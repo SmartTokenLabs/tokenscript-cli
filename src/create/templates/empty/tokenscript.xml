@@ -6,7 +6,7 @@
 		  xmlns:xml="http://www.w3.org/XML/1998/namespace"
 		  xsi:schemaLocation="http://tokenscript.org/2020/06/tokenscript http://tokenscript.org/2020/06/tokenscript.xsd"
 		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		  xmlns:ethereum="urn:ethereum:constantinople" custodian="false"
+		  xmlns:ethereum="urn:ethereum:constantinople"
 		  name="${TOKENSCRIPT_NAME}">
 	<ts:label>
 		<ts:plurals xml:lang="en">
@@ -19,8 +19,7 @@
 	</ts:contract>
 	<ts:origins>
 		<!-- Define the contract which holds the token that the user will use -->
-		<ts:ethereum contract="Token">
-		</ts:ethereum>
+		<ts:ethereum contract="Token"/>
 	</ts:origins>
 	<ts:cards>
 
@@ -32,15 +31,15 @@
 			<ts:label>
 				<ts:string xml:lang="en">Mint</ts:string>
 			</ts:label>
-			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-				<body>&mint.en;</body>
-			</ts:view>
 			<ts:transaction>
 				<ethereum:transaction contract="Token" function="safeMint">
 					<ts:data>
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+				&mint.en;
+			</ts:view>
 		</ts:card>
 
 	</ts:cards>

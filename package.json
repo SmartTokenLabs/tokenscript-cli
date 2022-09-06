@@ -61,8 +61,8 @@
     }
   },
   "scripts": {
-    "build": "shx rm -rf dist && tsc -b && npm run copy-templates",
-    "copy-templates": "cp -R src/create/templates dist/create/",
+    "build": "shx rm -rf dist && tsc -b && npm run copy-files",
+    "copy-files": "cp -R src/create/templates dist/create/ && cp -R src/schema dist/",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",

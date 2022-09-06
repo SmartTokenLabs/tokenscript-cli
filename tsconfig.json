@@ -18,6 +18,7 @@
     "src/**/*"
   ],
   "exclude": [
-	"src/create/templates"
+	"src/create/templates",
+    "src/schema"
   ]
 }

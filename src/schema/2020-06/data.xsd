@@ -14,7 +14,7 @@
     <!-- Importing XML namespace for xml:lang and xml:id -->
     <xs:element name="data">
         <xs:complexType>
-            <xs:choice maxOccurs="unbounded">
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="bool" type="variable"/>
                 <xs:element name="uint8" type="variable"/>
                 <xs:element name="uint16" type="variable"/>

@@ -13,8 +13,8 @@ export class ValidateXml implements IBuildStep {
 		// TODO: Just keep the XML in memory and write it at the end
 		let xml = fs.readFileSync(this.context.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml");
 
-		let res = await validateXMLWithXSD(xml, __dirname + "/../../tokenscript/schema/2020-06/tokenscript.xsd");
+		let res = await validateXMLWithXSD(xml, __dirname + "/../../schema/2020-06/tokenscript.xsd");
 
-		console.log(res);
+		console.log(res.output);
 	}
 }
