@@ -1,5 +1,5 @@
 import {Command} from "@oclif/core";
-
+import {BuildProcessor} from "../build/buildProcessor";
 
 export default class Create extends Command {
 
@@ -10,6 +10,11 @@ export default class Create extends Command {
 	static args = []
 
 	async run(): Promise<void> {
-		this.log('Build not implemented')
+
+		let buildProcessor = new BuildProcessor(process.cwd(), (status) => {
+			console.log(status + "\r\n");
+		});
+
+		await buildProcessor.build();
 	}
 }

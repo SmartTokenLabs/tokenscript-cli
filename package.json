@@ -22,7 +22,8 @@
     "@oclif/plugin-plugins": "^2.0.1",
     "fs-extra": "^10.1.0",
     "inquirer": "^8.2.4",
-    "replace-in-file": "^6.3.5"
+    "replace-in-file": "^6.3.5",
+    "super-xmlllint": "^1.0.6"
   },
   "devDependencies": {
     "@oclif/test": "^2",

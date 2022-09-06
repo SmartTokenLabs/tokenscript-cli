@@ -57,8 +57,6 @@ export default class Create extends Command {
 
 		let values = await this.collectFieldValues(templateDef.templateFields);
 
-		console.log(templateDef);
-
 		Templates.copyTemplate(template, this.dir);
 
 		await this.processTemplateUpdate(templateDef, values);
@@ -69,6 +67,8 @@ export default class Create extends Command {
 		let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 
 		await templateProcessor.processTemplateUpdate(values);
+
+		console.log("Project successfully initialized!\r\n");
 	}
 
 	private async handleExistingProject() {
