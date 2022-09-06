@@ -29,8 +29,8 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`tokenscript hello PERSON`](#tokenscript-hello-person)
-* [`tokenscript hello world`](#tokenscript-hello-world)
+* [`tokenscript build`](#tokenscript-build)
+* [`tokenscript create [DIRECTORY]`](#tokenscript-create-directory)
 * [`tokenscript help [COMMAND]`](#tokenscript-help-command)
 * [`tokenscript plugins`](#tokenscript-plugins)
 * [`tokenscript plugins:install PLUGIN...`](#tokenscript-pluginsinstall-plugin)
@@ -42,45 +42,36 @@ USAGE
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-2)
 * [`tokenscript plugins update`](#tokenscript-plugins-update)
 
-## `tokenscript hello PERSON`
+## `tokenscript build`
 
-Say hello
+Build the tokenscript project into a .tsml
 
 ```
 USAGE
-  $ tokenscript hello [PERSON] -f <value>
+  $ tokenscript build
 
-ARGUMENTS
-  PERSON  Person to say hello to
+DESCRIPTION
+  Build the tokenscript project into a .tsml
+```
+
+_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/build.ts)_
+
+## `tokenscript create [DIRECTORY]`
+
+Create a new TokenScript project
+
+```
+USAGE
+  $ tokenscript create [DIRECTORY] [-t empty|entryToken]
 
 FLAGS
-  -f, --from=<value>  (required) Whom is saying hello
+  -t, --template=<option>  <options: empty|entryToken>
 
 DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  Create a new TokenScript project
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/hello/index.ts)_
-
-## `tokenscript hello world`
-
-Say hello world
-
-```
-USAGE
-  $ tokenscript hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ oex hello world
-  hello world! (./src/commands/hello/world.ts)
-```
+_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/create.ts)_
 
 ## `tokenscript help [COMMAND]`
 
