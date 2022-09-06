@@ -1,0 +1,42 @@
+{
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://tokenscript.org/tokenscript-template.schema.json",
+	"title": "TokenScript Template",
+	"description": "A schema for defining tokenscript template/starter projects",
+	"type": "object",
+	"properties": {
+		"name": {
+			"description": "Name of the template",
+			"type": "string"
+		},
+		"description": {
+			"description": "A short description of the template",
+			"type": "string"
+		},
+		"templateFields": {
+			"description": "Fields in a template project that need to be updated with user values",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"description": "Name of the user-updatable field",
+						"type": "string"
+					},
+					"token": {
+						"description": "The token in the project that will be replaced with a user inputted value. This should be distinct & unique",
+						"type": "string"
+					},
+					"prompt": {
+						"description": "The question the user is asked to get the value for this field",
+						"type": "string"
+					},
+					"value": {
+						"description": "The user provided value. This is stored to allow updating these values later.",
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

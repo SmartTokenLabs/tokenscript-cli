@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "importHelpers": true,
+    "module": "commonjs",
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "allowJs": true,
+    "target": "es2019",
+	  "types": [
+		  "node"
+	  ]
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+	"src/create/templates"
+  ]
+}

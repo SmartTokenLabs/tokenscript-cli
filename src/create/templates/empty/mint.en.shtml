@@ -1,0 +1,33 @@
+<style type="text/css">
+	html {
+	}
+
+	body {
+		padding: 0px;
+		margin: 0px;
+	}
+
+	div {
+		margin: 0px;
+		padding: 0px;
+	}
+
+</style>
+<script type="text/javascript">
+	class Token {
+		constructor(tokenInstance) {
+			this.props = tokenInstance
+		}
+
+		render() {
+			return `
+        &lt;h3&gt;Mint Ape with Ticket ...&lt;/h3&gt;`;
+		}
+	}
+
+	web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
+		const currentTokenInstance = updatedTokens.currentInstance;
+		document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
+	};
+
+</script>

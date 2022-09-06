@@ -1,0 +1,11 @@
+{
+	"$schema": "../tstemplate.schema.json",
+	"name": "Empty Project",
+	"description": "An empty TokenScript project",
+	"templateFields": [
+		{
+			"name": "TokenScript name",
+			"description": "Enter a name for the TokenScript project"
+		}
+	]
+}
