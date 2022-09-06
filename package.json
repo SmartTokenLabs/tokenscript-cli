@@ -20,12 +20,15 @@
     "@oclif/core": "^1.13.10",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-plugins": "^2.0.1",
-    "inquirer": "^8.2.4"
+    "fs-extra": "^10.1.0",
+    "inquirer": "^8.2.4",
+    "replace-in-file": "^6.3.5"
   },
   "devDependencies": {
     "@oclif/test": "^2",
     "@types/chai": "^4",
     "@types/filesystem": "^0.0.32",
+    "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^9.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.9.4",

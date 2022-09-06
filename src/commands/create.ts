@@ -1,12 +1,14 @@
 import {CliUx, Command, Flags} from '@oclif/core'
 import {Templates} from "../create/template";
-import {ITemplateData} from "../create/templateProcessor";
-import * as fs from "fs";
+import {ITemplateData, ITemplateFields, TemplateProcessor} from "../create/templateProcessor";
+import * as fs from "fs-extra";
 import inquirer from "inquirer";
 
 export default class Create extends Command {
 
 	static description = 'Create a new TokenScript project';
+
+	private dir: string = ".";
 
 	static flags = {
 		// can pass either --force or -f
@@ -26,71 +28,114 @@ export default class Create extends Command {
 	async run(): Promise<void> {
 		const {flags, args} = await this.parse(Create);
 
-		let template = flags.template as string;
+		this.dir = args.directory.indexOf("/") !== 0 ? process.cwd() + "/" + args.directory : args.directory;
 
-		if (!template){
+		if (fs.existsSync(this.dir)){
 
-			while (!template){
+			let numFiles = fs.readdirSync(this.dir).length;
 
-				let responses: any = await inquirer.prompt([{
-					name: 'template',
-					message: 'Select project template',
-					type: 'list',
-					choices: Templates.templatesList.map((template) => {
-						return { name:  template.name + ": " + template.description, value: template.id}
-					}),
-				}]);
-
-				template = responses.template;
-
-				if (!template)
-					console.log("\r\nInvalid selection!\r\n");
-			}
-		}
-
-		console.log("\r\nTemplate chosen: " + template);
-
-		let dir = args.directory.indexOf("/") !== 0 ? process.cwd() + "/" + args.directory : args.directory;
-
-		console.log("\r\nDirectory: " + dir);
-
-		let templateDef = Templates.getTemplateDescriptor(template);
-
-		console.log(templateDef);
-
-		// TODO: Check project workspace is empty
-		if (fs.existsSync(dir)){
-
-			let numFiles = fs.readdirSync(dir).length;
-
-			if (numFiles){
-				// TODO: Overwrite warning
-
+			if (numFiles && fs.existsSync(this.dir + "/tstemplate.json")){
+				await this.handleExistingProject();
+				return;
 			}
 
 		} else {
-			let proceed = await CliUx.ux.confirm("Create new workspace at " + dir + "?");
+			let proceed = await CliUx.ux.confirm("Create new workspace at " + this.dir + "?");
 
-			if (proceed){
+			if (!proceed){
 				return;
 			}
+
+			fs.mkdirSync(this.dir, { recursive: true });
 		}
 
-		// TODO: Ask questions in template
+		let template = flags.template as string;
+		if (!template)
+			template = await this.showTemplateSelection();
 
-		// TODO: Copy template content into workspace
+		let templateDef = Templates.getTemplateDescriptor(template);
 
-		// TODO: Load template config file
+		let values = await this.collectFieldValues(templateDef.templateFields);
 
-		// TODO: Replace tokens in project using template processor
+		console.log(templateDef);
+
+		Templates.copyTemplate(template, this.dir);
+
+		await this.processTemplateUpdate(templateDef, values);
 	}
 
-	private collectFieldValues(templateDef: ITemplateData){
+	private async processTemplateUpdate(templateDef: ITemplateData, values: any[]){
 
-		for (let fieldDef of templateDef.templateFields){
+		let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 
+		await templateProcessor.processTemplateUpdate(values);
+	}
 
+	private async handleExistingProject() {
 
+		let templateDef = fs.readJsonSync(this.dir + "/tstemplate.json");
+
+		if (!templateDef)
+			throw new Error("Template file is invalid or not readable");
+
+		let proceed = await CliUx.ux.confirm("Existing workspace detected, would you like to try and update template values?\r\nThis may not work correctly, please save your current workspace before continuing");
+
+		if (!proceed)
+			return;
+
+		let values = await this.collectFieldValues(templateDef.templateFields);
+
+		await this.processTemplateUpdate(templateDef, values);
+	}
+
+	private async showTemplateSelection(){
+
+		let template;
+
+		while (!template){
+
+			let responses: any = await inquirer.prompt([{
+				name: 'template',
+				message: 'Select project template',
+				type: 'list',
+				choices: Templates.templatesList.map((template) => {
+					return { name:  template.name + ": " + template.description, value: template.id}
+				}),
+			}]);
+
+			template = responses.template;
+
+			if (!template)
+				console.log("\r\nInvalid selection!\r\n");
 		}
+
+		return template;
+	}
+
+	private async collectFieldValues(templateDef: ITemplateFields[]){
+
+		let responses: any = await inquirer.prompt(templateDef.map((fieldDef) => {
+			return {
+				name: fieldDef.name,
+				message: fieldDef.prompt + ":",
+				type: "input",
+				validate: (val) => {
+					return val != "";
+				}
+			};
+		}));
+
+		let values: any[] = [];
+
+		for (let i = 0; i < templateDef.length; i++){
+			let value = responses[templateDef[i].name];
+
+			if (value == undefined)
+				throw new Error("Value not provided");
+
+			values.push(responses[templateDef[i].name]);
+		}
+
+		return values;
 	}
 }

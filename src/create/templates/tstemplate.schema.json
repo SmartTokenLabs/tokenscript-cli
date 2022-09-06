@@ -13,6 +13,7 @@
 			"description": "A short description of the template",
 			"type": "string"
 		},
+		"required": ["name","description"],
 		"templateFields": {
 			"description": "Fields in a template project that need to be updated with user values",
 			"type": "array",
@@ -35,7 +36,8 @@
 						"description": "The user provided value. This is stored to allow updating these values later.",
 						"type": "string"
 					}
-				}
+				},
+				"required": ["name","token","prompt"]
 			}
 		}
 	}

@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "fs-extra";
 import {ITemplateData} from "./templateProcessor";
 
 export interface ITemplateListItem {
@@ -31,10 +31,15 @@ export class Templates {
 
 		const fileContents = fs.readFileSync(this.templateDir + id + "/tstemplate.json", "utf-8");
 
-		return JSON.parse(fileContents) as ITemplateData;
+		let templateDef = JSON.parse(fileContents) as ITemplateData;
+
+		if (!templateDef)
+			throw new Error("Could not resolve template");
+
+		return templateDef;
 	}
 
 	static copyTemplate(id: string, dest: string){
-
+		fs.copySync(this.templateDir + id, dest, { recursive: true });
 	}
 }

@@ -5,7 +5,18 @@
 	"templateFields": [
 		{
 			"name": "TokenScript name",
-			"description": "Enter a name for the TokenScript project"
+			"token": "TOKENSCRIPT_NAME",
+			"prompt": "Enter a name for the TokenScript project"
+		},
+		{
+			"name": "Contract address",
+			"token": "CONTRACT_ADDRESS",
+			"prompt": "Enter the ethereum contract address for the TokenScript"
+		},
+		{
+			"name": "Contract chain",
+			"token": "CONTRACT_CHAIN",
+			"prompt": "Enter the ethereum chainID for the TokenScript"
 		}
 	]
 }

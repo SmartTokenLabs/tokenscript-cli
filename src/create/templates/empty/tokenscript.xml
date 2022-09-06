@@ -15,11 +15,11 @@
 		</ts:plurals>
 	</ts:label>
 	<ts:contract interface="erc721" name="Token">
-		<ts:address network="8217">${CONTRACT_ADDRESS}</ts:address>
+		<ts:address network="${CONTRACT_CHAIN}">${CONTRACT_ADDRESS}</ts:address>
 	</ts:contract>
 	<ts:origins>
 		<!-- Define the contract which holds the token that the user will use -->
-		<ts:ethereum contract="MessageToken">
+		<ts:ethereum contract="Token">
 		</ts:ethereum>
 	</ts:origins>
 	<ts:cards>
