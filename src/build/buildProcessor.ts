@@ -34,6 +34,8 @@ export class BuildProcessor {
 
 			let buildStep = new BuildStep(this);
 
+			await new Promise(resolve => setTimeout(resolve, 500));
+
 			await buildStep.runBuildStep();
 
 		}
