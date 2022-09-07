@@ -4,6 +4,7 @@ import * as fs from "fs";
 export interface ITemplateFields {
 	name: string;
 	token: string;
+	updatePrefix?: string;
 	prompt: string;
 	value: string;
 }
@@ -34,9 +35,26 @@ export class TemplateProcessor {
 				this.workspace + "/*.shtml"
 			],
 			from: this.templateData.templateFields.map((field) => {
-				return field.value ?? new RegExp("\\\$\\\{" + field.token + "\\\}", 'g');
+				if (field.value){
+					let value = this.escapeRegExp(field.value);
+
+					return new RegExp(
+						field.updatePrefix ?
+						"(" + this.escapeRegExp(field.updatePrefix) + ")" + value :
+						value,
+				'g');
+				}
+
+				return new RegExp("\\\$\\\{" + field.token + "\\\}", 'g');
 			}),
-			to: values
+			to: values.map((value, index) => {
+				let template = this.templateData.templateFields[index];
+
+				if (template.value && template.updatePrefix)
+					return "$1" + value;
+
+				return value;
+			})
 		});
 
 		let replacements = results.reduce((count, currentValue) => {
@@ -53,5 +71,9 @@ export class TemplateProcessor {
 		}
 
 		fs.writeFileSync(this.workspace + "/tstemplate.json", JSON.stringify(this.templateData, null, "\t"));
+	}
+
+	escapeRegExp(string: string) {
+		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 	}
 }

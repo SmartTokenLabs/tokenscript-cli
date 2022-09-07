@@ -28,6 +28,10 @@
 						"description": "The token in the project that will be replaced with a user inputted value. This should be distinct & unique",
 						"type": "string"
 					},
+					"updatePrefix": {
+						"description": "Increase accuracy when updating already initialized templates",
+						"type": "string"
+					},
 					"prompt": {
 						"description": "The question the user is asked to get the value for this field",
 						"type": "string"

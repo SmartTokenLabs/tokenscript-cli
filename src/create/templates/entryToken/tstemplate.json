@@ -16,6 +16,7 @@
 		{
 			"name": "Contract chain",
 			"token": "CONTRACT_CHAIN",
+			"updatePrefix": "network=\"",
 			"prompt": "Enter the ethereum chainID for the TokenScript"
 		},
 		{
