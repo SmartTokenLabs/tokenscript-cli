@@ -4,15 +4,15 @@
           xsi:schemaLocation="http://tokenscript.org/2020/06/tokenscript http://tokenscript.org/2020/06/tokenscript.xsd"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:asnx="urn:ietf:params:xml:ns:asnx"
           xmlns:ethereum="urn:ethereum:constantinople" custodian="false"
-          name="${TOKENSCRIPT_NAME}">
+          name="$tst{TOKENSCRIPT_NAME}">
     <ts:label>
         <ts:plurals xml:lang="en">
-            <ts:string quantity="one">${TOKENSCRIPT_NAME}</ts:string>
-            <ts:string quantity="other">${TOKENSCRIPT_NAME}</ts:string>
+            <ts:string quantity="one">$tst{TOKENSCRIPT_NAME}</ts:string>
+            <ts:string quantity="other">$tst{TOKENSCRIPT_NAME}</ts:string>
         </ts:plurals>
     </ts:label>
     <ts:contract interface="erc721" name="MessageToken">
-        <ts:address network="${CONTRACT_CHAIN}">${CONTRACT_ADDRESS}</ts:address>
+        <ts:address network="$tst{CONTRACT_CHAIN}">$tst{CONTRACT_ADDRESS}</ts:address>
     </ts:contract>
     <ts:origins>
         <!-- Define the contract which holds the token that the user will use -->

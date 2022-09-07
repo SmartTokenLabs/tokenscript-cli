@@ -45,7 +45,7 @@ export class TemplateProcessor {
 				'g');
 				}
 
-				return new RegExp("\\\$\\\{" + field.token + "\\\}", 'g');
+				return new RegExp("\\\$tst\\\{" + field.token + "\\\}", 'g');
 			}),
 			to: values.map((value, index) => {
 				let template = this.templateData.templateFields[index];
