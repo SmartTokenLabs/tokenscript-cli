@@ -25,6 +25,25 @@ USAGE
 ...
 ```
 <!-- usagestop -->
+
+# Use locally
+
+You can run the CLI from source in developer mode like this:
+```sh-session
+git clone https://github.com/TokenScript/tokenscript-cli.git
+cd tokenscript-cli
+npm i
+./bin/dev
+```
+
+You can also install the package globally on your system like this:
+```sh-session
+npm run build
+npm link
+```
+
+Note: Rebuilding will update the global version
+
 # Commands
 <!-- commands -->
 * [`tokenscript build`](#tokenscript-build)
