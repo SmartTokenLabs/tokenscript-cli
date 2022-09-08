@@ -7,129 +7,129 @@ import {KeyImporter} from "../sign/keyImporter";
 
 export default class Sign extends Command {
 
-  static SIGNED_XML_LOC = process.cwd() + "/out/tokenscript.signed.tsml"
+	static SIGNED_XML_LOC = process.cwd() + "/out/tokenscript.signed.tsml"
 
-  static description = 'sign the built .tsml';
+	static description = 'sign the built .tsml';
 
-  /*static examples = [
-    '<%= config.bin %> <%= command.id %>',
-  ]*/
+	/*static examples = [
+	  '<%= config.bin %> <%= command.id %>',
+	]*/
 
-  static flags = {
-    // flag with a value (-n, --name=VALUE)
-    verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
-    // flag with no value (-f, --force)
-    force: Flags.boolean({char: 'f'}),
-  }
-
-  static args = [{name: 'file'}]
-
-  public async run(): Promise<void> {
-
-    const {args, flags} = await this.parse(Sign)
-
-	  let tsmlSrc = process.cwd() + "/out/tokenscript.tsml";
-
-    if (!fs.existsSync(tsmlSrc)){
-		this.error("Build .tsml first", {exit: 2});
-		return;
+	static flags = {
+		// flag with a value (-n, --name=VALUE)
+		verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
+		// flag with no value (-f, --force)
+		force: Flags.boolean({char: 'f'}),
 	}
 
-	const privateKeyLocation = process.cwd() + "/../test.key";
-	const publicKeyLocation = process.cwd() + "/../test.pub";
+	static args = [{name: 'file'}]
 
-	const crypto = new Crypto();
+	public async run(): Promise<void> {
 
-    xmldsigjs.Application.setEngine("OpenSSL", crypto);
+		const {args, flags} = await this.parse(Sign)
 
-	const xml = new xmldsigjs.SignedXml();
+		let tsmlSrc = process.cwd() + "/out/tokenscript.tsml";
 
-	// Import into CryptoKey from hex or PEM
-	/*let privKey = fs.readFileSync(privateKeyLocation, 'utf-8');
-    let pubKey = fs.readFileSync(publicKeyLocation, 'utf-8');
-
-	let keyImporter = new KeyImporter();
-	let publicKey = await keyImporter.getPublicKey(pubKey);
-	let privateKey = await keyImporter.getPrivateKey(privKey, pubKey);*/
-
-	  const keyPair = await crypto.subtle.generateKey(
-		  {
-			  name: "ECDSA",
-			  namedCurve: "K-256", // P-256, P-384, or P-521
-		  },
-		  true,
-		  ["sign", "verify"],
-	  );
-
-	  const privateKey = keyPair.privateKey;
-	  const publicKey = keyPair.publicKey;
-
-	  /*if (!privKey || !pubKey)
-		  throw new Error("Key generation failed");*/
-
-	  if (flags.verify){
-		  console.log("Verification only");
-		  await this.verifySignedXml(publicKey!!);
-		  return;
-	  }
-
-    const unsignedXml = xmldsigjs.Parse(fs.readFileSync(tsmlSrc, 'utf-8'));
-
-	const sig = await xml.Sign(
-		{ name: "ECDSA", hash: "SHA-256" },
-		privateKey!!,
-		unsignedXml,
-		{                                                     // options
-			keyValue: publicKey,
-			references: [
-				{ hash: "SHA-256", transforms: ["enveloped", "c14n"] },
-			]
+		if (!fs.existsSync(tsmlSrc)) {
+			this.error("Build .tsml first", {exit: 2});
+			return;
 		}
-	);
 
-	this.writeSignedXml(unsignedXml, sig);
+		const privateKeyLocation = process.cwd() + "/../test.key";
+		const publicKeyLocation = process.cwd() + "/../test.pub";
 
-	await this.verifySignedXml(publicKey!!);
-  }
+		const crypto = new Crypto();
 
-  private writeSignedXml(unsignedXml: Document, sig: Signature){
+		xmldsigjs.Application.setEngine("OpenSSL", crypto);
 
-	  unsignedXml.appendChild(sig.GetXml(true) as Node);
+		const xml = new xmldsigjs.SignedXml();
 
-	  let xmlStr = new XMLSerializer().serializeToString(unsignedXml);
+		// Import into CryptoKey from hex or PEM
+		/*let privKey = fs.readFileSync(privateKeyLocation, 'utf-8');
+		let pubKey = fs.readFileSync(publicKeyLocation, 'utf-8');
 
-	  // TODO: Not supporting multiple root nodes at this time
-	  //xmlStr = xmlFormatter(new XMLSerializer().serializeToString(sig.GetXml(true)!!));
+		let keyImporter = new KeyImporter();
+		let publicKey = await keyImporter.getPublicKey(pubKey);
+		let privateKey = await keyImporter.getPrivateKey(privKey, pubKey);*/
 
-	  fs.writeFileSync(Sign.SIGNED_XML_LOC, xmlStr);
-  }
+		const keyPair = await crypto.subtle.generateKey(
+			{
+				name: "ECDSA",
+				namedCurve: "K-256", // P-256, P-384, or P-521
+			},
+			true,
+			["sign", "verify"],
+		);
 
-  private async verifySignedXml(key: CryptoKey){
+		const privateKey = keyPair.privateKey;
+		const publicKey = keyPair.publicKey;
 
-	  let signedXml = fs.readFileSync(Sign.SIGNED_XML_LOC, 'utf-8');
+		/*if (!privKey || !pubKey)
+			throw new Error("Key generation failed");*/
 
-	  let doc = xmldsigjs.Parse(signedXml);
-	  let signature = doc.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature");
-	  doc.removeChild(signature[0]);
+		if (flags.verify) {
+			console.log("Verification only");
+			await this.verifySignedXml(publicKey!!);
+			return;
+		}
 
-	  const xml = new xmldsigjs.SignedXml(doc);
+		const unsignedXml = xmldsigjs.Parse(fs.readFileSync(tsmlSrc, 'utf-8'));
 
-	  xml.LoadXml(signature[0]);
+		const sig = await xml.Sign(
+			{name: "ECDSA", hash: "SHA-256"},
+			privateKey!!,
+			unsignedXml,
+			{                                                     // options
+				keyValue: publicKey,
+				references: [
+					{hash: "SHA-256", transforms: ["enveloped", "c14n"]},
+				]
+			}
+		);
 
-	  let verified = await xml.Verify(key);
+		this.writeSignedXml(unsignedXml, sig);
 
-	  console.log("Verified: " + verified);
-  }
+		await this.verifySignedXml(publicKey!!);
+	}
 
-  private hexToArrayBuffer(hex: string){
+	private writeSignedXml(unsignedXml: Document, sig: Signature) {
 
-	  let match = hex.match(/[\da-f]{2}/gi);
+		unsignedXml.appendChild(sig.GetXml(true) as Node);
 
-	  if (!match)
-		  return new Uint8Array([]).buffer;
+		let xmlStr = new XMLSerializer().serializeToString(unsignedXml);
 
-	  return new Uint8Array(match.map(function (h) {
-		  return parseInt(h, 16)
-	  })).buffer;
-  }
+		// TODO: Not supporting multiple root nodes at this time
+		//xmlStr = xmlFormatter(new XMLSerializer().serializeToString(sig.GetXml(true)!!));
+
+		fs.writeFileSync(Sign.SIGNED_XML_LOC, xmlStr);
+	}
+
+	private async verifySignedXml(key: CryptoKey) {
+
+		let signedXml = fs.readFileSync(Sign.SIGNED_XML_LOC, 'utf-8');
+
+		let doc = xmldsigjs.Parse(signedXml);
+		let signature = doc.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature");
+		doc.removeChild(signature[0]);
+
+		const xml = new xmldsigjs.SignedXml(doc);
+
+		xml.LoadXml(signature[0]);
+
+		let verified = await xml.Verify(key);
+
+		console.log("Verified: " + verified);
+	}
+
+	private hexToArrayBuffer(hex: string) {
+
+		let match = hex.match(/[\da-f]{2}/gi);
+
+		if (!match)
+			return new Uint8Array([]).buffer;
+
+		return new Uint8Array(match.map(function (h) {
+			return parseInt(h, 16)
+		})).buffer;
+	}
 }
