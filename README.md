@@ -42,16 +42,16 @@ Please follow the guide at the [node-gyp GIT repo](https://github.com/nodejs/nod
 
 You can run the CLI from source in developer mode like this:
 ```sh-session
-git clone https://github.com/TokenScript/tokenscript-cli.git
-cd tokenscript-cli
-npm i
-./bin/dev
+$ git clone https://github.com/TokenScript/tokenscript-cli.git
+$ cd tokenscript-cli
+$ npm i
+$ ./bin/dev
 ```
 
 You can also install the package globally on your system like this:
 ```sh-session
-npm run build
-npm link
+$ npm run build
+$ npm link
 ```
 
 Note: Rebuilding will update the global version
