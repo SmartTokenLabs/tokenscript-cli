@@ -3,6 +3,7 @@ import * as xmldsigjs from "xmldsigjs";
 import {Crypto, CryptoKey} from "@peculiar/webcrypto";
 import * as fs from "fs-extra";
 import {Signature} from "xmldsigjs";
+import {KeyImporter} from "../sign/keyImporter";
 
 export default class Sign extends Command {
 
@@ -43,33 +44,13 @@ export default class Sign extends Command {
 
 	const xml = new xmldsigjs.SignedXml();
 
-	//xml.LoadXml(fs.readFileSync(tsmlSrc, 'utf-8'));
-
-	let privKey = fs.readFileSync(privateKeyLocation, 'utf-8');
+	// Import into CryptoKey from hex or PEM
+	/*let privKey = fs.readFileSync(privateKeyLocation, 'utf-8');
     let pubKey = fs.readFileSync(publicKeyLocation, 'utf-8');
 
-
-	/*let privateKey = (await crypto.subtle.importKey(
-		'raw',
-		this.hexToArrayBuffer(privKey),
-		{
-			name: 'ECDSA',
-			namedCurve: 'K-256'
-		},
-		true,
-		['sign']
-	));
-
-	  let publicKey = (await crypto.subtle.importKey(
-		  'raw',
-		  this.hexToArrayBuffer(pubKey),
-		  {
-			  name: 'ECDSA',
-			  namedCurve: 'K-256'
-		  },
-		  true,
-		  ['verify']
-	  ));*/
+	let keyImporter = new KeyImporter();
+	let publicKey = await keyImporter.getPublicKey(pubKey);
+	let privateKey = await keyImporter.getPrivateKey(privKey, pubKey);*/
 
 	  const keyPair = await crypto.subtle.generateKey(
 		  {
@@ -83,8 +64,8 @@ export default class Sign extends Command {
 	  const privateKey = keyPair.privateKey;
 	  const publicKey = keyPair.publicKey;
 
-	  if (!privKey || !pubKey)
-		  throw new Error("Key generation failed");
+	  /*if (!privKey || !pubKey)
+		  throw new Error("Key generation failed");*/
 
 	  if (flags.verify){
 		  console.log("Verification only");
