@@ -10,25 +10,25 @@
 
     <!-- Importing XML namespace for xml:lang and xml:id -->
     <import namespace="http://www.w3.org/XML/1998/namespace"
-            schemaLocation="xml.xsd"/>
+            schemaLocation="../common/xml.xsd"/>
 
     <!-- Importing XML Signature namespace. Schema is from
         http://www.w3.org/TR/2008/REC-xmldsig-core-20080610/xmldsig-core-schema.xsd
     -->
     <import namespace="http://www.w3.org/2000/09/xmldsig#"
-            schemaLocation="xmldsig-core-schema.xsd"/>
+            schemaLocation="../common/xmldsig-core-schema.xsd"/>
 
     <!-- Importing XHTML namespace. use xhtml1-strict.xsd to get xhtml:Block -->
     <import namespace="http://www.w3.org/1999/xhtml"
-            schemaLocation="xhtml1-strict.xsd"/>
+            schemaLocation="../common/xhtml1-strict.xsd"/>
 
     <import namespace="urn:ietf:params:xml:ns:asnx"
-            schemaLocation="asnx.xsd"/>
+            schemaLocation="../common/asnx.xsd"/>
 
     <import namespace="urn:ethereum:constantinople"
-            schemaLocation="ethereum.xsd"/>
+            schemaLocation="../common/ethereum.xsd"/>
 
-    <include schemaLocation="data.xsd"/> <!-- soon to be replaced by data objects -->
+    <include schemaLocation="../common/data.xsd"/> <!-- soon to be replaced by data objects -->
 
     <element name="token">
         <complexType>
