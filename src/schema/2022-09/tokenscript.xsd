@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-		xmlns:ts="http://tokenscript.org/2020/06/tokenscript"
-		targetNamespace="http://tokenscript.org/2020/06/tokenscript"
+		xmlns:ts="http://tokenscript.org/2022/09/tokenscript"
+		targetNamespace="http://tokenscript.org/2022/09/tokenscript"
 		xmlns:xhtml="http://www.w3.org/1999/xhtml"
 		xmlns:dsig="http://www.w3.org/2000/09/xmldsig#"
 		xmlns:asnx="urn:ietf:params:xml:ns:asnx"
@@ -26,9 +26,9 @@
 			schemaLocation="../common/asnx.xsd"/>
 
 	<import namespace="urn:ethereum:constantinople"
-			schemaLocation="../common/ethereum.xsd"/>
+			schemaLocation="ethereum.xsd"/>
 
-	<include schemaLocation="../common/data.xsd"/> <!-- soon to be replaced by data objects -->
+	<include schemaLocation="data.xsd"/> <!-- soon to be replaced by data objects -->
 
 	<element name="token">
 		<complexType>
@@ -182,6 +182,26 @@
 	<element name="include" type="NCName"/>
 	<complexType name="view">
 		<sequence>
+			<element name="include" minOccurs="0" maxOccurs="unbounded">
+				<complexType>
+					<attribute name="type" use="required">
+						<simpleType>
+							<restriction base="string">
+								<enumeration value="html"/>
+								<enumeration value="css"/>
+								<enumeration value="js"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+					<attribute name="src" use="required">
+						<simpleType>
+							<restriction base="string">
+								<pattern value="(\./|res://|https?://).*"/>
+							</restriction>
+						</simpleType>
+					</attribute>
+				</complexType>
+			</element>
 			<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>
 		<attribute ref="xml:lang"/>

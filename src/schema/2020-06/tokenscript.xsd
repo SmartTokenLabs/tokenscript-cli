@@ -26,9 +26,9 @@
             schemaLocation="../common/asnx.xsd"/>
 
     <import namespace="urn:ethereum:constantinople"
-            schemaLocation="../common/ethereum.xsd"/>
+            schemaLocation="ethereum.xsd"/>
 
-    <include schemaLocation="../common/data.xsd"/> <!-- soon to be replaced by data objects -->
+    <include schemaLocation="data.xsd"/> <!-- soon to be replaced by data objects -->
 
     <element name="token">
         <complexType>
