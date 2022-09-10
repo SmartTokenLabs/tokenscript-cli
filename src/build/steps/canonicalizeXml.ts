@@ -8,12 +8,14 @@ export class CanonicalizeXml implements IBuildStep {
 	}
 
 	async runBuildStep() {
+
 		this.context.updateStatus("Canonicalization of XML...");
 
+		//let contents = this.context.getXmlString();
 		let contents = fs.readFileSync(this.context.workspace + BuildProcessor.SRC_XML_FILE);
 
 		let canonical = await canonicalizeXML(contents, "c14n");
 
-		fs.writeFileSync(this.context.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml", canonical.output);
+		this.context.setXmlString(canonical.output);
 	}
 }

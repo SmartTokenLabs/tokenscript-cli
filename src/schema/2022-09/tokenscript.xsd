@@ -20,7 +20,7 @@
 
 	<!-- Importing XHTML namespace. use xhtml1-strict.xsd to get xhtml:Block -->
 	<import namespace="http://www.w3.org/1999/xhtml"
-			schemaLocation="../common/xhtml1-strict.xsd"/>
+			schemaLocation="../common/xhtml5.xsd"/>
 
 	<import namespace="urn:ietf:params:xml:ns:asnx"
 			schemaLocation="../common/asnx.xsd"/>

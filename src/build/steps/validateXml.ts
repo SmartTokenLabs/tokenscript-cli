@@ -11,13 +11,14 @@ export class ValidateXml implements IBuildStep {
 
 		this.context.updateStatus("Validate TSML...");
 
-		// TODO: Just keep the XML in memory and write it at the end
-		let xml = fs.readFileSync(this.context.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml");
+		let doc = this.context.getXmlDoc();
 
-		const schemaVersion = xml.indexOf('xmlns:ts="http://tokenscript.org/2022/09/tokenscript"') > -1 ? "2022-09" : "2020-06";
+		let ns = doc.documentElement.getAttribute("xmlns:ts");
+
+		const schemaVersion = ns!!.indexOf("2022/09") > -1 ? "2022-09" : "2020-06";
 
 		try {
-			await validateXMLWithXSD(xml, __dirname + "/../../schema/" + schemaVersion + "/tokenscript.xsd");
+			await validateXMLWithXSD(this.context.getXmlString(), __dirname + "/../../schema/" + schemaVersion + "/tokenscript.xsd");
 
 		} catch (e: any){
 			let splitError = e.message.split("<?xml");
