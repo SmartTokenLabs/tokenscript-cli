@@ -77,6 +77,7 @@
 					<complexType>
 						<sequence>
 							<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>
+							<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
 						</sequence>
 						<attribute name="name" type="string"/>
 					</complexType>
