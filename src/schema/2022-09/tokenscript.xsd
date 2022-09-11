@@ -73,9 +73,25 @@
 	<element name="cards">
 		<complexType>
 			<sequence>
+				<element name="viewContent" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>
+						</sequence>
+						<attribute name="name" type="string"/>
+					</complexType>
+					<unique name="uniqueIncludeSrc">
+						<selector xpath="ts:include" />
+						<field xpath="@src" />
+					</unique>
+				</element>
 				<element maxOccurs="unbounded" name="card" type="ts:card"/>
 			</sequence>
 		</complexType>
+		<unique name="uniqueName">
+			<selector xpath="ts:viewContent" />
+			<field xpath="@name" />
+		</unique>
 		<key name="cardName">
 			<selector xpath="ts:card"/>
 			<field xpath="@name"/>
@@ -106,9 +122,36 @@
 			<element minOccurs="0" name="input" type="ts:tokens"/>
 			<element minOccurs="0" name="output" type="ts:tokens"/>
 			<element minOccurs="0" ref="ts:transaction"/>
-			<element minOccurs="0" maxOccurs="unbounded" name="guide-view" type="ts:view"/>
-			<element minOccurs="0" maxOccurs="unbounded" name="item-view" type="ts:view"/>
-			<element minOccurs="0" maxOccurs="unbounded" name="view" type="ts:view"/>
+			<element minOccurs="0" maxOccurs="unbounded" name="guide-view" type="ts:view">
+				<unique name="guideView-uniqueIncludeSrc">
+					<selector xpath="ts:include" />
+					<field xpath="@src" />
+				</unique>
+				<unique name="guideView-viewContent">
+					<selector xpath="ts:viewContent" />
+					<field xpath="@name" />
+				</unique>
+			</element>
+			<element minOccurs="0" maxOccurs="unbounded" name="item-view" type="ts:view">
+				<unique name="itemView-uniqueIncludeSrc">
+					<selector xpath="ts:include" />
+					<field xpath="@src" />
+				</unique>
+				<unique name="itemView-viewContent">
+					<selector xpath="ts:viewContent" />
+					<field xpath="@name" />
+				</unique>
+			</element>
+			<element minOccurs="0" maxOccurs="unbounded" name="view" type="ts:view">
+				<unique name="view-uniqueIncludeSrc">
+					<selector xpath="ts:include" />
+					<field xpath="@src" />
+				</unique>
+				<unique name="view-viewContent">
+					<selector xpath="ts:viewContent" />
+					<field xpath="@name" />
+				</unique>
+			</element>
 		</sequence>
 		<attribute name="type" use="required" type="ts:cardType"/>
 		<attribute name="exclude" type="IDREFS"/>
@@ -182,29 +225,35 @@
 	<element name="include" type="NCName"/>
 	<complexType name="view">
 		<sequence>
-			<element name="include" minOccurs="0" maxOccurs="unbounded">
+			<element name="viewContent" minOccurs="0" maxOccurs="unbounded">
 				<complexType>
-					<attribute name="type" use="required">
-						<simpleType>
-							<restriction base="string">
-								<enumeration value="html"/>
-								<enumeration value="css"/>
-								<enumeration value="js"/>
-							</restriction>
-						</simpleType>
-					</attribute>
-					<attribute name="src" use="required">
-						<simpleType>
-							<restriction base="string">
-								<pattern value="(\./|res://|https?://).*"/>
-							</restriction>
-						</simpleType>
+					<attribute name="name">
+						<!-- TODO: Ensure reference -->
 					</attribute>
 				</complexType>
 			</element>
+			<element name="include" minOccurs="0" maxOccurs="unbounded" type="ts:viewInclude"/>
 			<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
 		</sequence>
 		<attribute ref="xml:lang"/>
+	</complexType>
+	<complexType name="viewInclude">
+		<attribute name="type" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="html"/>
+					<enumeration value="css"/>
+					<enumeration value="js"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="src" use="required">
+			<simpleType>
+				<restriction base="string">
+					<pattern value="(\./|res://|https?://).*"/>
+				</restriction>
+			</simpleType>
+		</attribute>
 	</complexType>
 	<element name="redeem">
 		<complexType>
