@@ -4,6 +4,7 @@ import {PrepareOutputDirectory} from "./steps/prepareOutputDirectory";
 import {CanonicalizeXml} from "./steps/canonicalizeXml";
 import {ValidateXml} from "./steps/validateXml";
 import {InlineIncludes} from "./steps/inlineIncludes";
+import {Command} from "@oclif/core";
 
 export interface IBuildStep {
 	runBuildStep(): void
@@ -26,6 +27,7 @@ export class BuildProcessor {
 
 	constructor(
 		public workspace: string,
+		public cli: Command,
 		private statusCallback: (status: string) => void
 	) {
 

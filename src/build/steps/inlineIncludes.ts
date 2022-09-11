@@ -18,7 +18,8 @@ export class InlineIncludes implements IBuildStep {
 
 		let elems = doc?.documentElement.getElementsByTagName("ts:include");
 
-		for (let i = 0; i < elems.length; i++){
+		for (let i = 0, len = elems.length; i < len; i++){
+
 			let type = elems[i].getAttribute("type");
 			let src = elems[i].getAttribute("src");
 
