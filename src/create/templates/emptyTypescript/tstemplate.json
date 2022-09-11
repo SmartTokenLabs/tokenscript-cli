@@ -1,6 +1,6 @@
 {
 	"$schema": "../tstemplate.schema.json",
-	"name": "Empty Project",
+	"name": "Empty Typescript Project",
 	"description": "An empty TokenScript project",
 	"templateFields": [
 		{
