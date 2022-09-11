@@ -19,9 +19,9 @@
 		<ts:ethereum contract="Token"/>
 	</ts:origins>
 	<ts:cards>
-		<ts:viewContent name="common">
+		<!--<ts:viewContent name="common">
 			<ts:include type="js" src="./dist/bundle.js"/>
-		</ts:viewContent>
+		</ts:viewContent>-->
 		<ts:card type="action" name="Mint">
 			<!-- this action is of the model confirm-back.
 			window.onConfirm is called if user hit "confirm";
@@ -37,7 +37,7 @@
 				</ethereum:transaction>
 			</ts:transaction>
 			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-				<ts:viewContent name="common"/>
+				<!--<ts:viewContent name="common"/>-->
 				<ts:include type="html" src="./dist/index.html"/>
 			</ts:view>
 		</ts:card>
