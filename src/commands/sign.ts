@@ -4,18 +4,6 @@ import {Crypto, CryptoKey} from "@peculiar/webcrypto";
 import * as fs from "fs-extra";
 import {Signature} from "xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
-import {hexStringToUint8, uint8tohex} from "../utils";
-import {ec as EC} from "elliptic"
-import {
-	AsnParser,
-	AsnProp,
-	AsnPropTypes,
-	AsnSerializer,
-	OctetString
-} from "@peculiar/asn1-schema";
-import {ECParameters, ECPrivateKey} from "@peculiar/asn1-ecc";
-import {PrivateKeyInfo} from "@peculiar/asn1-pkcs8";
-import {AlgorithmIdentifier} from "@peculiar/asn1-x509";
 
 export default class Sign extends Command {
 
@@ -30,8 +18,6 @@ export default class Sign extends Command {
 	static flags = {
 		// flag with a value (-n, --name=VALUE)
 		verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
-		// flag with no value (-f, --force)
-		force: Flags.boolean({char: 'f'}),
 	}
 
 	static args = [{name: 'file'}]
@@ -51,50 +37,37 @@ export default class Sign extends Command {
 		const publicKeyLocation = process.cwd() + "/../test.pub";
 
 		const crypto = new Crypto();
-
 		xmldsigjs.Application.setEngine("OpenSSL", crypto);
 
-		const xml = new xmldsigjs.SignedXml();
+		if (flags.verify) {
+			this.log("Verification only, using public key");
 
-		// Import into CryptoKey from hex or PEM
+			if (!fs.existsSync(publicKeyLocation)){
+				this.error("Public key cannot be read at " + publicKeyLocation);
+				return;
+			}
+
+			let pubKeyStr = fs.readFileSync(publicKeyLocation, 'utf-8').trim();
+
+			let keyImporter = KeyImporter.fromPublic(pubKeyStr);
+
+			await this.verifySignedXml(await keyImporter.getPublicKey());
+			return;
+		}
+
+		if (!fs.existsSync(privateKeyLocation)){
+			this.error("Private key cannot be read at " + privateKeyLocation);
+			return;
+		}
+
 		let privKeyStr = fs.readFileSync(privateKeyLocation, 'utf-8').trim();
-		let pubKeyStr = fs.readFileSync(publicKeyLocation, 'utf-8').trim();
 
-		let ec = new EC('secp256k1');
+		let keyImporter = KeyImporter.fromPrivate(privKeyStr);
+		let privateKey = await keyImporter.getPrivateKey();
+		let publicKey = await keyImporter.getPublicKey();
 
-		const ecImportPrivate = ec.keyFromPrivate(privKeyStr);
-
-		let pkcs = this.getPkcs8FromECKey(ecImportPrivate);
-
-		//let privateKeyDer = ec.keyFromPrivate(privKeyStr).getPrivate();
-
-		//let publicKeyDer = ec.keyFromPublic(hexStringToUint8(pubKeyStr)).getPublic();
-		let publicKeyDer = ecImportPrivate.getPublic();
-
-		// Convert private
-		/*let parsedPriv = AsnParser.parse(hexStringToUint8(privateKeyDer), ECPrivateKey);
-
-		let convertedAsn = new PrivateKeyInfo();
-		convertedAsn.version = 0;
-		convertedAsn.privateKeyAlgorithm = new AlgorithmIdentifier({
-			algorithm: "1.2.840.10045.2.1",
-			parameters: AsnSerializer.serialize(parsedPriv.parameters)
-		});
-		convertedAsn.privateKey = new OctetString(hexStringToUint8(privateKeyDer));
-
-		privateKeyDer = uint8tohex(new Uint8Array(AsnSerializer.serialize(convertedAsn)));
-
-		console.log("correct pkcs8: " + privateKeyDer);*/
-		// end convert private
-
-		let privateKeyDer = pkcs;
-
-		let keyImporter = new KeyImporter();
-		let privateKey = await keyImporter.getPrivateKey(privateKeyDer);
-		let publicKey = await keyImporter.getPublicKey(publicKeyDer.encode("hex", false));
-
-		console.log("Converted private: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("pkcs8", privateKey!!))));
-		console.log("Converted public: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("raw", publicKey!!))));
+		//console.log("Converted private: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("pkcs8", privateKey!!))));
+		//console.log("Converted public: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("raw", publicKey!!))));
 
 		/*const keyPair = await crypto.subtle.generateKey(
 			{
@@ -108,16 +81,9 @@ export default class Sign extends Command {
 		console.log("Generated private: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("pkcs8", keyPair.privateKey!!))));
 		console.log("Generated public: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("raw", keyPair.publicKey!!))));*/
 
-		/*if (!privKey || !pubKey)
-			throw new Error("Key generation failed");*/
-
-		if (flags.verify) {
-			console.log("Verification only");
-			await this.verifySignedXml(publicKey!!);
-			return;
-		}
-
 		const unsignedXml = xmldsigjs.Parse(fs.readFileSync(tsmlSrc, 'utf-8'));
+
+		const xml = new xmldsigjs.SignedXml();
 
 		const sig = await xml.Sign(
 			{name: "ECDSA", hash: "SHA-256"},
@@ -167,52 +133,4 @@ export default class Sign extends Command {
 		console.log("Verified: " + verified);
 	}
 
-	private getPkcs8FromECKey(keyPair: EC.KeyPair){
-
-		let ecKeyInfo = new ECPrivateKey();
-
-		ecKeyInfo.version = 1;
-		ecKeyInfo.parameters = new ECParameters();
-		ecKeyInfo.parameters.namedCurve = "1.3.132.0.10";
-		ecKeyInfo.privateKey = new OctetString(hexStringToUint8(keyPair.getPrivate().toString("hex")));
-		ecKeyInfo.publicKey = hexStringToUint8(keyPair.getPublic().encode("hex", false));
-
-		let ecParams = new ECParameters();
-		ecParams.namedCurve = "1.3.132.0.10";
-
-		let convertedAsn = new PrivateKeyInfo();
-		convertedAsn.version = 0;
-		convertedAsn.privateKeyAlgorithm = new AlgorithmIdentifier({
-			algorithm: "1.2.840.10045.2.1",
-			parameters: AsnSerializer.serialize(ecParams)
-		});
-		convertedAsn.privateKey = new OctetString(AsnSerializer.serialize(ecKeyInfo));
-
-		let serialized = new Uint8Array(AsnSerializer.serialize(convertedAsn));
-
-		console.log("Converted ASN: " + uint8tohex(serialized));
-
-		return uint8tohex(serialized);
-	}
-
-	private hexToArrayBuffer(hex: string) {
-
-		let match = hex.match(/[\da-f]{2}/gi);
-
-		if (!match)
-			return new Uint8Array([]).buffer;
-
-		return new Uint8Array(match.map(function (h) {
-			return parseInt(h, 16)
-		})).buffer;
-	}
-}
-
-class ECKeyInfo {
-	@AsnProp({ type: AsnPropTypes.Integer })
-	version?: number;
-	@AsnProp({ type: AsnPropTypes.ObjectIdentifier, repeated: "sequence" })
-	objectId?: string[];
-	@AsnProp({ type:ECPrivateKey })
-	key?: ECPrivateKey;
 }
