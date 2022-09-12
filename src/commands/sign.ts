@@ -5,7 +5,6 @@ import * as fs from "fs-extra";
 import {Signature} from "xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
 import {hexStringToUint8, uint8tohex} from "../utils";
-import KeyEncoder from "key-encoder";
 import {ec as EC} from "elliptic"
 import {
 	AsnParser,
@@ -14,7 +13,7 @@ import {
 	AsnSerializer,
 	OctetString
 } from "@peculiar/asn1-schema";
-import {ECPrivateKey} from "@peculiar/asn1-ecc";
+import {ECParameters, ECPrivateKey} from "@peculiar/asn1-ecc";
 import {PrivateKeyInfo} from "@peculiar/asn1-pkcs8";
 import {AlgorithmIdentifier} from "@peculiar/asn1-x509";
 
@@ -61,17 +60,19 @@ export default class Sign extends Command {
 		let privKeyStr = fs.readFileSync(privateKeyLocation, 'utf-8').trim();
 		let pubKeyStr = fs.readFileSync(publicKeyLocation, 'utf-8').trim();
 
-		let keyEncoder = new KeyEncoder('secp256k1');
-
-		let privateKeyDer = keyEncoder.encodePrivate(privKeyStr, 'raw', 'der');
-		//let publicKeyDer = keyEncoder.encodePublic(pubKeyStr, 'raw', 'der');
-
 		let ec = new EC('secp256k1');
 
-		//let privateKeyDer = ec.keyFromPrivate(privKeyStr).getPrivate();
-		let publicKeyDer = ec.keyFromPublic(hexStringToUint8(pubKeyStr)).getPublic();
+		const ecImportPrivate = ec.keyFromPrivate(privKeyStr);
 
-		let parsedPriv = AsnParser.parse(hexStringToUint8(privateKeyDer), ECPrivateKey);
+		let pkcs = this.getPkcs8FromECKey(ecImportPrivate);
+
+		//let privateKeyDer = ec.keyFromPrivate(privKeyStr).getPrivate();
+
+		//let publicKeyDer = ec.keyFromPublic(hexStringToUint8(pubKeyStr)).getPublic();
+		let publicKeyDer = ecImportPrivate.getPublic();
+
+		// Convert private
+		/*let parsedPriv = AsnParser.parse(hexStringToUint8(privateKeyDer), ECPrivateKey);
 
 		let convertedAsn = new PrivateKeyInfo();
 		convertedAsn.version = 0;
@@ -82,6 +83,11 @@ export default class Sign extends Command {
 		convertedAsn.privateKey = new OctetString(hexStringToUint8(privateKeyDer));
 
 		privateKeyDer = uint8tohex(new Uint8Array(AsnSerializer.serialize(convertedAsn)));
+
+		console.log("correct pkcs8: " + privateKeyDer);*/
+		// end convert private
+
+		let privateKeyDer = pkcs;
 
 		let keyImporter = new KeyImporter();
 		let privateKey = await keyImporter.getPrivateKey(privateKeyDer);
@@ -159,6 +165,34 @@ export default class Sign extends Command {
 		let verified = await xml.Verify(key);
 
 		console.log("Verified: " + verified);
+	}
+
+	private getPkcs8FromECKey(keyPair: EC.KeyPair){
+
+		let ecKeyInfo = new ECPrivateKey();
+
+		ecKeyInfo.version = 1;
+		ecKeyInfo.parameters = new ECParameters();
+		ecKeyInfo.parameters.namedCurve = "1.3.132.0.10";
+		ecKeyInfo.privateKey = new OctetString(hexStringToUint8(keyPair.getPrivate().toString("hex")));
+		ecKeyInfo.publicKey = hexStringToUint8(keyPair.getPublic().encode("hex", false));
+
+		let ecParams = new ECParameters();
+		ecParams.namedCurve = "1.3.132.0.10";
+
+		let convertedAsn = new PrivateKeyInfo();
+		convertedAsn.version = 0;
+		convertedAsn.privateKeyAlgorithm = new AlgorithmIdentifier({
+			algorithm: "1.2.840.10045.2.1",
+			parameters: AsnSerializer.serialize(ecParams)
+		});
+		convertedAsn.privateKey = new OctetString(AsnSerializer.serialize(ecKeyInfo));
+
+		let serialized = new Uint8Array(AsnSerializer.serialize(convertedAsn));
+
+		console.log("Converted ASN: " + uint8tohex(serialized));
+
+		return uint8tohex(serialized);
 	}
 
 	private hexToArrayBuffer(hex: string) {
