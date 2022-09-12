@@ -18,13 +18,18 @@ export default class Sign extends Command {
 	static flags = {
 		// flag with a value (-n, --name=VALUE)
 		verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
+		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key file location', default: process.cwd() + "/ts-signing.key"}),
+		publicKeyFile: Flags.string({char: 'p', description: 'Hex encoded private key file location', default: process.cwd() + "/ts-signing.pub"}),
 	}
 
-	static args = [{name: 'file'}]
+	//static args = [{name: 'file'}]
 
 	public async run(): Promise<void> {
 
-		const {args, flags} = await this.parse(Sign)
+		// Fix issue with open-ssl lib shared library not loading
+		process.env.OPENSSL_CONF= "/dev/null";
+
+		const {flags} = await this.parse(Sign)
 
 		let tsmlSrc = process.cwd() + "/out/tokenscript.tsml";
 
@@ -33,14 +38,14 @@ export default class Sign extends Command {
 			return;
 		}
 
-		const privateKeyLocation = process.cwd() + "/../test.key";
-		const publicKeyLocation = process.cwd() + "/../test.pub";
-
 		const crypto = new Crypto();
 		xmldsigjs.Application.setEngine("OpenSSL", crypto);
 
 		if (flags.verify) {
+
 			this.log("Verification only, using public key");
+
+			const publicKeyLocation = flags.publicKeyFile.toString();
 
 			if (!fs.existsSync(publicKeyLocation)){
 				this.error("Public key cannot be read at " + publicKeyLocation);
@@ -54,6 +59,8 @@ export default class Sign extends Command {
 			await this.verifySignedXml(await keyImporter.getPublicKey());
 			return;
 		}
+
+		const privateKeyLocation = flags.privateKeyFile.toString();
 
 		if (!fs.existsSync(privateKeyLocation)){
 			this.error("Private key cannot be read at " + privateKeyLocation);
@@ -98,6 +105,8 @@ export default class Sign extends Command {
 			}
 		);
 
+		this.log("Signature created");
+
 		this.writeSignedXml(unsignedXml, sig);
 
 		await this.verifySignedXml(publicKey!!);
@@ -130,7 +139,11 @@ export default class Sign extends Command {
 
 		let verified = await xml.Verify(key);
 
-		console.log("Verified: " + verified);
+		if (verified){
+			this.log("TSML signature successfully verified!");
+		} else {
+			this.error("Signature verification failed", {exit: 2});
+		}
 	}
 
 }
