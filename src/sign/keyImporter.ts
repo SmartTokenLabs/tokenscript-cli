@@ -26,14 +26,8 @@ export class KeyImporter {
 	getPublicKey(hex: string){
 
 		return this.crypto.subtle.importKey(
-			"jwk",
-			{
-				crv: this.keyPreferences.curve,
-				key_ops: ["sign"],
-				kty: "EC",
-				x: hexStringToBase64Url(hex.substring(2,64)).replace(/=/g,''),
-				y: hexStringToBase64Url(hex.substring(66,64)).replace(/=/g,'')
-			},
+			"raw",
+			hexStringToUint8(hex),
 			{
 				name: this.keyPreferences.algorithm,
 				namedCurve: this.keyPreferences.curve
@@ -43,28 +37,17 @@ export class KeyImporter {
 		);
 	}
 
-	getPrivateKey(hex: string, hexPub: string){
-
-		let keyData = {
-			crv: this.keyPreferences.curve,
-			d: uint8arrayToBase64(hexStringToUint8(hex)),
-			key_ops: ["sign", "verify"],
-			kty: "EC",
-			x: uint8arrayToBase64(hexStringToUint8(hexPub.substring(2,64))).replace(/=/g,''),
-			y: uint8arrayToBase64(hexStringToUint8(hexPub.substring(66,64))).replace(/=/g,'')
-		};
-
-		console.log(keyData);
+	getPrivateKey(hex: string){
 
 		return this.crypto.subtle.importKey(
-			"jwk",
-			keyData,
+			"pkcs8",
+			hexStringToUint8(hex),
 			{
 				name: this.keyPreferences.algorithm,
 				namedCurve: this.keyPreferences.curve
 			},
 			true,
-			["sign", "verify"]
+			["sign"]
 		);
 	}
 

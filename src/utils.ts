@@ -64,3 +64,8 @@ export function base64toBase64Url(base64: string): string {
 		.split('+').join('-');
 	// .split('=').join('.');
 }
+
+export function uint8tohex(uint8: Uint8Array): string {
+	if (!uint8 || !uint8.length) return '';
+	return Array.from(uint8).map(i => ('0' + i.toString(16)).slice(-2)).join('');
+}

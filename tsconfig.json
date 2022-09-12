@@ -8,6 +8,7 @@
     "strict": true,
     "esModuleInterop": true,
     "moduleResolution": "Node",
+    "experimentalDecorators": true,
     "allowJs": true,
     "target": "es2020",
 	  "types": [

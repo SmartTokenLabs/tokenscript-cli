@@ -4,6 +4,19 @@ import {Crypto, CryptoKey} from "@peculiar/webcrypto";
 import * as fs from "fs-extra";
 import {Signature} from "xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
+import {hexStringToUint8, uint8tohex} from "../utils";
+import KeyEncoder from "key-encoder";
+import {ec as EC} from "elliptic"
+import {
+	AsnParser,
+	AsnProp,
+	AsnPropTypes,
+	AsnSerializer,
+	OctetString
+} from "@peculiar/asn1-schema";
+import {ECPrivateKey} from "@peculiar/asn1-ecc";
+import {PrivateKeyInfo} from "@peculiar/asn1-pkcs8";
+import {AlgorithmIdentifier} from "@peculiar/asn1-x509";
 
 export default class Sign extends Command {
 
@@ -45,14 +58,39 @@ export default class Sign extends Command {
 		const xml = new xmldsigjs.SignedXml();
 
 		// Import into CryptoKey from hex or PEM
-		/*let privKey = fs.readFileSync(privateKeyLocation, 'utf-8');
-		let pubKey = fs.readFileSync(publicKeyLocation, 'utf-8');
+		let privKeyStr = fs.readFileSync(privateKeyLocation, 'utf-8').trim();
+		let pubKeyStr = fs.readFileSync(publicKeyLocation, 'utf-8').trim();
+
+		let keyEncoder = new KeyEncoder('secp256k1');
+
+		let privateKeyDer = keyEncoder.encodePrivate(privKeyStr, 'raw', 'der');
+		//let publicKeyDer = keyEncoder.encodePublic(pubKeyStr, 'raw', 'der');
+
+		let ec = new EC('secp256k1');
+
+		//let privateKeyDer = ec.keyFromPrivate(privKeyStr).getPrivate();
+		let publicKeyDer = ec.keyFromPublic(hexStringToUint8(pubKeyStr)).getPublic();
+
+		let parsedPriv = AsnParser.parse(hexStringToUint8(privateKeyDer), ECPrivateKey);
+
+		let convertedAsn = new PrivateKeyInfo();
+		convertedAsn.version = 0;
+		convertedAsn.privateKeyAlgorithm = new AlgorithmIdentifier({
+			algorithm: "1.2.840.10045.2.1",
+			parameters: AsnSerializer.serialize(parsedPriv.parameters)
+		});
+		convertedAsn.privateKey = new OctetString(hexStringToUint8(privateKeyDer));
+
+		privateKeyDer = uint8tohex(new Uint8Array(AsnSerializer.serialize(convertedAsn)));
 
 		let keyImporter = new KeyImporter();
-		let publicKey = await keyImporter.getPublicKey(pubKey);
-		let privateKey = await keyImporter.getPrivateKey(privKey, pubKey);*/
+		let privateKey = await keyImporter.getPrivateKey(privateKeyDer);
+		let publicKey = await keyImporter.getPublicKey(publicKeyDer.encode("hex", false));
 
-		const keyPair = await crypto.subtle.generateKey(
+		console.log("Converted private: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("pkcs8", privateKey!!))));
+		console.log("Converted public: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("raw", publicKey!!))));
+
+		/*const keyPair = await crypto.subtle.generateKey(
 			{
 				name: "ECDSA",
 				namedCurve: "K-256", // P-256, P-384, or P-521
@@ -61,8 +99,8 @@ export default class Sign extends Command {
 			["sign", "verify"],
 		);
 
-		const privateKey = keyPair.privateKey;
-		const publicKey = keyPair.publicKey;
+		console.log("Generated private: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("pkcs8", keyPair.privateKey!!))));
+		console.log("Generated public: " + uint8tohex(new Uint8Array(await crypto.subtle.exportKey("raw", keyPair.publicKey!!))));*/
 
 		/*if (!privKey || !pubKey)
 			throw new Error("Key generation failed");*/
@@ -78,6 +116,7 @@ export default class Sign extends Command {
 		const sig = await xml.Sign(
 			{name: "ECDSA", hash: "SHA-256"},
 			privateKey!!,
+			//keyPair.privateKey!!,
 			unsignedXml,
 			{                                                     // options
 				keyValue: publicKey,
@@ -90,6 +129,7 @@ export default class Sign extends Command {
 		this.writeSignedXml(unsignedXml, sig);
 
 		await this.verifySignedXml(publicKey!!);
+		//await this.verifySignedXml(keyPair.publicKey!!);
 	}
 
 	private writeSignedXml(unsignedXml: Document, sig: Signature) {
@@ -132,4 +172,13 @@ export default class Sign extends Command {
 			return parseInt(h, 16)
 		})).buffer;
 	}
+}
+
+class ECKeyInfo {
+	@AsnProp({ type: AsnPropTypes.Integer })
+	version?: number;
+	@AsnProp({ type: AsnPropTypes.ObjectIdentifier, repeated: "sequence" })
+	objectId?: string[];
+	@AsnProp({ type:ECPrivateKey })
+	key?: ECPrivateKey;
 }
