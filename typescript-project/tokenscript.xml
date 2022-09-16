@@ -4,6 +4,7 @@
 		  xsi:schemaLocation="http://tokenscript.org/2022/09/tokenscript http://tokenscript.org/2022/09/tokenscript.xsd"
 		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		  xmlns:ethereum="urn:ethereum:constantinople"
+		  xmlns:xhmtl="http://www.w3.org/1999/xhtml"
 		  name="Test2">
 	<ts:label>
 		<ts:plurals xml:lang="en">
@@ -19,9 +20,10 @@
 		<ts:ethereum contract="Token"/>
 	</ts:origins>
 	<ts:cards>
-		<!--<ts:viewContent name="common">
-			<ts:include type="js" src="./dist/bundle.js"/>
-		</ts:viewContent>-->
+		<ts:viewContent name="common" xmlns="http://www.w3.org/1999/xhtml">
+			<ts:include type="html" src="./dist/index.html"/>
+			<ts:include type="css" src="./src/styles.css"/>
+		</ts:viewContent>
 		<ts:card type="action" name="Mint">
 			<!-- this action is of the model confirm-back.
 			window.onConfirm is called if user hit "confirm";
@@ -36,9 +38,31 @@
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
-			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-				<!--<ts:viewContent name="common"/>-->
-				<ts:include type="html" src="./dist/index.html"/>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" urlFragment="mint-action-1">
+				<script>
+					//document.location.hash = "mint-action";
+				</script>
+				<ts:viewContent name="common"/>
+				<!--<ts:include type="html" src="./dist/index.html"/>-->
+			</ts:view>
+		</ts:card>
+		<ts:card type="action" name="Mint2">
+			<!-- this action is of the model confirm-back.
+			window.onConfirm is called if user hit "confirm";
+			window.close() causes the back button to be pressed.
+			-->
+			<ts:label>
+				<ts:string xml:lang="en">Mint 2</ts:string>
+			</ts:label>
+			<ts:transaction>
+				<ethereum:transaction contract="Token" function="safeMint">
+					<ts:data>
+					</ts:data>
+				</ethereum:transaction>
+			</ts:transaction>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" urlFragment="mint-action-2">
+				<ts:viewContent name="common"/>
+				<!--<ts:include type="html" src="./dist/index.html"/>-->
 			</ts:view>
 		</ts:card>
 	</ts:cards>

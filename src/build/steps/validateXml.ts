@@ -1,6 +1,5 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
 import {validateXMLWithXSD} from "super-xmlllint";
-import * as fs from "fs";
 
 export class ValidateXml implements IBuildStep {
 
@@ -21,8 +20,10 @@ export class ValidateXml implements IBuildStep {
 			await validateXMLWithXSD(this.context.getXmlString(), __dirname + "/../../schema/" + schemaVersion + "/tokenscript.xsd");
 
 		} catch (e: any){
+			// TODO: This should probably be done with Regex
 			let splitError = e.message.split("<?xml");
-			e.message = splitError[0];
+			let afterXml = splitError[1].split("ts:token>");
+			e.message = splitError[0] + (afterXml.length > 1 ? afterXml[1] : "");
 			throw e;
 		}
 

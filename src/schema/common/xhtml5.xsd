@@ -125,6 +125,7 @@
 	<xs:group name="restrictedFlowContent">
 		<xs:choice>
 			<xs:element ref="script"/>
+			<xs:element ref="style"/>
 			<xs:element ref="noscript"/>
 			<xs:element ref="pre"/>
 			<xs:element ref="hr"/>
@@ -224,8 +225,11 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="head"/>
-				<xs:element ref="body"/>
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="head"/>
+					<xs:element ref="body"/>
+				</xs:choice>
+				<xs:any maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attributeGroup ref="i18n"/>
 			<xs:attribute name="id" type="xs:ID"/>

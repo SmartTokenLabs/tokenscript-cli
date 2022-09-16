@@ -1,5 +1,4 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
-import {DOMParser} from "@xmldom/xmldom";
 import * as fs from "fs";
 
 export class InlineIncludes implements IBuildStep {
@@ -20,23 +19,50 @@ export class InlineIncludes implements IBuildStep {
 
 		for (let i = 0, len = elems.length; i < len; i++){
 
-			let type = elems[i].getAttribute("type");
-			let src = elems[i].getAttribute("src");
+			const elem = elems[0];
+
+			let type = elem.getAttribute("type");
+			let src = elem.getAttribute("src");
 
 			if (!type || !src){
 				throw new Error("Invalid include tag, type and src attributes must be defined!");
 			}
 
+			this.context.cli.log("Processing " + src);
+
 			let content = this.getIncludeContent(type, src);
 
-			let parent = elems[i].parentNode;
+			let parent = elem.parentElement;
 
 			if (!parent)
 				throw new Error("DOM Error, could not find parent element!");
 
+			parent.removeChild(elem);
+
 			// TODO: Replace at same position rather than append.
-			parent.appendChild(new DOMParser().parseFromString(content, "text/html"));
-			parent.removeChild(elems[i]);
+			if (type === "html") {
+				const contentElem = this.context.parseXml(content, "text/html");
+
+				let scriptElems = contentElem.getElementsByTagName("script");
+
+				for (let s = 0; s < scriptElems.length; s++) {
+
+					scriptElems[s].innerHTML = "//<![CDATA[\r\n" + scriptElems[s].innerHTML + "\r\n//]]>";
+				}
+
+				parent.append(...contentElem.body.childNodes);
+
+				let styleElems = contentElem.getElementsByTagName("style");
+
+				for (let s = 0; s < styleElems.length; s++) {
+
+					styleElems[s].innerHTML = "/* <![CDATA[ */ \r\n" + styleElems[s].innerHTML + "\r\n /* //]]> */";
+				}
+
+				parent.append(...contentElem.body.childNodes);
+			} else {
+				parent.innerHTML += content;
+			}
 		}
 
 		this.context.setXmlDoc(doc);
@@ -57,11 +83,19 @@ export class InlineIncludes implements IBuildStep {
 				break;
 
 			case "css":
-				content = '<style>' + content + '</style>';
+				content = `<style>
+					/* <![CDATA[ */
+					${content}
+					/* ]]> */
+				</style>`;
 				break;
 
 			case "js":
-				content = '<script type="text/javascript">' + content + '</script>';
+				content = `<script type="text/javascript">
+					// <![CDATA[
+					${content}
+					// ]]>
+				</script>`;
 				break;
 
 			default:
