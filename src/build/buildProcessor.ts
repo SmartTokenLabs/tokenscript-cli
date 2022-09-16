@@ -1,10 +1,11 @@
 import fs from "fs";
-import {DOMParser, XMLSerializer} from "@xmldom/xmldom";
+import {XMLSerializer} from "@xmldom/xmldom";
 import {PrepareOutputDirectory} from "./steps/prepareOutputDirectory";
 import {CanonicalizeXml} from "./steps/canonicalizeXml";
 import {ValidateXml} from "./steps/validateXml";
 import {InlineIncludes} from "./steps/inlineIncludes";
 import {Command} from "@oclif/core";
+import {JSDOM} from "jsdom";
 
 export interface IBuildStep {
 	runBuildStep(): void
@@ -59,7 +60,7 @@ export class BuildProcessor {
 
 	getXmlDoc(){
 		if (!this.xmlDoc){
-			this.xmlDoc = new DOMParser().parseFromString(this.getXmlString(), 'text/xml');
+			this.xmlDoc = this.parseXml(this.getXmlString());
 		}
 		return this.xmlDoc;
 	}
@@ -72,12 +73,29 @@ export class BuildProcessor {
 
 	setXmlDoc(xmlDoc: Document){
 		this.xmlDoc = xmlDoc;
+
 		this.xmlString = new XMLSerializer().serializeToString(this.xmlDoc);
+
+		//this.xmlString = serialize(this.xmlDoc, { requireWellFormed: false });
+
+		//this.xmlString = this.xmlDoc.documentElement.outerHTML;
+
 		this.saveXmlOutput();
 	}
 
 	private saveXmlOutput(){
 		fs.writeFileSync(this.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml", this.xmlString!!);
+	}
+
+	public parseXml(xmlString: string, type: DOMParserSupportedType = "text/xml"){
+
+		const dom = new JSDOM("");
+		const DOMParser = dom.window.DOMParser;
+		const parser = new DOMParser;
+
+		return parser.parseFromString(xmlString, type);
+
+		//this.xmlDoc = new DOMParser().parseFromString(this.getXmlString(), 'text/xml');
 	}
 
 }

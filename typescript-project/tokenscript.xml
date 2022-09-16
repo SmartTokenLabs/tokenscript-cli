@@ -4,6 +4,7 @@
 		  xsi:schemaLocation="http://tokenscript.org/2022/09/tokenscript http://tokenscript.org/2022/09/tokenscript.xsd"
 		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		  xmlns:ethereum="urn:ethereum:constantinople"
+		  xmlns:xhmtl="http://www.w3.org/1999/xhtml"
 		  name="Test2">
 	<ts:label>
 		<ts:plurals xml:lang="en">

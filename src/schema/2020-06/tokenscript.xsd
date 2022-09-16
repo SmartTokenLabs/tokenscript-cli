@@ -23,7 +23,7 @@
             schemaLocation="../common/xhtml1-strict.xsd"/>
 
     <import namespace="urn:ietf:params:xml:ns:asnx"
-            schemaLocation="../common/asnx.xsd"/>
+            schemaLocation="asnx.xsd"/>
 
     <import namespace="urn:ethereum:constantinople"
             schemaLocation="ethereum.xsd"/>

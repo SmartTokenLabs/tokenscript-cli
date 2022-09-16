@@ -23,7 +23,7 @@
 			schemaLocation="../common/xhtml5.xsd"/>
 
 	<import namespace="urn:ietf:params:xml:ns:asnx"
-			schemaLocation="../common/asnx.xsd"/>
+			schemaLocation="asnx.xsd"/>
 
 	<import namespace="urn:ethereum:constantinople"
 			schemaLocation="ethereum.xsd"/>
@@ -106,9 +106,24 @@
 			<element minOccurs="0" name="input" type="ts:tokens"/>
 			<element minOccurs="0" name="output" type="ts:tokens"/>
 			<element minOccurs="0" ref="ts:transaction"/>
-			<element minOccurs="0" maxOccurs="unbounded" name="guide-view" type="ts:view"/>
-			<element minOccurs="0" maxOccurs="unbounded" name="item-view" type="ts:view"/>
-			<element minOccurs="0" maxOccurs="unbounded" name="view" type="ts:view"/>
+			<element minOccurs="0" maxOccurs="unbounded" name="guide-view" type="ts:view">
+				<unique name="guideView-uniqueIncludeSrc">
+					<selector xpath="ts:include" />
+					<field xpath="@src" />
+				</unique>
+			</element>
+			<element minOccurs="0" maxOccurs="unbounded" name="item-view" type="ts:view">
+				<unique name="itemView-uniqueIncludeSrc">
+					<selector xpath="ts:include" />
+					<field xpath="@src" />
+				</unique>
+			</element>
+			<element minOccurs="0" maxOccurs="unbounded" name="view" type="ts:view">
+				<unique name="view-uniqueIncludeSrc">
+					<selector xpath="ts:include" />
+					<field xpath="@src" />
+				</unique>
+			</element>
 		</sequence>
 		<attribute name="type" use="required" type="ts:cardType"/>
 		<attribute name="exclude" type="IDREFS"/>
@@ -182,29 +197,30 @@
 	<element name="include" type="NCName"/>
 	<complexType name="view">
 		<sequence>
-			<element name="include" minOccurs="0" maxOccurs="unbounded">
-				<complexType>
-					<attribute name="type" use="required">
-						<simpleType>
-							<restriction base="string">
-								<enumeration value="html"/>
-								<enumeration value="css"/>
-								<enumeration value="js"/>
-							</restriction>
-						</simpleType>
-					</attribute>
-					<attribute name="src" use="required">
-						<simpleType>
-							<restriction base="string">
-								<pattern value="(\./|res://|https?://).*"/>
-							</restriction>
-						</simpleType>
-					</attribute>
-				</complexType>
-			</element>
-			<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+			<choice maxOccurs="unbounded">
+				<element name="include" minOccurs="0" maxOccurs="unbounded" type="ts:viewInclude"/>
+				<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+			</choice>
 		</sequence>
 		<attribute ref="xml:lang"/>
+	</complexType>
+	<complexType name="viewInclude">
+		<attribute name="type" use="required">
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="html"/>
+					<enumeration value="css"/>
+					<enumeration value="js"/>
+				</restriction>
+			</simpleType>
+		</attribute>
+		<attribute name="src" use="required">
+			<simpleType>
+				<restriction base="string">
+					<pattern value="(\./|res://|https?://).*"/>
+				</restriction>
+			</simpleType>
+		</attribute>
 	</complexType>
 	<element name="redeem">
 		<complexType>
