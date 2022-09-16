@@ -1,11 +1,13 @@
 *-debug.log
 *-error.log
 /.nyc_output
-/dist
+**/dist
 /lib
 /package-lock.json
 /tmp
 /yarn.lock
-node_modules
+**/node_modules
 oclif.manifest.json
 .idea/
+typescript-project
+test-project
