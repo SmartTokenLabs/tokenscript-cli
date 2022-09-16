@@ -38,7 +38,7 @@
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
-			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" urlFragment="mint-action-1">
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 				<script>
 					//document.location.hash = "mint-action";
 				</script>
@@ -60,7 +60,7 @@
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
-			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" urlFragment="mint-action-2">
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 				<ts:viewContent name="common"/>
 				<!--<ts:include type="html" src="./dist/index.html"/>-->
 			</ts:view>
