@@ -1,6 +1,7 @@
 import express, {Express, Request, Response} from "express";
 import chokidar from "chokidar";
-import exec from "child_process";
+import exec, {ChildProcess} from "child_process";
+import open from "open";
 
 import expressWs from "express-ws";
 
@@ -11,6 +12,10 @@ export class Emulator {
 	ws?: expressWs.Instance;
 
 	projectDir: string = process.cwd();
+
+	buildProcess?: ChildProcess;
+
+	buildTimer?: NodeJS.Timeout;
 
 	startEmulator() {
 
@@ -25,7 +30,7 @@ export class Emulator {
 
 		const port = process.env.PORT ?? 8090;
 
-		this.server.use(express.static("../../tokenscript-playground/browser-runtime/dist/"));
+		this.server.use(express.static(__dirname + "/../../node_modules/@tokenscript/browser-runtime/dist/"));
 
 		this.server.use(express.static(this.projectDir + "/out/"));
 
@@ -42,6 +47,8 @@ export class Emulator {
 			console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 		});
 
+		open("http://localhost:" + port + "/#emulator");
+
 	}
 
 	watchProject(){
@@ -53,25 +60,32 @@ export class Emulator {
 			ignoreInitial: true
 		}).on('all', (event, path) => {
 
-			console.log("Build started..");
+			if (this.buildTimer)
+				clearTimeout(this.buildTimer);
 
-			const buildProc = exec.exec("cd " + this.projectDir + " && npm run build", (error, stdout, stderr) => {
-
-				this.sendClientNotification();
-				console.log("Build updated!");
-			});
-;
-			buildProc.on('data', function(data) {
-				console.log(data.toString());
-			});
-
+			this.buildTimer = setTimeout(() => {
+				this.buildProject();
+			}, 1000);
 		});
 
 	}
 
 	buildProject(){
 
+		if (this.buildProcess){
+			this.buildProcess.kill("SIGINT");
+			this.buildProcess = undefined;
+		}
 
+		console.log("Build started..");
+
+		this.buildProcess = exec.exec("cd " + this.projectDir + " && npm run build", (error, stdout, stderr) => {
+
+			this.sendClientNotification();
+			console.log("Build updated!");
+		});
+
+		this.buildProcess.stdout?.pipe(process.stdout);
 	}
 
 	sendClientNotification(){
