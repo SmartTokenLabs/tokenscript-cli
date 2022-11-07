@@ -51,6 +51,16 @@ export class BuildProcessor {
 		}
 	}
 
+	async validate(){
+
+		const index = BuildProcessor.BUILD_STEPS.indexOf(ValidateXml);
+
+		const validator = new BuildProcessor.BUILD_STEPS[index](this);
+
+		await validator.runBuildStep();
+
+	}
+
 	getXmlString(){
 		if (!this.xmlString){
 			this.xmlString = fs.readFileSync(this.workspace + BuildProcessor.SRC_XML_FILE, 'utf-8');
@@ -81,6 +91,9 @@ export class BuildProcessor {
 		//this.xmlString = this.xmlDoc.documentElement.outerHTML;
 
 		this.saveXmlOutput();
+
+		// TODO: Fix: For some reason validation fails in some cases unless the XML string is reloaded from the disk.
+		this.xmlString = null;
 	}
 
 	private saveXmlOutput(){

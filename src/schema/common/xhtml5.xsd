@@ -468,6 +468,13 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
+			<xs:attribute name="crossorigin" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>
+						The crossorigin attribute, provides support for CORS, defining how the element handles cross-origin requests, thereby enabling the configuration of the CORS requests for the element's fetched data. Depending on the element, the attribute can be a CORS settings attribute.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
 			<xs:attribute name="language" type="xs:string">
 				<xs:annotation>
 					<xs:documentation>

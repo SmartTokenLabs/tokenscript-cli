@@ -47,18 +47,17 @@ export class InlineIncludes implements IBuildStep {
 
 				for (let s = 0; s < scriptElems.length; s++) {
 
-					scriptElems[s].innerHTML = "//<![CDATA[\r\n" + scriptElems[s].innerHTML + "\r\n//]]>";
+					scriptElems[s].innerHTML = "//<![CDATA[\r\n" + this.escapeNonPrintableUnicodeChars(scriptElems[s].innerHTML) + "\r\n//]]>";
 				}
-
-				parent.append(...contentElem.body.childNodes);
 
 				let styleElems = contentElem.getElementsByTagName("style");
 
 				for (let s = 0; s < styleElems.length; s++) {
 
-					styleElems[s].innerHTML = "/* <![CDATA[ */ \r\n" + styleElems[s].innerHTML + "\r\n /* //]]> */";
+					styleElems[s].innerHTML = "/*<![CDATA[*/ \r\n" + styleElems[s].innerHTML + "\r\n /*//]]>*/";
 				}
 
+				parent.append(...contentElem.head.childNodes);
 				parent.append(...contentElem.body.childNodes);
 			} else {
 				parent.innerHTML += content;
@@ -66,6 +65,13 @@ export class InlineIncludes implements IBuildStep {
 		}
 
 		this.context.setXmlDoc(doc);
+	}
+
+	private escapeNonPrintableUnicodeChars(content: string){
+
+		content = content.replace(/\u0019/g, "\\u0019");
+
+		return content;
 	}
 
 	private getIncludeContent(type: string, src: string){
