@@ -1,7 +1,7 @@
 
 function init(){
 
-	const table = document.getElementById("data-table");
+	const table = document.getElementsByClassName("data-table")[0];
 
 	table.innerHTML += `
 		<tr>
