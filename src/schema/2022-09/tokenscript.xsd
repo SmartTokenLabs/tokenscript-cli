@@ -73,9 +73,28 @@
 	<element name="cards">
 		<complexType>
 			<sequence>
+				<element name="viewContent" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<sequence>
+							<choice maxOccurs="unbounded">
+								<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>
+								<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+							</choice>
+						</sequence>
+						<attribute name="name" type="string"/>
+					</complexType>
+					<unique name="uniqueIncludeSrc">
+						<selector xpath="ts:include" />
+						<field xpath="@src" />
+					</unique>
+				</element>
 				<element maxOccurs="unbounded" name="card" type="ts:card"/>
 			</sequence>
 		</complexType>
+		<unique name="uniqueName">
+			<selector xpath="ts:viewContent" />
+			<field xpath="@name" />
+		</unique>
 		<key name="cardName">
 			<selector xpath="ts:card"/>
 			<field xpath="@name"/>
@@ -111,17 +130,29 @@
 					<selector xpath="ts:include" />
 					<field xpath="@src" />
 				</unique>
+				<unique name="guideView-viewContent">
+					<selector xpath="ts:viewContent" />
+					<field xpath="@name" />
+				</unique>
 			</element>
 			<element minOccurs="0" maxOccurs="unbounded" name="item-view" type="ts:view">
 				<unique name="itemView-uniqueIncludeSrc">
 					<selector xpath="ts:include" />
 					<field xpath="@src" />
 				</unique>
+				<unique name="itemView-viewContent">
+					<selector xpath="ts:viewContent" />
+					<field xpath="@name" />
+				</unique>
 			</element>
 			<element minOccurs="0" maxOccurs="unbounded" name="view" type="ts:view">
 				<unique name="view-uniqueIncludeSrc">
 					<selector xpath="ts:include" />
 					<field xpath="@src" />
+				</unique>
+				<unique name="view-viewContent">
+					<selector xpath="ts:viewContent" />
+					<field xpath="@name" />
 				</unique>
 			</element>
 		</sequence>
@@ -198,6 +229,13 @@
 	<complexType name="view">
 		<sequence>
 			<choice maxOccurs="unbounded">
+				<element name="viewContent" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<attribute name="name">
+							<!-- TODO: Ensure reference -->
+						</attribute>
+					</complexType>
+				</element>
 				<element name="include" minOccurs="0" maxOccurs="unbounded" type="ts:viewInclude"/>
 				<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
 			</choice>
