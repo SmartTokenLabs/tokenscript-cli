@@ -22,6 +22,7 @@
     "@oclif/plugin-plugins": "^2.0.1",
     "@xmldom/xmldom": "^0.8.6",
     "chokidar": "^3.5.3",
+    "cors": "^2.8.5",
     "express": "^4.18.1",
     "express-ws": "^5.0.2",
     "fs-extra": "^10.1.0",
@@ -36,6 +37,7 @@
     "@oclif/test": "^2",
     "@tokenscript/browser-runtime": "../tokenscript-playground/browser-runtime",
     "@types/chai": "^4",
+    "@types/cors": "^2.8.12",
     "@types/express": "^4.17.14",
     "@types/express-ws": "^3.0.1",
     "@types/filesystem": "^0.0.32",
@@ -95,5 +97,8 @@
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts"
+  "types": "dist/index.d.ts",
+  "bundleDependencies": [
+    "tokenscript-browser-runtime"
+  ]
 }

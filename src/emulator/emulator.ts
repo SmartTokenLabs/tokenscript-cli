@@ -2,8 +2,9 @@ import express, {Express, Request, Response} from "express";
 import chokidar from "chokidar";
 import exec, {ChildProcess} from "child_process";
 import open from "open";
-
 import expressWs from "express-ws";
+import fs from "fs";
+import cors from "cors";
 
 export class Emulator {
 
@@ -17,6 +18,9 @@ export class Emulator {
 
 	buildTimer?: NodeJS.Timeout;
 
+	constructor(private emulatorHost?: string|undefined) {
+	}
+
 	startEmulator() {
 
 		this.launchServer();
@@ -29,6 +33,16 @@ export class Emulator {
 		this.server = express();
 
 		const port = process.env.PORT ?? 8090;
+
+		const tsHost = "http://localhost:" + port + "/";
+		let isRemoteEmulator = false;
+
+		if (this.emulatorHost) {
+			this.server.use(cors());
+			isRemoteEmulator = true;
+		} else {
+			this.emulatorHost = tsHost;
+		}
 
 		this.server.use(express.static(__dirname + "/../../node_modules/@tokenscript/browser-runtime/dist/"));
 
@@ -47,7 +61,15 @@ export class Emulator {
 			console.log(`⚡️[server]: Server is running at https://localhost:${port}`);
 		});
 
-		open("http://localhost:" + port + "/#emulator");
+		const urlToOpen = isRemoteEmulator ? "=" + encodeURIComponent(tsHost) : "";
+
+		if (!fs.existsSync(this.projectDir + "/out/tokenscript.tsml")){
+			this.buildProject(() => {
+				open(this.emulatorHost + "#emulator=" + urlToOpen);
+			})
+		} else {
+			open(this.emulatorHost + "#emulator" + urlToOpen);
+		}
 
 	}
 
@@ -70,7 +92,7 @@ export class Emulator {
 
 	}
 
-	buildProject(){
+	buildProject(callback?: Function){
 
 		if (this.buildProcess){
 			this.buildProcess.kill("SIGINT");
@@ -83,6 +105,8 @@ export class Emulator {
 
 			this.sendClientNotification();
 			console.log("Build updated!");
+
+			if (callback) callback();
 		});
 
 		this.buildProcess.stdout?.pipe(process.stdout);

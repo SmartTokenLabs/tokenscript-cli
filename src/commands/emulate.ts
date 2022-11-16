@@ -1,10 +1,12 @@
-import {CliUx, Command} from "@oclif/core";
+import {CliUx, Command, Flags} from "@oclif/core";
 import {Emulator} from "../emulator/emulator";
 export default class Emulate extends Command {
 
 	static description = 'Emulate the TokenScript in a browser'
 
-	static flags = {}
+	static flags = {
+		emulatorHost: Flags.string({char: "e", required: false, default: ""}),
+	}
 
 	static args = []
 
@@ -19,15 +21,11 @@ export default class Emulate extends Command {
 
 	async run(): Promise<void> {
 
-		const path = __dirname + "../../tokenscript-playground/browser-runtime/dist";
+		const {flags} = await this.parse(Emulate);
 
-		this.log(path);
+		const emulator = new Emulator(flags.emulatorHost as string);
 
 		this.log("Starting emulator...");
-
-		//const webpackConfig = eval(await fs.readFileSync(process.cwd() + "/webpack.config.js")) as Webpack.Configuration;
-
-		const emulator = new Emulator();
 
 		await emulator.startEmulator();
 	}
