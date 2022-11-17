@@ -96,13 +96,19 @@ export class BuildProcessor {
 		this.xmlString = null;
 	}
 
+	public getOutputXmlPath(){
+		return this.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml"
+	}
+
 	private saveXmlOutput(){
-		fs.writeFileSync(this.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml", this.xmlString!!);
+		fs.writeFileSync(this.getOutputXmlPath(), this.xmlString!!);
 	}
 
 	public parseXml(xmlString: string, type: DOMParserSupportedType = "text/xml"){
 
-		const dom = new JSDOM("");
+		const dom = new JSDOM("", {
+			contentType: "text/xml"
+		});
 		const DOMParser = dom.window.DOMParser;
 		const parser = new DOMParser;
 

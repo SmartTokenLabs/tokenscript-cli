@@ -13,7 +13,7 @@ export default class Validate extends Command {
 
 		CliUx.ux.action.stop("error");
 
-		this.error(error.message);
+		this.error(error.message ?? error);
 
 		this.exit(error.code);
 	}

@@ -1,5 +1,5 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
-import {validateXMLWithXSD} from "super-xmlllint";
+const xsd = require("libxmljs2-xsd") as any;
 
 export class ValidateXml implements IBuildStep {
 
@@ -15,16 +15,22 @@ export class ValidateXml implements IBuildStep {
 		let ns = doc.documentElement.getAttribute("xmlns:ts");
 
 		const schemaVersion = ns!!.indexOf("2022/09") > -1 ? "2022-09" : "2020-06";
+		const schemaBasePath = __dirname + "/../../schema/" + schemaVersion + "/";
 
-		try {
-			await validateXMLWithXSD(this.context.getXmlString(), __dirname + "/../../schema/" + schemaVersion + "/tokenscript.xsd");
+		const schema = xsd.parseFile(schemaBasePath + "tokenscript.xsd", {
+			baseUrl: schemaBasePath
+		});
 
-		} catch (e: any){
-			// TODO: This should probably be done with Regex
-			let splitError = e.message.split("<?xml");
-			let afterXml = splitError[1].split("ts:token>");
-			e.message = splitError[0] + (afterXml.length > 1 ? afterXml[1] : "");
-			throw e;
+		const errors = schema.validateFile(this.context.getOutputXmlPath());
+
+		if (errors){
+
+			const errMsg = "XML Validation Errors: \r\n" +
+				errors.map((error: any) => {
+					return "- " + error.message.trim() + " (line " + error.line + ", column " + error.column + ")";
+				}).join("\r\n");
+
+			throw new Error(errMsg);
 		}
 
 	}
