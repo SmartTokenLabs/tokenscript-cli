@@ -4,7 +4,8 @@
   "description": "Plain typescript project for TokenScript",
   "scripts": {
     "start": "webpack serve --open",
-    "build": "webpack && tokenscript build",
+    "build": "webpack && npm run build:ts",
+    "build:ts": "../bin/dev build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
