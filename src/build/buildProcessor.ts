@@ -106,9 +106,7 @@ export class BuildProcessor {
 
 	public parseXml(xmlString: string, type: DOMParserSupportedType = "text/xml"){
 
-		const dom = new JSDOM("", {
-			contentType: "text/xml"
-		});
+		const dom = new JSDOM("");
 		const DOMParser = dom.window.DOMParser;
 		const parser = new DOMParser;
 
