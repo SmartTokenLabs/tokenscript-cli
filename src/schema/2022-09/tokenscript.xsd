@@ -241,6 +241,7 @@
 			</choice>
 		</sequence>
 		<attribute ref="xml:lang"/>
+		<attribute name="urlFragment" type="anyURI" />
 	</complexType>
 	<complexType name="viewInclude">
 		<attribute name="type" use="required">
