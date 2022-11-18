@@ -9,6 +9,7 @@ It currently includes commands for creating projects based on a selection of tem
 
 <!-- toc -->
 * [Usage](#usage)
+* [Development](#development)
 * [Commands](#commands)
 <!-- tocstop -->
 # Usage
@@ -26,7 +27,18 @@ USAGE
 ```
 <!-- usagestop -->
 
-# Use locally
+# Development
+
+TokenScript CLI isn't yet published as an NPM package, it needs to be installed and built, or run in development mode.
+
+## Development dependencies 
+
+The TokenScript CLI requires libxml2js which in turn requires node-gyp to build. 
+This comes bundled with newer versions of npm but may need some dependencies installed depending on your operating system.
+
+Please follow the guide at the [node-gyp GIT repo](https://github.com/nodejs/node-gyp) to ensure that it's working. 
+
+## Use locally
 
 You can run the CLI from source in developer mode like this:
 ```sh-session
@@ -43,6 +55,16 @@ npm link
 ```
 
 Note: Rebuilding will update the global version
+
+## building the typescript project
+
+```shell
+$ cd typescript project
+typescript-project$ npm i 
+typescript-project$ npm run build
+```
+
+If all goes well you should see a file in `./out/tokenscript.tsml`
 
 # Commands
 <!-- commands -->
