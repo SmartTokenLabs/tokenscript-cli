@@ -70,6 +70,7 @@ If all goes well you should see a file in `./out/tokenscript.tsml`
 <!-- commands -->
 * [`tokenscript build`](#tokenscript-build)
 * [`tokenscript create [DIRECTORY]`](#tokenscript-create-directory)
+* [`tokenscript emulate`](#tokenscript-emulate)
 * [`tokenscript help [COMMAND]`](#tokenscript-help-command)
 * [`tokenscript plugins`](#tokenscript-plugins)
 * [`tokenscript plugins:install PLUGIN...`](#tokenscript-pluginsinstall-plugin)
@@ -112,6 +113,23 @@ DESCRIPTION
 ```
 
 _See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/create.ts)_
+
+## `tokenscript emulate`
+
+Emulate the TokenScript in a browser
+
+```
+USAGE
+  $ tokenscript emulate [-e <value>]
+
+FLAGS
+  -e, --emulatorHost=<value>
+
+DESCRIPTION
+  Emulate the TokenScript in a browser
+```
+
+_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/emulate.ts)_
 
 ## `tokenscript help [COMMAND]`
 
