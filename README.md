@@ -19,7 +19,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/0.0.0 linux-x64 node-v16.6.2
+@tokenscript/cli/0.0.0 linux-x64 node-v16.18.1
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -80,6 +80,7 @@ If all goes well you should see a file in `./out/tokenscript.tsml`
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-1)
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-2)
 * [`tokenscript plugins update`](#tokenscript-plugins-update)
+* [`tokenscript validate`](#tokenscript-validate)
 
 ## `tokenscript build`
 
@@ -361,4 +362,18 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `tokenscript validate`
+
+Validate an existing .tsml
+
+```
+USAGE
+  $ tokenscript validate
+
+DESCRIPTION
+  Validate an existing .tsml
+```
+
+_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/validate.ts)_
 <!-- commandsstop -->
