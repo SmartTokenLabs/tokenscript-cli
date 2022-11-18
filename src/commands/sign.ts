@@ -115,7 +115,7 @@ export default class Sign extends Command {
 
 	private writeSignedXml(unsignedXml: Document, sig: Signature) {
 
-		unsignedXml.appendChild(sig.GetXml(true) as Node);
+		unsignedXml.documentElement.appendChild(sig.GetXml(true) as Node);
 
 		let xmlStr = new XMLSerializer().serializeToString(unsignedXml);
 
