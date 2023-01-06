@@ -10,7 +10,9 @@ export interface ITemplateListItem {
 
 export class Templates {
 
-	static templateDir = __dirname + "/templates/";
+	static templateDir = fs.existsSync(__dirname + "/../../static/templates/") ?
+							__dirname + "/../../static/templates/" :
+							__dirname + "/templates/";
 
 	static templatesList: ITemplateListItem[] = [
 		{

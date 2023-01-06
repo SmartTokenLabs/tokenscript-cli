@@ -28,8 +28,8 @@
     "fs-extra": "^10.1.0",
     "inquirer": "^8.2.4",
     "jsdom": "^20.0.0",
-    "open": "^8.4.0",
     "libxmljs2-xsd": "^0.30.1",
+    "open": "^8.4.0",
     "replace-in-file": "^6.3.5",
     "xmldsigjs": "^2.5.0"
   },
@@ -56,7 +56,7 @@
     "node-gyp": "^9.3.0",
     "oclif": "^3",
     "patch-package": "^6.5.0",
-    "shx": "^0.3.3",
+    "shx": "^0.3.4",
     "ts-node": "^10.2.1",
     "tslib": "^2.3.1",
     "typescript": "^4.4.3"
@@ -81,7 +81,7 @@
   },
   "scripts": {
     "build": "shx rm -rf dist && tsc -b && npm run copy-files",
-    "copy-files": "cp -R src/create/templates dist/create/ && cp -R src/schema dist/",
+    "copy-files": "shx cp -R static/* dist/ && cp -R src/schema dist/",
     "lint": "eslint . --ext .ts --config .eslintrc",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "yarn lint",
@@ -97,8 +97,5 @@
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts",
-  "bundleDependencies": [
-    "tokenscript-browser-runtime"
-  ]
+  "types": "dist/index.d.ts"
 }

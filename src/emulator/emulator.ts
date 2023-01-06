@@ -44,7 +44,13 @@ export class Emulator {
 			this.emulatorHost = tsHost;
 		}
 
-		this.server.use(express.static(__dirname + "/../../node_modules/@tokenscript/browser-runtime/dist/"));
+		// Uncomment to use local built version of the tokenscript viewer
+		//this.server.use(express.static(__dirname + "/../../node_modules/@tokenscript/browser-runtime/dist/"));
+
+		const viewerBundlePath = fs.existsSync(__dirname + "/../../static/viewerBundle/") ?
+									__dirname + "/../../static/viewerBundle/" :
+									__dirname + "/viewerBundle";
+		this.server.use(express.static(viewerBundlePath));
 
 		this.server.use(express.static(this.projectDir + "/out/"));
 
