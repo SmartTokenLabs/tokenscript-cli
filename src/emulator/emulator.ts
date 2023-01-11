@@ -1,9 +1,9 @@
-import express, {Express, Request, Response} from "express";
+import express, {Express} from "express";
 import chokidar from "chokidar";
 import exec, {ChildProcess} from "child_process";
 import open from "open";
 import expressWs from "express-ws";
-import fs from "fs";
+import fs, {existsSync} from "fs";
 import cors from "cors";
 
 export class Emulator {
@@ -22,6 +22,10 @@ export class Emulator {
 	}
 
 	startEmulator() {
+
+		if (!existsSync(this.projectDir + "/tokenscript.xml")){
+			throw new Error("TokenScript XML file not detected, are you running this command from a TokenScript project directory?");
+		}
 
 		this.launchServer();
 
@@ -108,6 +112,16 @@ export class Emulator {
 		console.log("Build started..");
 
 		this.buildProcess = exec.exec("cd " + this.projectDir + " && npm run build", (error, stdout, stderr) => {
+
+			if (error){
+				const errMsg = "Failed to build TokenScript project: ";
+				if (callback){
+					throw new Error(errMsg + error.message);
+				} else {
+					console.error(errMsg, error.message);
+				}
+				return;
+			}
 
 			this.sendClientNotification();
 			console.log("Build updated!");

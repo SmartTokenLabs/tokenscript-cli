@@ -1,3 +1,13 @@
+/*
+  Global App CSS
+  ----------------------
+  Use this file for styles that should be applied to all components.
+  For example, "font-family" within the "body" selector is a CSS property
+  most apps will want applied to all components.
+
+  Any global CSS variables should also be applied here.
+*/
+
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;400&display=swap.css");
 .overlay-tn button:disabled {
   cursor: not-allowed !important;
@@ -15,12 +25,10 @@
 .overlay-tn .headline-container-tn .toolbar-tn {
   display: flex;
   justify-content: right;
+  align-items: center;
 }
 .overlay-tn .headline-container-tn .toolbar-tn button {
-  margin: 0;
-}
-.overlay-tn .headline-container-tn .toolbar-tn button:last-child {
-  margin: 0 10px;
+  margin-right: 10px;
 }
 
 .overlay-tn .cancel-auth-btn {
@@ -513,12 +521,6 @@ li.issuer-connect-banner-tn .tokens-btn-tn,
   cursor: pointer;
   color: white;
   background: #101010;
-}
-
-.refresh-tn {
-  margin-top: 0;
-  margin-bottom: 10px;
-  margin-right: 10px;
 }
 
 .refresh-icon-tn {
@@ -1109,3 +1111,46 @@ li.issuer-connect-banner-tn .tokens-btn-tn {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+
+body {
+  margin: 0px;
+  padding: 0px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+}
+
+.lds-ring {
+	display: inline-block;
+	position: relative;
+	width: 80px;
+	height: 80px;
+}
+.lds-ring div {
+	box-sizing: border-box;
+	display: block;
+	position: absolute;
+	width: 64px;
+	height: 64px;
+	margin: 8px;
+	border: 8px solid;
+	border-radius: 50%;
+	animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+	border-color: #fff transparent transparent transparent;
+}
+.lds-ring div:nth-child(1) {
+	animation-delay: -0.45s;
+}
+.lds-ring div:nth-child(2) {
+	animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+	animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
