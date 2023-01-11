@@ -68,6 +68,9 @@ If all goes well you should see a file in `./out/tokenscript.tsml`
 
 # Commands
 <!-- commands -->
+* [`tokenscript build`](#tokenscript-build)
+* [`tokenscript create [DIRECTORY]`](#tokenscript-create-directory)
+* [`tokenscript emulate`](#tokenscript-emulate)
 * [`tokenscript help [COMMAND]`](#tokenscript-help-command)
 * [`tokenscript plugins`](#tokenscript-plugins)
 * [`tokenscript plugins:install PLUGIN...`](#tokenscript-pluginsinstall-plugin)
@@ -78,6 +81,55 @@ If all goes well you should see a file in `./out/tokenscript.tsml`
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-1)
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-2)
 * [`tokenscript plugins update`](#tokenscript-plugins-update)
+* [`tokenscript validate`](#tokenscript-validate)
+
+## `tokenscript build`
+
+Build the tokenscript project into a .tsml
+
+```
+USAGE
+  $ tokenscript build
+
+DESCRIPTION
+  Build the tokenscript project into a .tsml
+```
+
+_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.0/dist/commands/build.ts)_
+
+## `tokenscript create [DIRECTORY]`
+
+Create a new TokenScript project
+
+```
+USAGE
+  $ tokenscript create [DIRECTORY] [-t empty|entryToken]
+
+FLAGS
+  -t, --template=<option>  <options: empty|entryToken>
+
+DESCRIPTION
+  Create a new TokenScript project
+```
+
+_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.0/dist/commands/create.ts)_
+
+## `tokenscript emulate`
+
+Emulate the TokenScript in a browser
+
+```
+USAGE
+  $ tokenscript emulate [-e <value>]
+
+FLAGS
+  -e, --emulatorHost=<value>
+
+DESCRIPTION
+  Emulate the TokenScript in a browser
+```
+
+_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.0/dist/commands/emulate.ts)_
 
 ## `tokenscript help [COMMAND]`
 
@@ -328,4 +380,18 @@ FLAGS
 DESCRIPTION
   Update installed plugins.
 ```
+
+## `tokenscript validate`
+
+Validate an existing .tsml
+
+```
+USAGE
+  $ tokenscript validate
+
+DESCRIPTION
+  Validate an existing .tsml
+```
+
+_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.0/dist/commands/validate.ts)_
 <!-- commandsstop -->
