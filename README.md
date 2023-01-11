@@ -95,8 +95,6 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/build.ts)_
-
 ## `tokenscript create [DIRECTORY]`
 
 Create a new TokenScript project
@@ -112,8 +110,6 @@ DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/create.ts)_
-
 ## `tokenscript emulate`
 
 Emulate the TokenScript in a browser
@@ -128,8 +124,6 @@ FLAGS
 DESCRIPTION
   Emulate the TokenScript in a browser
 ```
-
-_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/emulate.ts)_
 
 ## `tokenscript help [COMMAND]`
 
@@ -392,6 +386,4 @@ USAGE
 DESCRIPTION
   Validate an existing .tsml
 ```
-
-_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v0.0.0/dist/commands/validate.ts)_
 <!-- commandsstop -->
