@@ -19,7 +19,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.0.1 linux-x64 node-v16.18.1
+@tokenscript/cli/1.0.2 linux-x64 node-v16.18.1
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -95,7 +95,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.1/dist/commands/build.ts)_
+_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.2/dist/commands/build.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -112,7 +112,7 @@ DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.1/dist/commands/create.ts)_
+_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.2/dist/commands/create.ts)_
 
 ## `tokenscript emulate`
 
@@ -129,7 +129,7 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.1/dist/commands/emulate.ts)_
+_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.2/dist/commands/emulate.ts)_
 
 ## `tokenscript help [COMMAND]`
 
@@ -393,5 +393,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.1/dist/commands/validate.ts)_
+_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.2/dist/commands/validate.ts)_
 <!-- commandsstop -->

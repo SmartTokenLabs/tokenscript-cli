@@ -53,7 +53,7 @@ export class Emulator {
 
 		const viewerBundlePath = fs.existsSync(__dirname + "/../../static/viewerBundle/") ?
 									__dirname + "/../../static/viewerBundle/" :
-									__dirname + "/viewerBundle";
+									__dirname + "/../viewerBundle";
 		this.server.use(express.static(viewerBundlePath));
 
 		this.server.use(express.static(this.projectDir + "/out/"));
