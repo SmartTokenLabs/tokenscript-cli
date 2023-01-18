@@ -4,6 +4,10 @@ import {Crypto, CryptoKey} from "@peculiar/webcrypto";
 import * as fs from "fs-extra";
 import {SignedXml} from "xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
+import {uint8tohex} from "../utils";
+import {computeAddress} from "ethers/lib/utils";
+
+const crypto = new Crypto();
 
 export default class Sign extends Command {
 
@@ -38,7 +42,6 @@ export default class Sign extends Command {
 			return;
 		}
 
-		const crypto = new Crypto();
 		xmldsigjs.Application.setEngine("OpenSSL", crypto);
 
 		if (flags.verify) {
@@ -132,6 +135,13 @@ export default class Sign extends Command {
 
 		if (verified){
 			this.log("TSML signature successfully verified!");
+
+			const pubKey = new Uint8Array(await crypto.subtle.exportKey("raw", key));
+
+			this.log("\nSigned using: ");
+			this.log("Public key: ", uint8tohex(pubKey));
+			this.log("Ethereum address: ", computeAddress(pubKey));
+
 		} else {
 			this.error("Signature verification failed", {exit: 2});
 		}
