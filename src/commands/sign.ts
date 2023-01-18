@@ -2,7 +2,7 @@ import {Command, Flags} from '@oclif/core'
 import * as xmldsigjs from "xmldsigjs";
 import {Crypto, CryptoKey} from "@peculiar/webcrypto";
 import * as fs from "fs-extra";
-import {Signature} from "xmldsigjs";
+import {SignedXml} from "xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
 
 export default class Sign extends Command {
@@ -92,7 +92,7 @@ export default class Sign extends Command {
 
 		const xml = new xmldsigjs.SignedXml();
 
-		const sig = await xml.Sign(
+		await xml.Sign(
 			{name: "ECDSA", hash: "SHA-256"},
 			privateKey!!,
 			//keyPair.privateKey!!,
@@ -107,22 +107,14 @@ export default class Sign extends Command {
 
 		this.log("Signature created");
 
-		this.writeSignedXml(unsignedXml, sig);
+		this.writeSignedXml(xml);
 
 		await this.verifySignedXml(publicKey!!);
 		//await this.verifySignedXml(keyPair.publicKey!!);
 	}
 
-	private writeSignedXml(unsignedXml: Document, sig: Signature) {
-
-		unsignedXml.documentElement.appendChild(sig.GetXml(true) as Node);
-
-		let xmlStr = new XMLSerializer().serializeToString(unsignedXml);
-
-		// TODO: Not supporting multiple root nodes at this time
-		//xmlStr = xmlFormatter(new XMLSerializer().serializeToString(sig.GetXml(true)!!));
-
-		fs.writeFileSync(Sign.SIGNED_XML_LOC, xmlStr);
+	private writeSignedXml(xml: SignedXml) {
+		fs.writeFileSync(Sign.SIGNED_XML_LOC, xml.toString());
 	}
 
 	private async verifySignedXml(key: CryptoKey) {
@@ -131,7 +123,6 @@ export default class Sign extends Command {
 
 		let doc = xmldsigjs.Parse(signedXml);
 		let signature = doc.getElementsByTagNameNS("http://www.w3.org/2000/09/xmldsig#", "Signature");
-		doc.removeChild(signature[0]);
 
 		const xml = new xmldsigjs.SignedXml(doc);
 
