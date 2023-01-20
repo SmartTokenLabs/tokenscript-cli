@@ -11,3 +11,6 @@ oclif.manifest.json
 .idea/
 typescript-project
 test-project
+*.key
+*.pub
+*.pem

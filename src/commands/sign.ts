@@ -5,13 +5,15 @@ import * as fs from "fs-extra";
 import {SignedXml} from "xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
 import {uint8tohex} from "../utils";
-import {computeAddress} from "ethers/lib/utils";
+import {base64, computeAddress} from "ethers/lib/utils";
+import {PemConverter} from "@peculiar/x509";
 
 const crypto = new Crypto();
 
 export default class Sign extends Command {
 
-	static SIGNED_XML_LOC = process.cwd() + "/out/tokenscript.signed.tsml"
+	static SIGNED_XML_LOC = process.cwd() + "/out/tokenscript.signed.tsml";
+	static DEFAULT_CERT_LOCATION = process.cwd() + "/ts-certificate.pem";
 
 	static description = 'sign the built .tsml';
 
@@ -24,6 +26,7 @@ export default class Sign extends Command {
 		verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
 		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key file location', default: process.cwd() + "/ts-signing.key"}),
 		publicKeyFile: Flags.string({char: 'p', description: 'Hex encoded private key file location', default: process.cwd() + "/ts-signing.pub"}),
+		certFile: Flags.string({char: 'r', description: 'Certificate PEM filename', default: Sign.DEFAULT_CERT_LOCATION}),
 	}
 
 	//static args = [{name: 'file'}]
@@ -70,6 +73,28 @@ export default class Sign extends Command {
 			return;
 		}
 
+		const certLocation = flags.certFile.toString();
+
+		let certs;
+
+		if (fs.existsSync(certLocation)){
+
+			const cert = fs.readFileSync(certLocation, 'utf-8');
+			const rawCert = PemConverter.decodeFirst(cert);
+			const certBase64 = base64.encode(new Uint8Array(rawCert));
+
+			certs = [certBase64];
+
+			this.log("Including PEM certificate at: " + certLocation);
+		} else {
+			// Only throw an error if the location is provided by user input.
+			// If the location is the default and the file doesn't exist, we can skip x509 inclusion.
+			if (certLocation !== Sign.DEFAULT_CERT_LOCATION) {
+				this.error("Certificate cannot be read at " + certLocation);
+				return;
+			}
+		}
+
 		let privKeyStr = fs.readFileSync(privateKeyLocation, 'utf-8').trim();
 
 		let keyImporter = KeyImporter.fromPrivate(privKeyStr);
@@ -104,7 +129,8 @@ export default class Sign extends Command {
 				keyValue: publicKey,
 				references: [
 					{hash: "SHA-256", transforms: ["enveloped", "c14n"]},
-				]
+				],
+				x509: certs
 			}
 		);
 
