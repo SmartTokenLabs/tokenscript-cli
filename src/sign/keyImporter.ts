@@ -68,6 +68,10 @@ export class KeyImporter {
 		);
 	}
 
+	getRawPublicKey(){
+		return new Uint8Array(this.ecKey.getPublic().encode("array", false));
+	}
+
 	getPrivateKey(){
 
 		const priv = this.getPkcs8FromECKey(this.ecKey);

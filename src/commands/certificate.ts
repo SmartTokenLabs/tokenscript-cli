@@ -119,6 +119,8 @@ export default class Certificate extends Command {
 
 		this.log("Creating certificate from signing request...");
 
+		const masterKeyExt = new x509.Extension("2.5.29.18", true, await signerKeyImporter.getRawPublicKey());
+
 		const cert = await x509.X509CertificateGenerator.create({
 			serialNumber: "01",
 			subject: csr.subjectName,
@@ -129,11 +131,12 @@ export default class Certificate extends Command {
 			publicKey: csr.publicKey,
 			signingKey: await signerKeyImporter.getPrivateKey(),
 			extensions: [
-				new x509.BasicConstraintsExtension(true, 2, true),
-				new x509.ExtendedKeyUsageExtension(["1.2.3.4.5.6.7", "2.3.4.5.6.7.8"], true),
-				new x509.KeyUsagesExtension(x509.KeyUsageFlags.keyCertSign | x509.KeyUsageFlags.cRLSign, true),
+				new x509.BasicConstraintsExtension(false, 0, true), // This key should not be used to sign intermediate certs
+				// new x509.ExtendedKeyUsageExtension(["1.2.3.4.5.6.7", "2.3.4.5.6.7.8"], true),
+				new x509.KeyUsagesExtension(x509.KeyUsageFlags.digitalSignature, true), // This key can be used for digital signatures
 				await x509.SubjectKeyIdentifierExtension.create(csr.publicKey),
 				await x509.AuthorityKeyIdentifierExtension.create(await signerKeyImporter.getPublicKey()),
+				masterKeyExt
 			]
 		});
 
