@@ -121,12 +121,16 @@ export default class Certificate extends Command {
 
 		const masterKeyExt = new x509.Extension("2.5.29.18", true, await signerKeyImporter.getRawPublicKey());
 
+		// TODO: use parameter
+		const expiry = new Date();
+		expiry.setFullYear(expiry.getFullYear() + 2); // default two year validity
+
 		const cert = await x509.X509CertificateGenerator.create({
 			serialNumber: "01",
 			subject: csr.subjectName,
 			issuer: "CN=" + issuerCn,
 			notBefore: new Date(),
-			notAfter: new Date(Date.now() + 3.154e+7), // one year validity
+			notAfter: expiry,
 			signingAlgorithm: {name: "ECDSA", hash: "SHA-256"},
 			publicKey: csr.publicKey,
 			signingKey: await signerKeyImporter.getPrivateKey(),
