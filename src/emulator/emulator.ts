@@ -63,7 +63,6 @@ export class Emulator {
 		this.ws.app.ws('/ws', function(ws: any, req) {
 			ws.on('message', function(msg: any) {
 				console.log(msg);
-				ws.send("Great reply!");
 			});
 		});
 
@@ -75,10 +74,10 @@ export class Emulator {
 
 		if (!fs.existsSync(this.projectDir + "/out/tokenscript.tsml")){
 			this.buildProject(() => {
-				open(this.emulatorHost + "#emulator=" + urlToOpen);
+				open(this.emulatorHost + "?emulator=" + urlToOpen + "#card=0");
 			})
 		} else {
-			open(this.emulatorHost + "#emulator" + urlToOpen);
+			open(this.emulatorHost + "?emulator" + urlToOpen + "#card=0");
 		}
 
 	}
