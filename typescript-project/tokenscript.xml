@@ -13,11 +13,34 @@
 		</ts:plurals>
 	</ts:label>
 	<ts:contract interface="erc721" name="TestToken">
-		<ts:address network="5">0x487361F1e70a991351Fa48028545DaF545673ADb</ts:address>
+		<ts:address network="5">0x07d6AE261994e0024377c2306178123582aC62d6</ts:address>
 	</ts:contract>
+	<ts:attestation name="MyAttestation" type="eas">
+		<ts:meta>
+			<ts:title>My Attestation</ts:title>
+			<ts:image>https://somesite.com/someimage.png</ts:image>
+			<ts:description>A really good attestation</ts:description>
+		</ts:meta>
+		<ts:key>MIIBMzCB7AYHKoZIzj0CATCB4AIBATAsBgcqhkjOPQEBAiEA/////////////////////////////////////v///C8wRAQgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHBEEEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuAIhAP////////////////////66rtzmr0igO7/SXozQNkFBAgEBA0IABAjUvEi8UYyC+0rSFu+IwRBos/DEC6YMJV+eCnoYOC4nZU7uayKDJmBxVnmTOSwaM4+gufLbeqqxuovyF5gI3TQ=</ts:key> <!-- Public key in base64 PEM -->
+		<!--
+			Event ID is the same as devconId/conferenceId but renamed to be more generic.
+			It can be used to define multiple "attestation collections" for the same public key and schema ID.
+			If omitted, all attestations with this schemaUID and pubkey are considered the same collection
+		-->
+		<ts:eventId>devcon7</ts:eventId>
+		<!--
+			This field defines the inner attestation fields used to construct a unique ID for the attestation.
+			In this way, duplicate attestations are not imported and an attestation can be revoked and reissued.
+			When the user imports the attestation again it replaces the old one.
+			If omitted, the EAS attestation UID is used.
+		-->
+		<ts:idFields>eventId.ticketId</ts:idFields>
+		<ts:eas schemaUID="0x7f6fb09beb1886d0b223e9f15242961198dd360021b2c9f75ac879c0f786cafd" />
+	</ts:attestation>
 	<ts:origins>
 		<!-- Define the contract which holds the token that the user will use -->
 		<ts:ethereum contract="TestToken"/>
+		<ts:attestation name="MyAttestation"/>
 	</ts:origins>
 	<ts:cards>
 		<ts:viewContent name="common" xmlns="http://www.w3.org/1999/xhtml">

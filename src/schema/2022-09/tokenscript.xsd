@@ -36,10 +36,12 @@
 				<element ref="asnx:module" minOccurs="0" maxOccurs="unbounded"/>
 				<element minOccurs="0" name="label" type="ts:text"/>
 				<element minOccurs="0" maxOccurs="unbounded" ref="ts:contract"/>
+				<element minOccurs="0" maxOccurs="unbounded" ref="ts:attestation"/>
 				<element name="origins" minOccurs="0">
 					<complexType>
 						<sequence>
 							<element ref="ts:ethereum"/>
+							<element name="attestation" minOccurs="0" maxOccurs="unbounded" type="ts:attest-ref"/>
 						</sequence>
 					</complexType>
 				</element>
@@ -69,6 +71,10 @@
 			<selector xpath="ts:attribute"></selector>
 			<field xpath="@name"></field>
 		</key>
+		<unique name="attest-uniqueName">
+			<selector xpath="ts:attestation" />
+			<field xpath="@name" />
+		</unique>
 	</element>
 	<element name="cards">
 		<complexType>
@@ -420,6 +426,46 @@
 			<attribute name="filter" type="string"/>
 			<!-- TODO: this should be whatever ASN.X allows as element name -->
 			<attribute name="select" type="NCName"/>
+		</complexType>
+	</element>
+	<simpleType name="attest-type">
+		<restriction base="string">
+			<enumeration value="eas"/>
+		</restriction>
+	</simpleType>
+	<simpleType name="schemaUID">
+		<restriction base="string">
+			<pattern value="0x[A-Fa-f0-9]{64}"/>
+		</restriction>
+	</simpleType>
+	<complexType name="attest-ref">
+		<attribute name="name" type="NCName">
+
+		</attribute>
+	</complexType>
+	<element name="attestation">
+		<complexType>
+			<sequence>
+				<element name="meta" minOccurs="0" >
+					<complexType>
+						<sequence>
+							<element name="title" type="string"/>
+							<element name="image" type="string"/>
+							<element name="description" type="string"/>
+						</sequence>
+					</complexType>
+				</element>
+				<element name="key" maxOccurs="unbounded" />
+				<element name="eventId" minOccurs="0" />
+				<element name="idFields" minOccurs="0" />
+				<element name="eas">
+					<complexType>
+						<attribute name="schemaUID" type="string" />
+					</complexType>
+				</element>
+			</sequence>
+			<attribute name="name" type="NCName"/>
+			<attribute name="type" type="ts:attest-type"/>
 		</complexType>
 	</element>
 	<complexType name="address" mixed="true">
