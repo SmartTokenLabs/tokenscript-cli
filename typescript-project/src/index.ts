@@ -1,21 +1,23 @@
 
-function init(){
+import * as QRCode from "qrcode";
 
-	const table = document.getElementsByClassName("data-table")[0];
+function initIndex(){
 
-	table.innerHTML += `
-		<tr>
-			<td>Document Hash Query:</td>
-			<td>${document.location.hash}</td>
-		</tr>
-	`;
+	// @ts-ignore
+	web3.tokens.dataChanged = async (oldTokens, updatedTokens, cardId) => {
+		const currentTokenInstance = updatedTokens.currentInstance;
 
-	/*table.innerHTML += `
-		<tr>
-			<td>Local storage test:</td>
-			<td>${localStorage.getItem("ls-test")}</td>
-		</tr>
-	`;*/
+		console.log(currentTokenInstance);
+
+		document.getElementById("attestation-container").innerHTML = `
+			<h2>${currentTokenInstance.name}</h2>
+			<p>${currentTokenInstance.description}</p>
+			<img src="${currentTokenInstance.image_preview_url}"/>
+			<div>${currentTokenInstance.tokenId}</div>
+		`;
+
+		document.getElementById("qrcode").setAttribute("src", await QRCode.toDataURL(currentTokenInstance.tokenInfo.token))
+	};
 }
 
-init();
+initIndex();

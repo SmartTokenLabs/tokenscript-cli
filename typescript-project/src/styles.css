@@ -1,7 +1,10 @@
 
+* {
+	font-family: "Source Sans Pro", sans-serif;
+}
+
 body {
-	background: black;
-	color: blue;
+	text-align: center;
 }
 
 body > h1 {

@@ -8,7 +8,8 @@ module.exports = {
     mode: "development",
     devtool: 'source-map',
     entry: {
-        index: path.resolve(__dirname, './src/index.ts')
+        index: path.resolve(__dirname, './src/index.ts'),
+		mint: path.resolve(__dirname, './src/mint.ts'),
     },
     module: {
         rules: [
@@ -27,16 +28,24 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     output: {
-        filename: 'bundle.js', // <- ensure unique bundle name
+        filename: '[name].js', // <- ensure unique bundle name
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
         new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
+			filename: "index.html",
 			template: path.resolve(__dirname, "./src/templates/index.html"),
+			chunks: ["index"],
 			scriptLoading: "blocking"
 		}),
-		new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/bundle/]),
+		new HtmlWebpackPlugin({
+			filename: "mint.html",
+			template: path.resolve(__dirname, "./src/templates/mint.html"),
+			chunks: ["mint"],
+			scriptLoading: "blocking"
+		}),
+		new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*\.js/]),
     ],
 	optimization: {
 		minimize: true,

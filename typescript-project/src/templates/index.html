@@ -1,21 +1,10 @@
 
 <div>
-	<h1>Welcome to TokenScript</h1>
-	<table class="data-table">
-		<tr>
-			<td>Key</td>
-			<td>Value</td>
-		</tr>
-	</table>
-	<h1>Sorry James, I'm afraid I can't do that!</h1>
-</div>
-<style>
-	div > h4 { font-size: 18px }
-</style>
-<script type="text/javascript">
-	window.addEventListener("DOMContentLoaded", () => {
+	<div id="attestation-container">
 
-		if (!localStorage.getItem("ls-test"))
-			localStorage.setItem("ls-test", "test!");
-	})
-</script>
+	</div>
+	<div>
+		<h4>Event Entry QR</h4>
+		<img id="qrcode" src="" style="max-width: 90%"/>
+	</div>
+</div>
