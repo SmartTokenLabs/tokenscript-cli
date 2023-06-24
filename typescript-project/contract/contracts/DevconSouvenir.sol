@@ -13,11 +13,16 @@ contract DevconSouvenir is ERC721, ERC721Enumerable, ERC721Burnable, Ownable, Ea
 
 	bytes32 constant EVENT_ID = keccak256(abi.encodePacked("devcon6"));
 
-	string tokenUri = "https://ipfs.moralis.io:2053/ipfs/QmSuaxSVzvLVFemhYLCfcVBtp4b8yz3QDygYUVK64bnvjP";
+	string contractUri = "https://resources.smarttokenlabs.com/contract/devcon6_souvenir.json";
+	string tokenUri = "https://resources.smarttokenlabs.com/1/0x7522dc5a357891b4daec194e285551ea5ea66d09/393198783119013881004632";
 	address issuer = 0xe761Eb6e829DE49deaB008120733c1E35Acf77DB;
 
 	constructor(address initialIssuer) ERC721("Devcon 6 Souvenir", "DEVCON6") {
 		issuer = initialIssuer;
+	}
+
+	function setContractUri(string memory uri) public onlyOwner {
+		contractUri = uri;
 	}
 
 	function setTokenUri(string memory uri) public onlyOwner {

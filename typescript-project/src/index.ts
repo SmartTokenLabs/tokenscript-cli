@@ -7,8 +7,6 @@ function initIndex(){
 	web3.tokens.dataChanged = async (oldTokens, updatedTokens, cardId) => {
 		const currentTokenInstance = updatedTokens.currentInstance;
 
-		console.log(currentTokenInstance);
-
 		document.getElementById("attestation-container").innerHTML = `
 			<h2>${currentTokenInstance.name}</h2>
 			<p>${currentTokenInstance.description}</p>
