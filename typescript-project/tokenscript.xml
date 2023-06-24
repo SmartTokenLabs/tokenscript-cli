@@ -12,10 +12,10 @@
 			<ts:string quantity="other">Devcon 6</ts:string>
 		</ts:plurals>
 	</ts:label>
-	<ts:contract interface="erc721" name="Devcon7Souvenir">
-		<ts:address network="5">0x07d6AE261994e0024377c2306178123582aC62d6</ts:address>
+	<ts:contract interface="erc721" name="Devcon6Souvenir">
+		<ts:address network="11155111">0x3cC6c9c6DC13814c6ba4da3520d2Ae40332A831F</ts:address>
 	</ts:contract>
-	<ts:attestation name="MyAttestation" type="eas">
+	<ts:attestation name="Devcon6Attestation" type="eas">
 		<ts:meta>
 			<ts:title>Devcon 6 Attestation</ts:title>
 			<ts:image>https://devcon-vi.attest.tickets/img/nft_bg.png</ts:image>
@@ -42,10 +42,10 @@
 	</ts:attestation>
 	<ts:origins>
 		<!-- Define the contract which holds the token that the user will use -->
-		<ts:ethereum contract="TestToken"/>
-		<ts:attestation name="MyAttestation"/>
+		<ts:ethereum contract="Devcon6Souvenir"/>
+		<ts:attestation name="Devcon6Attestation"/>
 	</ts:origins>
-	<ts:selection filter="isRedeemed=TRUE" name="alreadyRedeemed">
+	<ts:selection name="alreadyRedeemed" filter="isRedeemed=TRUE">
 		<ts:label>
 			<ts:string xml:lang="en">Already minted</ts:string>
 		</ts:label>
@@ -66,7 +66,7 @@
 				<ts:include type="css" src="./src/styles.css"/>
 			</ts:view>
 		</ts:card>
-		<ts:card type="action" name="Mint">
+		<ts:card type="action" name="Mint" exclude="alreadyRedeemed">
 			<!-- this action is of the model confirm-back.
 			window.onConfirm is called if user hit "confirm";
 			window.close() causes the back button to be pressed.
@@ -75,10 +75,30 @@
 				<ts:string xml:lang="en">Mint Souvenir NFT</ts:string>
 			</ts:label>
 			<ts:transaction>
-				<ethereum:transaction as="uint" contract="Devcon7Souvenir" function="safeMint">
+				<ethereum:transaction as="uint" contract="Devcon6Souvenir" function="mintUsingAttestation">
 					<ts:data>
-						<ts:uint256 ref="attestation" />
-						<ts:string>https://smart-token-labs-demo-server.mypinata.cloud/ipfs/QmXdnWNa2CaRCUa4jMTirmkVJkygr2LtnccSuDY3yXrvVm/bayc_1013.json</ts:string>
+						<ts:bytes local-ref="attestation"/>
+						<ts:bytes local-ref="signature"/>
+					</ts:data>
+				</ethereum:transaction>
+			</ts:transaction>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+				<ts:include type="html" src="./dist/mint.html"/>
+				<ts:include type="css" src="./src/styles.css"/>
+			</ts:view>
+		</ts:card>
+		<ts:card type="action" name="Burn">
+			<!-- this action is of the model confirm-back.
+			window.onConfirm is called if user hit "confirm";
+			window.close() causes the back button to be pressed.
+			-->
+			<ts:label>
+				<ts:string xml:lang="en">Burn</ts:string>
+			</ts:label>
+			<ts:transaction>
+				<ethereum:transaction as="uint" contract="Devcon6Souvenir" function="burn">
+					<ts:data>
+						<ts:uint256 ref="tokenId"/>
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
@@ -92,9 +112,9 @@
 	<ts:attribute name="isRedeemed">
 		<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.36</ts:syntax></ts:type>
 		<ts:origins>
-			<ethereum:call function="isRedeemed" contract="Devcon7Souvenir" as="bool">
+			<ethereum:call function="isRedeemed" contract="Devcon6Souvenir" as="bool">
 				<ts:data>
-					<ts:string ref="tokenId"/>
+					<ts:uint256 ref="tokenId"/>
 				</ts:data>
 			</ethereum:call>
 		</ts:origins>
