@@ -54,7 +54,8 @@ contract DevconSouvenir is ERC721, ERC721Enumerable, ERC721Burnable, Ownable, Ea
 		if (_exists(tokenId))
 			revert("Souvenir for this ticket has already been minted");
 
-		safeMint(msg.sender, tokenId);
+		_safeMint(msg.sender, tokenId);
+		//_setTokenURI(tokenId, tokenUri);
 	}
 
 	function stringToUint(string memory s) public pure returns (uint) {

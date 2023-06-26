@@ -164,6 +164,7 @@
 		</sequence>
 		<attribute name="type" use="required" type="ts:cardType"/>
 		<attribute name="exclude" type="IDREFS"/>
+		<attribute name="origins" type="IDREFS"/>
 		<attribute name="name" type="NCName" use="required"/>
 	</complexType>
 	<complexType name="tokens">
