@@ -37,19 +37,10 @@ describe("DevconSouvenir", function () {
 
 		// ABI encode attestation.
 		// TODO: Add this into attestation library
-		const attestationData = defaultAbiCoder.encode(
+		const attestation = defaultAbiCoder.encode(
 			signedAttestation.sig.types.Attest.map((field) => field.type),
 			signedAttestation.sig.types.Attest.map((field) => signedAttestation.sig.message[field.name])
 		);
-
-		const domainData = defaultAbiCoder.encode(
-			["string", "uint256", "address"],
-			[signedAttestation.sig.domain.version, signedAttestation.sig.domain.chainId, signedAttestation.sig.domain.verifyingContract]
-		);
-
-		const attestation = defaultAbiCoder.encode(
-			["bytes", "bytes"], [domainData, attestationData]
-		)
 
 		return {attestation, signature: joinSignature(signedAttestation.sig.signature)}
 	}

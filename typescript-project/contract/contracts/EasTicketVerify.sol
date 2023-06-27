@@ -21,11 +21,6 @@ contract EasTicketVerify {
 		"Attest(bytes32 schema,address recipient,uint64 time,uint64 expirationTime,bool revocable,bytes32 refUID,bytes data)"
 	);
 
-	struct AttestationData {
-		bytes domain;
-		bytes attestation;
-	}
-
 	struct AttestationDomainData {
 		string version;
 		uint256 chainId;
@@ -58,18 +53,7 @@ contract EasTicketVerify {
 	function verifyEasTicket(bytes memory attestation, bytes memory signature, address issuer, bool checkRevocation)
 		public view returns (EasTicketData memory ticket) {
 
-		// Decode data
-		AttestationData memory decoded;
-		(
-			decoded.domain,
-			decoded.attestation
-		) = abi.decode(attestation, (bytes, bytes));
-
-		AttestationDomainData memory domain;
-		(domain.version, domain.chainId, domain.verifyingContract) = abi.decode(
-			decoded.domain,
-			(string, uint256, address)
-		);
+		AttestationDomainData memory domain = AttestationDomainData("0.26", block.chainid, 0xC2679fBD37d54388Ce493F1DB75320D236e1815e);
 
 		AttestationCoreData memory message;
 		(
@@ -80,7 +64,7 @@ contract EasTicketVerify {
 			message.revocable,
 			message.refUID,
 			message.data
-		) = abi.decode(decoded.attestation, (bytes32, address, uint64, uint64, bool, bytes32, bytes));
+		) = abi.decode(attestation, (bytes32, address, uint64, uint64, bool, bytes32, bytes));
 
 		// Verify EIP Signature
 		address signer = recoverEasSigner(message, signature, domain);
