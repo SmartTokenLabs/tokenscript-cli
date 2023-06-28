@@ -10,6 +10,7 @@ module.exports = {
     entry: {
         index: path.resolve(__dirname, './src/index.ts'),
 		mint: path.resolve(__dirname, './src/mint.ts'),
+		enter: path.resolve(__dirname, './src/enter.ts'),
     },
     module: {
         rules: [
@@ -43,6 +44,12 @@ module.exports = {
 			filename: "mint.html",
 			template: path.resolve(__dirname, "./src/templates/mint.html"),
 			chunks: ["mint"],
+			scriptLoading: "blocking"
+		}),
+		new HtmlWebpackPlugin({
+			filename: "enter.html",
+			template: path.resolve(__dirname, "./src/templates/enter.html"),
+			chunks: ["enter"],
 			scriptLoading: "blocking"
 		}),
 		new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*\.js/]),

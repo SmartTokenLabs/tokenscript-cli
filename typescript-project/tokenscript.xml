@@ -17,7 +17,7 @@
 	</ts:contract>
 	<ts:attestation name="Devcon6Attestation" type="eas">
 		<ts:meta>
-			<ts:title>Devcon 6 Attestation</ts:title>
+			<ts:name>Devcon 6 Attestation</ts:name>
 			<ts:image>https://devcon-vi.attest.tickets/img/nft_bg.png</ts:image>
 			<ts:description>Your Devcon 7 ticket attestation. Use it to claim great perks available for all Devcon 6 attendees!</ts:description>
 		</ts:meta>
@@ -66,11 +66,20 @@
 				<ts:include type="css" src="./src/styles.css"/>
 			</ts:view>
 		</ts:card>
-		<ts:card type="action" name="Mint" origins="Devcon6Attestation" exclude="alreadyRedeemed">
+		<ts:card type="action" name="Enter" origins="Devcon6Attestation">
 			<!-- this action is of the model confirm-back.
 			window.onConfirm is called if user hit "confirm";
 			window.close() causes the back button to be pressed.
 			-->
+			<ts:label>
+				<ts:string xml:lang="en">Enter</ts:string>
+			</ts:label>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+				<ts:include type="html" src="./dist/enter.html"/>
+				<ts:include type="css" src="./src/styles.css"/>
+			</ts:view>
+		</ts:card>
+		<ts:card type="action" name="Mint" origins="Devcon6Attestation" exclude="alreadyRedeemed">
 			<ts:label>
 				<ts:string xml:lang="en">Mint Souvenir NFT</ts:string>
 			</ts:label>

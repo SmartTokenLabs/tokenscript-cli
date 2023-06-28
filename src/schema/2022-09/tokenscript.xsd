@@ -450,7 +450,7 @@
 				<element name="meta" minOccurs="0" >
 					<complexType>
 						<sequence>
-							<element name="title" type="string"/>
+							<element name="name" type="string"/>
 							<element name="image" type="string"/>
 							<element name="description" type="string"/>
 						</sequence>
