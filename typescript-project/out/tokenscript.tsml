@@ -6,7 +6,7 @@
 		</ts:plurals>
 	</ts:label>
 	<ts:contract interface="erc721" name="Devcon6Souvenir">
-		<ts:address network="11155111">0xBc38B8d5EDbBEa727E4050fe0901D32ef0edf0F1</ts:address>
+		<ts:address network="11155111">0x7a7142CA5c6d0Ba2bbB41BE5A4a44f26668172Ef</ts:address>
 	</ts:contract>
 	<ts:attestation name="Devcon6Attestation" type="eas">
 		<ts:meta>
@@ -120,8 +120,8 @@ body > h1 {
 			<ts:transaction>
 				<ethereum:transaction as="uint" contract="Devcon6Souvenir" function="mintUsingAttestation">
 					<ts:data>
-						<ts:bytes local-ref="attestation"/>
-						<ts:bytes local-ref="signature"/>
+						<ts:struct ref="attestation"/>
+						<ts:bytes ref="signature"/>
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
@@ -130,7 +130,7 @@ body > h1 {
 				
 			<h1 xmlns="http://www.w3.org/1999/xhtml">Mint</h1>
 <script xmlns="http://www.w3.org/1999/xhtml">//&lt;![CDATA[
-web3.tokens.dataChanged=(n,e,t)=&gt;{const o=e.currentInstance;web3.action.setProps({...o.tokenInfo.abiEncoded})};
+web3.tokens.dataChanged=(e,n,a)=&gt;{n.currentInstance};
 //# sourceMappingURL=mint.js.map
 //]]&gt;</script><style>
 					/* <![CDATA[ */
@@ -171,7 +171,7 @@ body > h1 {
 				
 			<h1 xmlns="http://www.w3.org/1999/xhtml">Mint</h1>
 <script xmlns="http://www.w3.org/1999/xhtml">//&lt;![CDATA[
-web3.tokens.dataChanged=(n,e,t)=&gt;{const o=e.currentInstance;web3.action.setProps({...o.tokenInfo.abiEncoded})};
+web3.tokens.dataChanged=(e,n,a)=&gt;{n.currentInstance};
 //# sourceMappingURL=mint.js.map
 //]]&gt;</script><style>
 					/* <![CDATA[ */

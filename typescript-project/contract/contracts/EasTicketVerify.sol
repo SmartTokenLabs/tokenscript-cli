@@ -34,7 +34,6 @@ contract EasTicketVerify {
 		bool revocable; // Whether the attestation is revocable.
 		bytes32 refUID; // The UID of the related attestation.
 		bytes data; // The actual Schema data (eg eventId: 12345, ticketId: 6 etc)
-		uint256 value; // An explicit ETH amount to send to the resolver. This is important to prevent accidental user errors.
 		bytes32 schema; // The UID of the associated EAS schema
 	}
 
@@ -50,42 +49,31 @@ contract EasTicketVerify {
 		uint64 time;
 	}
 
-	function verifyEasTicket(bytes memory attestation, bytes memory signature, address issuer, bool checkRevocation)
+	function verifyEasTicket(AttestationCoreData memory attestation, bytes memory signature, address issuer, bool checkRevocation)
 		public view returns (EasTicketData memory ticket) {
 
 		AttestationDomainData memory domain = AttestationDomainData("0.26", block.chainid, 0xC2679fBD37d54388Ce493F1DB75320D236e1815e);
 
-		AttestationCoreData memory message;
-		(
-			message.schema,
-			message.recipient,
-			message.time,
-			message.expirationTime,
-			message.revocable,
-			message.refUID,
-			message.data
-		) = abi.decode(attestation, (bytes32, address, uint64, uint64, bool, bytes32, bytes));
-
 		// Verify EIP Signature
-		address signer = recoverEasSigner(message, signature, domain);
+		address signer = recoverEasSigner(attestation, signature, domain);
 
 		if (signer != issuer)
 			revert("Attestation signer does not match required issuer");
 
 		// Expiry check
-		if (!validateTicketTimestamps(message))
+		if (!validateTicketTimestamps(attestation))
 			revert("Attestation is expired or not yet valid");
 
 		// Revocation check
-		if (checkRevocation && message.revocable){
-			RevokeData memory revoke = verifyEasRevoked(message, issuer, domain.verifyingContract);
+		if (checkRevocation && attestation.revocable){
+			RevokeData memory revoke = verifyEasRevoked(attestation, issuer, domain.verifyingContract);
 			if (revoke.time > 0)
 				revert("Attestation has been revoked");
 		}
 
 		// Decode data
 		(ticket.eventId, ticket.ticketId, ticket.ticketClass, ticket.commitment) = abi.decode(
-			message.data,
+			attestation.data,
 			(string, string, uint8, bytes)
 		);
 	}

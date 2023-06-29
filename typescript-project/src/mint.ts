@@ -6,9 +6,9 @@ function initMint(){
 		const currentTokenInstance = updatedTokens.currentInstance;
 
 		// @ts-ignore
-		web3.action.setProps({
+		/*web3.action.setProps({
 			...currentTokenInstance.tokenInfo.abiEncoded
-		});
+		});*/
 
 		//document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
 	};

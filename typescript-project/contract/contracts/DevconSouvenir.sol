@@ -41,7 +41,7 @@ contract DevconSouvenir is ERC721, ERC721Enumerable, ERC721Burnable, Ownable, Ea
 		//_setTokenURI(tokenId, tokenUri);
 	}
 
-	function mintUsingAttestation(bytes memory attestation, bytes memory signature)
+	function mintUsingAttestation(AttestationCoreData memory attestation, bytes memory signature)
 	public
 	{
 		EasTicketData memory ticket = verifyEasTicket(attestation, signature, issuer, msg.sender != owner());

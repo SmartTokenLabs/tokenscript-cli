@@ -37,12 +37,20 @@ describe("DevconSouvenir", function () {
 
 		// ABI encode attestation.
 		// TODO: Add this into attestation library
-		const attestation = defaultAbiCoder.encode(
+		/*const attestation = defaultAbiCoder.encode(
 			signedAttestation.sig.types.Attest.map((field) => field.type),
 			signedAttestation.sig.types.Attest.map((field) => signedAttestation.sig.message[field.name])
-		);
+		);*/
+		const attestStructData = {};
 
-		return {attestation, signature: joinSignature(signedAttestation.sig.signature)}
+		for (const field of signedAttestation.sig.types.Attest){
+			attestStructData[field.name] = signedAttestation.sig.message[field.name];
+		}
+
+		return <{attestStructData: any, signature: string}>{
+			attestStructData,
+			signature: joinSignature(signedAttestation.sig.signature)
+		}
 	}
 
 	// We define a fixture to reuse the same setup in every test.
@@ -63,9 +71,9 @@ describe("DevconSouvenir", function () {
 		it("Valid attestation should mint token", async function () {
 			const {devconSouvenir, owner} = await loadFixture(deployOneYearLockFixture);
 
-			const {attestation, signature} = await createAttestation({eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, owner);
+			const {attestStructData, signature} = await createAttestation({eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, owner);
 
-			await devconSouvenir.mintUsingAttestation(attestation, signature);
+			await devconSouvenir.mintUsingAttestation(attestStructData, signature);
 
 			expect(await devconSouvenir.isRedeemed(parseInt("12345"))).to.equal(true);
 		});
@@ -73,9 +81,9 @@ describe("DevconSouvenir", function () {
 		it("Invalid attestation attestor should revert", async function () {
 			const {devconSouvenir, otherAccount} = await loadFixture(deployOneYearLockFixture);
 
-			const {attestation, signature} = await createAttestation({eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, otherAccount);
+			const {attestStructData, signature} = await createAttestation({eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, otherAccount);
 
-			await expect(devconSouvenir.mintUsingAttestation(attestation, signature))
+			await expect(devconSouvenir.mintUsingAttestation(attestStructData, signature))
 				.to.be.revertedWith('Attestation signer does not match required issuer');
 		});
 
@@ -86,25 +94,25 @@ describe("DevconSouvenir", function () {
 				{eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, owner,
 				{from: Math.round(Date.now()/1000) + 10000, to: Math.round(Date.now()/1000) + 20000});
 
-			await expect(devconSouvenir.mintUsingAttestation(attestation.attestation, attestation.signature))
+			await expect(devconSouvenir.mintUsingAttestation(attestation.attestStructData, attestation.signature))
 				.to.be.revertedWith('Attestation is expired or not yet valid');
 
 			attestation = await createAttestation(
 				{eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, owner,
 				{from: Math.round(Date.now()/1000) - 10000, to: Math.round(Date.now()/1000) - 20000});
 
-			await expect(devconSouvenir.mintUsingAttestation(attestation.attestation, attestation.signature))
+			await expect(devconSouvenir.mintUsingAttestation(attestation.attestStructData, attestation.signature))
 				.to.be.revertedWith('Attestation is expired or not yet valid');
 		});
 
 		it("Already minted token should not mint again", async function () {
 			const {devconSouvenir, owner} = await loadFixture(deployOneYearLockFixture);
 
-			const {attestation, signature} = await createAttestation({eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, owner);
+			const {attestStructData, signature} = await createAttestation({eventId: "devcon6", ticketId: "12345", ticketClass: 2, commitment: "email@test.com"}, owner);
 
-			await devconSouvenir.mintUsingAttestation(attestation, signature);
+			await devconSouvenir.mintUsingAttestation(attestStructData, signature);
 
-			await expect(devconSouvenir.mintUsingAttestation(attestation, signature))
+			await expect(devconSouvenir.mintUsingAttestation(attestStructData, signature))
 				.to.be.revertedWith('Souvenir for this ticket has already been minted');
 		});
 	});
