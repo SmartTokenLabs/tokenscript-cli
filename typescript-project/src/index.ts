@@ -14,7 +14,7 @@ function initIndex(){
 			<div>${currentTokenInstance.tokenId}</div>
 		`;
 
-		document.getElementById("qrcode").setAttribute("src", await QRCode.toDataURL(currentTokenInstance.tokenInfo.token))
+		document.getElementById("qrcode").setAttribute("src", await QRCode.toDataURL(currentTokenInstance.tokenInfo.data.token))
 	};
 }
 

@@ -453,12 +453,21 @@
 							<element name="name" type="string"/>
 							<element name="image" type="string"/>
 							<element name="description" type="string"/>
+							<element name="attributeField" minOccurs="0" maxOccurs="unbounded">
+								<complexType>
+									<simpleContent>
+										<extension base="string">
+											<attribute name="name" type="string"/>
+										</extension>
+									</simpleContent>
+								</complexType>
+							</element>
 						</sequence>
 					</complexType>
 				</element>
-				<element name="key" maxOccurs="unbounded" />
-				<element name="eventId" minOccurs="0" />
-				<element name="idFields" minOccurs="0" />
+				<element name="key" type="string" maxOccurs="unbounded" />
+				<element name="eventId" type="string" minOccurs="0" />
+				<element name="idFields" type="string" minOccurs="0" />
 				<element name="eas">
 					<complexType>
 						<attribute name="schemaUID" type="string" />
