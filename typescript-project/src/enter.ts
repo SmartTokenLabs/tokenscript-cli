@@ -13,9 +13,8 @@ class Token {
           <h3>Door open time</h3>
           <input id="openTime" type="number" value='20' />
           </div>
-          <div id="contractAddress">${this.props.contractAddress}</div>
-          <div id="attestation">${this.props.tokenInfo.abiEncoded.attestation}</div>
-          <div id="attestationSig">${this.props.tokenInfo.abiEncoded.signature}</div>
+          <div id="attestation">${this.props.attestation}</div>
+          <div id="attestationSig">${this.props.signature}</div>
           <div id="status"/>`;
 	}
 }
