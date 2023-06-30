@@ -28,13 +28,13 @@ contract EasTicketVerify {
 	}
 
 	struct AttestationCoreData {
+		bytes32 schema; // The UID of the associated EAS schema
 		address recipient; // The recipient of the attestation.
 		uint64 time; // The time when the attestation is valid from (Unix timestamp).
 		uint64 expirationTime; // The time when the attestation expires (Unix timestamp).
 		bool revocable; // Whether the attestation is revocable.
 		bytes32 refUID; // The UID of the related attestation.
 		bytes data; // The actual Schema data (eg eventId: 12345, ticketId: 6 etc)
-		bytes32 schema; // The UID of the associated EAS schema
 	}
 
 	struct EasTicketData {

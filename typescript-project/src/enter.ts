@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 				document.getElementById('status').innerHTML = 'Verifying credentials ...'
 				// 3. open door
-				let contractAddress = document.getElementById("contractAddress").textContent;
+				// let contractAddress = document.getElementById("contractAddress").textContent;
 				let unlockTime = document.getElementById("openTime").value;
 				let attestationHex = document.getElementById("attestation").textContent;
 				let attestationSigHex = document.getElementById("attestationSig").textContent;

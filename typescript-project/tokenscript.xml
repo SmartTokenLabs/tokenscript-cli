@@ -13,7 +13,7 @@
 		</ts:plurals>
 	</ts:label>
 	<ts:contract interface="erc721" name="Devcon6Souvenir">
-		<ts:address network="11155111">0x7a7142CA5c6d0Ba2bbB41BE5A4a44f26668172Ef</ts:address>
+		<ts:address network="11155111">0xFF6E9ADF5E4cC99F2aa1f4DC01f0956b757b4ABA</ts:address>
 	</ts:contract>
 	<ts:attestation name="Devcon6Attestation" type="eas">
 		<ts:meta>
