@@ -92,7 +92,7 @@
 				<ethereum:transaction as="uint" contract="Devcon6Souvenir" function="mintUsingAttestation">
 					<ts:data>
 						<ts:struct ref="attestation"/>
-						<ts:bytes ref="signature"/>
+						<ts:bytes ref="attestationSig"/>
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
@@ -116,10 +116,6 @@
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
-			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-				<ts:include type="html" src="./dist/mint.html"/>
-				<ts:include type="css" src="./src/styles.css"/>
-			</ts:view>
 		</ts:card>
 	</ts:cards>
 

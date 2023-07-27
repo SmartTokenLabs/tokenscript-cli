@@ -7,15 +7,17 @@ class Token {
 
 	render() {
 		return `
-         <h3>Sign the challenge to unlock ...</h3>
-          <div id="msg">Preparing to unlock the entrance door.</div>
-          <div id="inputBox">
-          <h3>Door open time</h3>
-          <input id="openTime" type="number" value='20' />
+		  <h3>Enter Door</h3>
+          <h4>Sign the challenge to unlock ...</h4>
+          <div style="display: none;">
+			  <div id="inputBox">
+			  <h3>Door open time</h3>
+			  <input id="openTime" type="number" value='20' />
+			  </div>
+			  <div id="attestation">${this.props.attestation}</div>
+			  <div id="attestationSig">${this.props.attestationSig}</div>
           </div>
-          <div id="attestation">${this.props.attestation}</div>
-          <div id="attestationSig">${this.props.signature}</div>
-          <div id="status"/>`;
+		`;
 	}
 }
 
@@ -36,35 +38,43 @@ var iotAddr = "0x7D586C708C741345098248D47A2D9353A1FAE115".toLowerCase();
 //0xB1A6929C36C0AD999806A96DFE718777E650F395 //0x68A83B723485E7E5EDCF1C435220A60AD31241A4
 var serverAddr = "http://scriptproxy.smarttokenlabs.com";
 document.addEventListener("DOMContentLoaded", function() {
-	window.onload = function startup() {
+
+	function startup() {
+		document.getElementById("load-status").innerText = "Fetching challenge...";
+		document.getElementById("loader").style.display = "flex";
 		// 1. call API to fetch challenge james.lug.org.cn
 		fetch(`${serverAddr}:8080/api/${iotAddr}/getChallenge`)
 			.then(handleErrors)
 			.then(function (response) {
-				document.getElementById('msg').innerHTML = 'Challenge: ' + response
+				document.getElementById('status').innerHTML = 'Challenge: ' + response
 				window.challenge = response
+				document.getElementById("loader").style.display = "none";
 			})
 	}
 
-	window.onConfirm = function onConfirm(signature) {
+	window.onload = startup;
+
+	window.onConfirm = function onConfirm() {
 		if (window.challenge === undefined || window.challenge.length == 0) return
 		const challenge = window.challenge
-		document.getElementById('status').innerHTML = 'Wait for signature...'
+		document.getElementById("loader").style.display = "flex";
+		document.getElementById('load-status').innerHTML = 'Waiting for signature...'
 		// 2. sign challenge to generate response
 		web3.personal.sign({ data: challenge }, function (error, value) {
 			if (error != null) {
-				document.getElementById('status').innerHTML = error
+				document.getElementById('status').innerHTML = "Error: " + error.indexOf("ACTION_REJECTED") ? "Signing rejected" : error;
+				document.getElementById("loader").style.display = "none";
 			}
 			else
 			{
-
+				window.challenge = '';
 				document.getElementById('status').innerHTML = 'Verifying credentials ...'
 				// 3. open door
 				// let contractAddress = document.getElementById("contractAddress").textContent;
 				let unlockTime = document.getElementById("openTime").value;
 				let attestationHex = document.getElementById("attestation").textContent;
 				let attestationSigHex = document.getElementById("attestationSig").textContent;
-				//document.getElementById('msg-txt').value;
+
 				fetch(`${serverAddr}:8080/api/${iotAddr}/checkSignature?openTime=${unlockTime}&sig=${value}&attn=${attestationHex}&attnSig=${attestationSigHex}`)
 					.then(function (response) {
 						if (!response.ok) {
@@ -79,16 +89,19 @@ document.addEventListener("DOMContentLoaded", function() {
 					.then(function (response) {
 						if (response == "pass") {
 							document.getElementById('status').innerHTML = 'Entrance granted!'
+
+							document.getElementById("door").classList.add("opened");
 							window.close()
 						} else {
 							document.getElementById('status').innerHTML = 'Failed with: ' + response
 						}
-					}).catch(function() {
-					console.log("error blah");
-				});
+						document.getElementById("loader").style.display = "none";
+
+						setTimeout(() => startup(), 2000);
+					}).catch(function(e) {
+						document.getElementById("loader").style.display = "none";
+					});
 			}
 		});
-		window.challenge = '';
-		document.getElementById('msg').innerHTML = '';
 	}
 })
