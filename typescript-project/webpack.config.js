@@ -11,6 +11,7 @@ module.exports = {
         index: path.resolve(__dirname, './src/index.ts'),
 		mint: path.resolve(__dirname, './src/mint.ts'),
 		enter: path.resolve(__dirname, './src/enter.ts'),
+		lock: path.resolve(__dirname, './src/lock.ts'),
     },
     module: {
         rules: [
@@ -50,6 +51,12 @@ module.exports = {
 			filename: "enter.html",
 			template: path.resolve(__dirname, "./src/templates/enter.html"),
 			chunks: ["enter"],
+			scriptLoading: "blocking"
+		}),
+		new HtmlWebpackPlugin({
+			filename: "lock.html",
+			template: path.resolve(__dirname, "./src/templates/lock.html"),
+			chunks: ["lock"],
 			scriptLoading: "blocking"
 		}),
 		new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/.*\.js/]),

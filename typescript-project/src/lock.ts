@@ -7,8 +7,8 @@ class Token {
 
 	render() {
 		return `
-		  <h3>Enter Door</h3>
-          <h4>Sign the challenge to unlock ...</h4>
+		  <h3>Lock Door</h3>
+          <h4>Sign the challenge to lock ...</h4>
           <div style="display: none;">
 			  <div id="inputBox">
 			  <h3>Door open time</h3>
@@ -33,8 +33,8 @@ function handleErrors(response) {
 	return response.text();
 }
 
-var iotAddr = "0x32A611066C00A043C202889D67DF86F4F2C82285".toLowerCase();
-var serverAddr = "https://scriptproxy.smarttokenlabs.com";
+const iotAddr = "0x32A611066C00A043C202889D67DF86F4F2C82285".toLowerCase();
+const serverAddr = "https://scriptproxy.smarttokenlabs.com";
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -67,15 +67,15 @@ document.addEventListener("DOMContentLoaded", function() {
 			else
 			{
 				window.challenge = '';
-				document.getElementById('status').innerHTML = 'Verifying credentials ...';
-				document.getElementById('load-status').innerHTML = 'Verifying credentials ...';
+				document.getElementById('status').innerHTML = 'Verifying credentials ...'
+				document.getElementById('load-status').innerHTML = 'Verifying credentials ...'
 				// 3. open door
 				// let contractAddress = document.getElementById("contractAddress").textContent;
 				let unlockTime = document.getElementById("openTime").value;
 				let attestationHex = document.getElementById("attestation").textContent;
 				let attestationSigHex = document.getElementById("attestationSig").textContent;
 
-				fetch(`${serverAddr}:8433/api/${iotAddr}/checkSignature?openTime=${unlockTime}&sig=${value}&attn=${attestationHex}&attnSig=${attestationSigHex}`)
+				fetch(`${serverAddr}:8433/api/${iotAddr}/checkSignatureLock?openTime=0&sig=${value}&attn=${attestationHex}&attnSig=${attestationSigHex}`)
 					.then(function (response) {
 						if (!response.ok) {
 							document.getElementById('status').innerHTML = response.statusText;
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
 						if (response == "pass") {
 							document.getElementById('status').innerHTML = 'Entrance granted!'
 
-							document.getElementsByClassName("door")[0].classList.add("opened");
+							document.getElementsByClassName("door")[0].classList.remove("opened");
 
 							setTimeout(() => window.close(), 2000);
 						} else {
