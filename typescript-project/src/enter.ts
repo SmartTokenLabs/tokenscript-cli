@@ -91,7 +91,8 @@ document.addEventListener("DOMContentLoaded", function() {
 							document.getElementById('status').innerHTML = 'Entrance granted!'
 
 							document.getElementById("door").classList.add("opened");
-							window.close()
+
+							setTimeout(() => window.close(), 2000);
 						} else {
 							document.getElementById('status').innerHTML = 'Failed with: ' + response
 						}
