@@ -119,7 +119,6 @@ export class Emulator {
 				} else {
 					console.error(errMsg, error.message);
 				}
-				return;
 			}
 
 			this.sendClientNotification();

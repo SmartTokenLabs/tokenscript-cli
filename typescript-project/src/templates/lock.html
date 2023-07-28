@@ -16,9 +16,11 @@
 <div class="door-container">
 	<div class="door opened" onclick="onConfirm()">
 		<div class="door-front">
+			<img class="deva" src="https://pbs.twimg.com/profile_images/1535034047407312904/bcFyZnKT_400x400.jpg"/>
 			<div class="knob"></div>
 		</div>
 		<div class="door-back">
+			<img class="devcon-poster" src="https://entethalliance.org/wp-content/uploads/2022/10/devcon-image-1.jpg"/>
 			<div class="rack"></div>
 			<div class="hat"></div>
 			<div class="jacket"></div>
@@ -44,6 +46,21 @@
 		cursor: pointer;
 		transform-style: preserve-3d;
 		transform: perspective(2500px);
+	}
+
+	.devcon-poster {
+		position: absolute;
+		top: 10px;
+		left: 26px;
+		width: 120px;
+	}
+
+	.deva {
+		position: absolute;
+		z-index: 50;
+		top: 40px;
+		left: 54px;
+		width: 60px;
 	}
 
 	.door-front {
