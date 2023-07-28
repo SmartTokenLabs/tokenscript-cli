@@ -23,7 +23,7 @@
 			<ts:attributeField name='data.eventId'>Event ID</ts:attributeField>
 			<ts:attributeField name='data.ticketClass'>Ticket Class</ts:attributeField>
 			<ts:attributeField name='data.ticketId'>Ticket ID</ts:attributeField>
-			<ts:attributeField name='time'>Valid From</ts:attributeField>
+			<ts:attributeField name='time' display_type="date">Valid From</ts:attributeField>
 			<ts:attributeField name='meta.commitmentId'>Email</ts:attributeField>
 		</ts:meta>
 		<!--
