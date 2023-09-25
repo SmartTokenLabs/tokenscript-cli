@@ -445,16 +445,16 @@ body > h1 {
 				
 			<p xmlns="http://www.w3.org/1999/xhtml">Use your Devcon attestation to close the secret door in the hacker village.</p>
 
-<div xmlns="http://www.w3.org/1999/xhtml" id="status">Preparing to lock...</div>
+<div xmlns="http://www.w3.org/1999/xhtml" id="status2">Preparing to lock...</div>
 
-<div xmlns="http://www.w3.org/1999/xhtml" id="loader">
+<div xmlns="http://www.w3.org/1999/xhtml" id="loader2">
 	<div class="lds-ring">
 		<div style=""></div>
 		<div style=""></div>
 		<div style=""></div>
 		<div style=""></div>
 	</div>
-	<div id="load-status"></div>
+	<div id="load-status2"></div>
 </div>
 
 <div xmlns="http://www.w3.org/1999/xhtml" class="door-container">
@@ -696,16 +696,16 @@ body > h1 {
 		transform: rotateX(45deg);
 	}
 
-	#status {
+	#status2 {
 
 	}
 
-	#load-status {
+	#load-status2 {
 		margin-top: 20px;
 		color: white;
 	}
 
-	#loader {
+	#loader2 {
 		position: absolute;
 		z-index: 100;
 		width: 100%;
@@ -760,7 +760,7 @@ body > h1 {
  /*//]]&gt;*/</style>
 <script xmlns="http://www.w3.org/1999/xhtml">//&lt;![CDATA[
 /*! For license information please see lock.js.LICENSE.txt */
-(()=&gt;{class t{constructor(t){this.props=t}render(){return`\n\t\t  &lt;h3&gt;Lock Door&lt;/h3&gt;\n          &lt;h4&gt;Sign the challenge to lock ...&lt;/h4&gt;\n          &lt;div style="display: none;"&gt;\n\t\t\t  &lt;div id="inputBox"&gt;\n\t\t\t  &lt;h3&gt;Door open time&lt;/h3&gt;\n\t\t\t  &lt;input id="openTime" type="number" value='20' /&gt;\n\t\t\t  &lt;/div&gt;\n\t\t\t  &lt;div id="attestation"&gt;${this.props.attestation}&lt;/div&gt;\n\t\t\t  &lt;div id="attestationSig"&gt;${this.props.attestationSig}&lt;/div&gt;\n          &lt;/div&gt;\n\t\t`}}function e(t){if(!t.ok)throw Error(t.statusText);return t.text()}web3.tokens.dataChanged=(e,n,o)=&gt;{const i=n.currentInstance;document.getElementById(o).innerHTML=new t(i).render()};const n="0x32A611066C00A043C202889D67DF86F4F2C82285".toLowerCase(),o="https://scriptproxy.smarttokenlabs.com";document.addEventListener("DOMContentLoaded",(function(){function t(){document.getElementById("load-status").innerText="Fetching challenge...",document.getElementById("loader").style.display="flex",fetch(`${o}:8433/api/${n}/getChallenge`).then(e).then((function(t){document.getElementById("status").innerHTML="Challenge: "+t,window.challenge=t,document.getElementById("loader").style.display="none"}))}window.onload=t,window.onConfirm=function(){if(void 0===window.challenge||0==window.challenge.length)return;const e=window.challenge;document.getElementById("loader").style.display="flex",document.getElementById("load-status").innerHTML="Waiting for signature...",web3.personal.sign({data:e},(function(e,i){if(null!=e)document.getElementById("status").innerHTML=(e.indexOf("ACTION_REJECTED"),"Signing rejected"),document.getElementById("loader").style.display="none";else{window.challenge="",document.getElementById("status").innerHTML="Verifying credentials ...",document.getElementById("load-status").innerHTML="Verifying credentials ...";document.getElementById("openTime").value;let e=document.getElementById("attestation").textContent,d=document.getElementById("attestationSig").textContent;fetch(`${o}:8433/api/${n}/checkSignatureLock?openTime=0&amp;sig=${i}&amp;attn=${e}&amp;attnSig=${d}`).then((function(t){if(t.ok)return t.text();throw document.getElementById("status").innerHTML=t.statusText,Error(t.statusText)})).then((function(e){"pass"==e?(document.getElementById("status").innerHTML="Entrance granted!",document.getElementsByClassName("door")[0].classList.remove("opened"),setTimeout((()=&gt;window.close()),2e3)):document.getElementById("status").innerHTML="Failed with: "+e,document.getElementById("loader").style.display="none",setTimeout((()=&gt;t()),2e3)})).catch((function(t){document.getElementById("loader").style.display="none"}))}}))}}))})();
+(()=&gt;{class t{constructor(t){this.props=t}render(){return`\n\t\t  &lt;h3&gt;Lock Door&lt;/h3&gt;\n          &lt;h4&gt;Sign the challenge to lock ...&lt;/h4&gt;\n          &lt;div style="display: none;"&gt;\n\t\t\t  &lt;div id="inputBox"&gt;\n\t\t\t  &lt;h3&gt;Door open time&lt;/h3&gt;\n\t\t\t  &lt;input id="openTime" type="number" value='20' /&gt;\n\t\t\t  &lt;/div&gt;\n\t\t\t  &lt;div id="attestation"&gt;${this.props.attestation}&lt;/div&gt;\n\t\t\t  &lt;div id="attestationSig"&gt;${this.props.attestationSig}&lt;/div&gt;\n          &lt;/div&gt;\n\t\t`}}function e(t){if(!t.ok)throw Error(t.statusText);return t.text()}web3.tokens.dataChanged=(e,n,o)=&gt;{const i=n.currentInstance;document.getElementById(o).innerHTML=new t(i).render()};const n="0x32A611066C00A043C202889D67DF86F4F2C82285".toLowerCase(),o="https://scriptproxy.smarttokenlabs.com";document.addEventListener("DOMContentLoaded",(function(){function t(){document.getElementById("load-status2").innerText="Fetching challenge...",document.getElementById("loader2").style.display="flex",fetch(`${o}:8433/api/${n}/getChallenge`).then(e).then((function(t){document.getElementById("status2").innerHTML="Challenge: "+t,window.challenge=t,document.getElementById("loader2").style.display="none"}))}window.onload=t,window.onConfirm=function(){if(void 0===window.challenge||0==window.challenge.length)return;const e=window.challenge;document.getElementById("loader2").style.display="flex",document.getElementById("load-status2").innerHTML="Waiting for signature...",web3.personal.sign({data:e},(function(e,i){if(null!=e)document.getElementById("status2").innerHTML=(e.indexOf("ACTION_REJECTED"),"Signing rejected"),document.getElementById("loader2").style.display="none";else{window.challenge="",document.getElementById("status2").innerHTML="Verifying credentials ...",document.getElementById("load-status2").innerHTML="Verifying credentials ...";document.getElementById("openTime").value;let e=document.getElementById("attestation").textContent,d=document.getElementById("attestationSig").textContent;fetch(`${o}:8433/api/${n}/checkSignatureLock?openTime=0&amp;sig=${i}&amp;attn=${e}&amp;attnSig=${d}`).then((function(t){if(t.ok)return t.text();throw document.getElementById("status2").innerHTML=t.statusText,Error(t.statusText)})).then((function(e){"pass"==e?(document.getElementById("status2").innerHTML="Entrance granted!",document.getElementsByClassName("door")[0].classList.remove("opened"),setTimeout((()=&gt;window.close()),2e3)):document.getElementById("status2").innerHTML="Failed with: "+e,document.getElementById("loader2").style.display="none",setTimeout((()=&gt;t()),2e3)})).catch((function(t){document.getElementById("loader2").style.display="none"}))}}))}}))})();
 //# sourceMappingURL=lock.js.map
 //]]&gt;</script><style>
 					/* <![CDATA[ */

@@ -39,15 +39,15 @@ const serverAddr = "https://scriptproxy.smarttokenlabs.com";
 document.addEventListener("DOMContentLoaded", function() {
 
 	function startup() {
-		document.getElementById("load-status").innerText = "Fetching challenge...";
-		document.getElementById("loader").style.display = "flex";
+		document.getElementById("load-status2").innerText = "Fetching challenge...";
+		document.getElementById("loader2").style.display = "flex";
 		// 1. call API to fetch challenge james.lug.org.cn
 		fetch(`${serverAddr}:8433/api/${iotAddr}/getChallenge`)
 			.then(handleErrors)
 			.then(function (response) {
-				document.getElementById('status').innerHTML = 'Challenge: ' + response
+				document.getElementById('status2').innerHTML = 'Challenge: ' + response
 				window.challenge = response
-				document.getElementById("loader").style.display = "none";
+				document.getElementById("loader2").style.display = "none";
 			})
 	}
 
@@ -56,19 +56,19 @@ document.addEventListener("DOMContentLoaded", function() {
 	window.onConfirm = function onConfirm() {
 		if (window.challenge === undefined || window.challenge.length == 0) return
 		const challenge = window.challenge
-		document.getElementById("loader").style.display = "flex";
-		document.getElementById('load-status').innerHTML = 'Waiting for signature...'
+		document.getElementById("loader2").style.display = "flex";
+		document.getElementById('load-status2').innerHTML = 'Waiting for signature...'
 		// 2. sign challenge to generate response
 		web3.personal.sign({ data: challenge }, function (error, value) {
 			if (error != null) {
-				document.getElementById('status').innerHTML = "Error: " + error.indexOf("ACTION_REJECTED") ? "Signing rejected" : error;
-				document.getElementById("loader").style.display = "none";
+				document.getElementById('status2').innerHTML = "Error: " + error.indexOf("ACTION_REJECTED") ? "Signing rejected" : error;
+				document.getElementById("loader2").style.display = "none";
 			}
 			else
 			{
 				window.challenge = '';
-				document.getElementById('status').innerHTML = 'Verifying credentials ...'
-				document.getElementById('load-status').innerHTML = 'Verifying credentials ...'
+				document.getElementById('status2').innerHTML = 'Verifying credentials ...'
+				document.getElementById('load-status2').innerHTML = 'Verifying credentials ...'
 				// 3. open door
 				// let contractAddress = document.getElementById("contractAddress").textContent;
 				let unlockTime = document.getElementById("openTime").value;
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function() {
 				fetch(`${serverAddr}:8433/api/${iotAddr}/checkSignatureLock?openTime=0&sig=${value}&attn=${attestationHex}&attnSig=${attestationSigHex}`)
 					.then(function (response) {
 						if (!response.ok) {
-							document.getElementById('status').innerHTML = response.statusText;
+							document.getElementById('status2').innerHTML = response.statusText;
 							throw Error(response.statusText);
 						}
 						else
@@ -88,19 +88,19 @@ document.addEventListener("DOMContentLoaded", function() {
 					})
 					.then(function (response) {
 						if (response == "pass") {
-							document.getElementById('status').innerHTML = 'Entrance granted!'
+							document.getElementById('status2').innerHTML = 'Entrance granted!'
 
 							document.getElementsByClassName("door")[0].classList.remove("opened");
 
 							setTimeout(() => window.close(), 2000);
 						} else {
-							document.getElementById('status').innerHTML = 'Failed with: ' + response
+							document.getElementById('status2').innerHTML = 'Failed with: ' + response
 						}
-						document.getElementById("loader").style.display = "none";
+						document.getElementById("loader2").style.display = "none";
 
 						setTimeout(() => startup(), 2000);
 					}).catch(function(e) {
-						document.getElementById("loader").style.display = "none";
+						document.getElementById("loader2").style.display = "none";
 					});
 			}
 		});

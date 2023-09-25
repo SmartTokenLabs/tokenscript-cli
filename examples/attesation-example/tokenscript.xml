@@ -35,7 +35,10 @@
 			It can be used to define multiple "attestation collections" for the same public key and schema ID.
 			If omitted, all attestations with this schemaUID and pubkey are considered the same collection
 		-->
-		<ts:eventId>devcon6</ts:eventId>
+		<!--<ts:eventId>devcon6</ts:eventId>-->
+		<ts:collectionFields>
+			<ts:collectionField name="eventId">devcon6</ts:collectionField>
+		</ts:collectionFields>
 		<!--
 			This field defines the inner attestation fields used to construct a unique ID for the attestation.
 			In this way, duplicate attestations are not imported and an attestation can be revoked and reissued.
