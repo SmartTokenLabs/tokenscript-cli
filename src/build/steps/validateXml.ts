@@ -14,6 +14,9 @@ export class ValidateXml implements IBuildStep {
 
 		let ns = doc.documentElement.getAttribute("xmlns:ts");
 
+		if (!ns)
+			throw new Error("Could not find namespace in XML. Are you missing a namespace declaration?");
+
 		const schemaVersion = ns!!.indexOf("2022/09") > -1 ? "2022-09" : "2020-06";
 		const schemaBasePath = __dirname + "/../../schema/" + schemaVersion + "/";
 
@@ -23,7 +26,7 @@ export class ValidateXml implements IBuildStep {
 
 		const errors = schema.validateFile(this.context.getOutputXmlPath());
 
-		if (errors){
+		if (errors) {
 
 			const errMsg = "XML Validation Errors: \r\n" +
 				errors.map((error: any) => {
