@@ -1,6 +1,6 @@
 {
   "name": "@tokenscript/cli",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A tool for managing tokenscript projects",
   "author": "Michael Wallace @micwallace",
   "bin": {
@@ -26,6 +26,7 @@
     "@peculiar/asn1-x509": "^2.3.0",
     "@peculiar/webcrypto": "^1.4.0",
     "@peculiar/x509": "^1.9.2",
+    "@tokenscript/libxmljs2-xsd": "^0.32.0",
     "@xmldom/xmldom": "^0.9.0-beta.6",
     "chokidar": "^3.5.3",
     "cors": "^2.8.5",
@@ -37,7 +38,6 @@
     "inquirer": "^8.2.4",
     "jsdom": "^20.0.0",
     "key-encoder": "^2.0.3",
-    "libxmljs2-xsd": "^0.30.1",
     "open": "^8.4.0",
     "patch-package": "^6.5.1",
     "replace-in-file": "^6.3.5",

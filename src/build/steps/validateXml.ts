@@ -1,5 +1,5 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
-const xsd = require("libxmljs2-xsd") as any;
+const xsd = require("@tokenscript/libxmljs2-xsd") as any;
 
 export class ValidateXml implements IBuildStep {
 
