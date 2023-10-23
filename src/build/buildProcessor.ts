@@ -6,6 +6,7 @@ import {ValidateXml} from "./steps/validateXml";
 import {InlineIncludes} from "./steps/inlineIncludes";
 import {Command} from "@oclif/core";
 import {JSDOM} from "jsdom";
+import {resolve} from "path";
 
 export interface IBuildStep {
 	runBuildStep(): void
@@ -20,8 +21,8 @@ export class BuildProcessor {
 		ValidateXml
 	];
 
-	static OUTPUT_DIR = "/out";
-	static SRC_XML_FILE = "/tokenscript.xml";
+	static OUTPUT_DIR = "out";
+	static SRC_XML_FILE = "tokenscript.xml";
 
 	private xmlString?: string|null = null;
 	private xmlDoc: Document|null = null;
@@ -63,7 +64,7 @@ export class BuildProcessor {
 
 	getXmlString(){
 		if (!this.xmlString){
-			this.xmlString = fs.readFileSync(this.workspace + BuildProcessor.SRC_XML_FILE, 'utf-8');
+			this.xmlString = fs.readFileSync(resolve(this.workspace, BuildProcessor.SRC_XML_FILE), 'utf-8');
 		}
 		return this.xmlString;
 	}
@@ -97,7 +98,7 @@ export class BuildProcessor {
 	}
 
 	public getOutputXmlPath(){
-		return this.workspace + BuildProcessor.OUTPUT_DIR + "/tokenscript.tsml"
+		return resolve(this.workspace, BuildProcessor.OUTPUT_DIR, "tokenscript.tsml");
 	}
 
 	private saveXmlOutput(){

@@ -7,13 +7,14 @@ import {KeyImporter} from "../sign/keyImporter";
 import {uint8tohex} from "../utils";
 import {base64, computeAddress} from "ethers/lib/utils";
 import {PemConverter} from "@peculiar/x509";
+import {join} from "path";
 
 const crypto = new Crypto();
 
 export default class Sign extends Command {
 
-	static SIGNED_XML_LOC = process.cwd() + "/out/tokenscript.signed.tsml";
-	static DEFAULT_CERT_LOCATION = process.cwd() + "/ts-certificate.pem";
+	static SIGNED_XML_LOC = join(process.cwd(), "out", "tokenscript.signed.tsml");
+	static DEFAULT_CERT_LOCATION = join(process.cwd(), "ts-certificate.pem");
 
 	static description = 'sign the built .tsml';
 
@@ -24,8 +25,8 @@ export default class Sign extends Command {
 	static flags = {
 		// flag with a value (-n, --name=VALUE)
 		verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
-		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key file location', default: process.cwd() + "/ts-signing.key"}),
-		publicKeyFile: Flags.string({char: 'p', description: 'Hex encoded private key file location', default: process.cwd() + "/ts-signing.pub"}),
+		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key file location', default: join(process.cwd(), "ts-signing.key")}),
+		publicKeyFile: Flags.string({char: 'p', description: 'Hex encoded private key file location', default: join(process.cwd(), "ts-signing.pub")}),
 		certFile: Flags.string({char: 'r', description: 'Certificate PEM filename', default: Sign.DEFAULT_CERT_LOCATION}),
 	}
 
@@ -38,7 +39,7 @@ export default class Sign extends Command {
 
 		const {flags} = await this.parse(Sign)
 
-		let tsmlSrc = process.cwd() + "/out/tokenscript.tsml";
+		let tsmlSrc = join(process.cwd(), "out", "tokenscript.tsml");
 
 		if (!fs.existsSync(tsmlSrc)) {
 			this.error("Build .tsml first", {exit: 2});

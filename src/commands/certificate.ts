@@ -6,6 +6,7 @@ import {KeyImporter} from "../sign/keyImporter";
 import inquirer from "inquirer";
 import {PemConverter} from "@peculiar/x509";
 import {FlagOutput} from "@oclif/core/lib/interfaces";
+import {join} from "path";
 
 const crypto = new Crypto();
 x509.cryptoProvider.set(crypto);
@@ -18,10 +19,10 @@ export default class Certificate extends Command {
 	static description = 'Create a certificate request or sign an existing request.';
 
 	static flags = {
-		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key filename', default: process.cwd() + "/ts-signing.key"}),
-		masterPrivateKeyFile: Flags.string({char: 'm', description: 'Hex encoded master private key filename', default: process.cwd() + "/ts-master.key"}),
-		certRequestFile: Flags.string({char: 'r', description: 'Certificate signing request PEM input or output filename', default: process.cwd() + "/" + Certificate.CERT_REQUEST_FILENAME}),
-		certFile: Flags.string({char: 'r', description: 'Certificate PEM input or output filename', default: process.cwd() + "/" + Certificate.CERT_FILENAME}),
+		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key filename', default: join(process.cwd(), "ts-signing.key")}),
+		masterPrivateKeyFile: Flags.string({char: 'm', description: 'Hex encoded master private key filename', default: join(process.cwd(), "ts-master.key")}),
+		certRequestFile: Flags.string({char: 'r', description: 'Certificate signing request PEM input or output filename', default: join(process.cwd(), Certificate.CERT_REQUEST_FILENAME)}),
+		certFile: Flags.string({char: 'r', description: 'Certificate PEM input or output filename', default: join(process.cwd(), Certificate.CERT_FILENAME)}),
 		cn: Flags.string({char: 'c', description: 'The CN for the certificate, or issuer CN if signing', default: ""}),
 	}
 

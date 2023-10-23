@@ -5,8 +5,12 @@ import open from "open";
 import expressWs from "express-ws";
 import fs, {existsSync} from "fs";
 import cors from "cors";
+import {join} from "path";
 
 export class Emulator {
+
+	static PROD_VIEWER_LOC = join(__dirname, "..", "viewerBundle");
+	static DEV_VIEWER_LOC = join(__dirname, "..", "..", "static", "viewerBundle");
 
 	server?: Express;
 
@@ -23,7 +27,7 @@ export class Emulator {
 
 	startEmulator() {
 
-		if (!existsSync(this.projectDir + "/tokenscript.xml")){
+		if (!existsSync(join(this.projectDir, "tokenscript.xml"))){
 			throw new Error("TokenScript XML file not detected, are you running this command from a TokenScript project directory?");
 		}
 
@@ -51,12 +55,11 @@ export class Emulator {
 		// Uncomment to use local built version of the tokenscript viewer
 		//this.server.use(express.static(__dirname + "/../../node_modules/@tokenscript/browser-runtime/dist/"));
 
-		const viewerBundlePath = fs.existsSync(__dirname + "/../../static/viewerBundle/") ?
-									__dirname + "/../../static/viewerBundle/" :
-									__dirname + "/../viewerBundle";
+		const viewerBundlePath = fs.existsSync(Emulator.DEV_VIEWER_LOC) ?
+									Emulator.DEV_VIEWER_LOC : Emulator.PROD_VIEWER_LOC;
 		this.server.use(express.static(viewerBundlePath));
 
-		this.server.use(express.static(this.projectDir + "/out/"));
+		this.server.use(express.static(join(this.projectDir, "out")));
 
 		this.ws = expressWs(this.server);
 
@@ -72,7 +75,7 @@ export class Emulator {
 
 		const urlToOpen = isRemoteEmulator ? "=" + encodeURIComponent(tsHost) : "";
 
-		if (!fs.existsSync(this.projectDir + "/out/tokenscript.tsml")){
+		if (!fs.existsSync(join(this.projectDir, "out", "tokenscript.tsml"))){
 			this.buildProject(() => {
 				open(this.emulatorHost + "?emulator=" + urlToOpen + "#card=0");
 			})
@@ -85,8 +88,8 @@ export class Emulator {
 	watchProject(){
 
 		chokidar.watch([
-			this.projectDir + "/src",
-			this.projectDir + "/tokenscript.xml"
+			join(this.projectDir, "src"),
+			join(this.projectDir, "tokenscript.xml")
 		], {
 			ignoreInitial: true
 		}).on('all', (event, path) => {

@@ -1,5 +1,6 @@
 import * as fs from "fs-extra";
 import {ITemplateData} from "./templateProcessor";
+import {resolve} from "path";
 
 export interface ITemplateListItem {
 	id: string;
@@ -10,9 +11,10 @@ export interface ITemplateListItem {
 
 export class Templates {
 
-	static templateDir = fs.existsSync(__dirname + "/../../static/templates/") ?
-							__dirname + "/../../static/templates/" :
-							__dirname + "/templates/";
+	static DEV_PATH = resolve(__dirname, "..", "..", "static/templates");
+	static PROD_PATH = resolve(__dirname, "templates");
+
+	static templateDir = fs.existsSync(Templates.DEV_PATH) ? Templates.DEV_PATH : Templates.PROD_PATH;
 
 	static templatesList: ITemplateListItem[] = [
 		{
@@ -31,7 +33,7 @@ export class Templates {
 
 	static getTemplateDescriptor(id: string){
 
-		const fileContents = fs.readFileSync(this.templateDir + id + "/tstemplate.json", "utf-8");
+		const fileContents = fs.readFileSync(resolve(this.templateDir, id, "tstemplate.json"), "utf-8");
 
 		let templateDef = JSON.parse(fileContents) as ITemplateData;
 
@@ -42,6 +44,6 @@ export class Templates {
 	}
 
 	static copyTemplate(id: string, dest: string){
-		fs.copySync(this.templateDir + id, dest, { recursive: true });
+		fs.copySync(resolve(this.templateDir, id), dest, { recursive: true });
 	}
 }
