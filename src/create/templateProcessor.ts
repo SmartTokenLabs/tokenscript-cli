@@ -1,5 +1,6 @@
 import {replaceInFile} from "replace-in-file";
 import * as fs from "fs";
+import {join} from "path";
 
 export interface ITemplateFields {
 	name: string;
@@ -31,8 +32,8 @@ export class TemplateProcessor {
 
 		const results = await replaceInFile({
 			files: [
-				this.workspace + "/*.xml",
-				this.workspace + "/*.shtml"
+				join(this.workspace, "*.xml"),
+				join(this.workspace, "*.shtml")
 			],
 			from: this.templateData.templateFields.map((field) => {
 				if (field.value){
@@ -70,7 +71,7 @@ export class TemplateProcessor {
 			this.templateData.templateFields[i].value = values[i];
 		}
 
-		fs.writeFileSync(this.workspace + "/tstemplate.json", JSON.stringify(this.templateData, null, "\t"));
+		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
 	}
 
 	escapeRegExp(string: string) {

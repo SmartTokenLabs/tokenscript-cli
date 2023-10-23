@@ -1,5 +1,6 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
 import * as fs from "fs";
+import {resolve} from "path";
 
 export class InlineIncludes implements IBuildStep {
 
@@ -76,8 +77,7 @@ export class InlineIncludes implements IBuildStep {
 
 	private getIncludeContent(type: string, src: string){
 
-		if (src.indexOf("/") !== 0){}
-			src = this.context.workspace + "/" + src;
+		src = resolve(this.context.workspace, src);
 
 		if (!fs.existsSync(src))
 			throw new Error("Include tag src " + src + " does not exist or cannot be read!");

@@ -3,6 +3,7 @@ import {Templates} from "../create/template";
 import {ITemplateData, ITemplateFields, TemplateProcessor} from "../create/templateProcessor";
 import * as fs from "fs-extra";
 import inquirer from "inquirer";
+import {resolve, join} from "path";
 
 export default class Create extends Command {
 
@@ -28,13 +29,13 @@ export default class Create extends Command {
 	async run(): Promise<void> {
 		const {flags, args} = await this.parse(Create);
 
-		this.dir = args.directory.indexOf("/") !== 0 ? process.cwd() + "/" + args.directory : args.directory;
+		this.dir = args.directory.indexOf("/") !== 0 ? resolve(process.cwd(), args.directory) : args.directory;
 
 		if (fs.existsSync(this.dir)){
 
 			let numFiles = fs.readdirSync(this.dir).length;
 
-			if (numFiles && fs.existsSync(this.dir + "/tstemplate.json")){
+			if (numFiles && fs.existsSync(join(this.dir, "tstemplate.json"))){
 				await this.handleExistingProject();
 				return;
 			}

@@ -1,5 +1,6 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
 const xsd = require("@tokenscript/libxmljs2-xsd") as any;
+import {join, sep} from "path";
 
 export class ValidateXml implements IBuildStep {
 
@@ -18,9 +19,11 @@ export class ValidateXml implements IBuildStep {
 			throw new Error("Could not find namespace in XML. Are you missing a namespace declaration?");
 
 		const schemaVersion = ns!!.indexOf("2022/09") > -1 ? "2022-09" : "2020-06";
-		const schemaBasePath = __dirname + "/../../schema/" + schemaVersion + "/";
 
-		const schema = xsd.parseFile(schemaBasePath + "tokenscript.xsd", {
+		// For some reason external schemas referenced by tokenscript.xsd do not work when using path.join or path.resolve
+		const schemaBasePath = __dirname + sep + ".." + sep + ".." + sep + "schema" + sep + schemaVersion + sep;
+
+		const schema = xsd.parseFile(join(schemaBasePath, "tokenscript.xsd"), {
 			baseUrl: schemaBasePath
 		});
 
