@@ -267,6 +267,7 @@
 		<attribute ref="xml:lang"/>
 		<attribute name="url" type="anyURI" />
 		<attribute name="urlFragment" type="anyURI" />
+		<attribute name="uiButton" type="boolean" />
 	</complexType>
 	<complexType name="viewInclude">
 		<attribute name="type" use="required">
