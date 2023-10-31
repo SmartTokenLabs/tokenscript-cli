@@ -30,7 +30,7 @@ export class TemplateProcessor {
 		if (this.templateData.templateFields.length != values.length)
 			throw new Error("Template values length must match field length");
 
-		// Add trimmed name into replacement template. NB this relies on 'name' being the first entry. Should be a map lookup.
+		// Add trimmed name into replacement template.
 		values = this.insertTrimmedName(values);
 
 		const results = await replaceInFile({
@@ -78,7 +78,8 @@ export class TemplateProcessor {
 	}
 
 	insertTrimmedName(values: any[]): any[] {
-		const trimVal = values[0].replace(/\s/g, "");
+		const nameIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_NAME');
+		const trimVal = values[nameIndex].replace(/\s/g, "");
 		let trimEntry: ITemplateFields = {name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: ''};
 		this.templateData.templateFields.push(trimEntry);
         
