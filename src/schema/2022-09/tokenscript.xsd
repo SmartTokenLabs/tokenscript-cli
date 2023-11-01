@@ -41,7 +41,7 @@
 				<element name="origins" minOccurs="0">
 					<complexType>
 						<sequence>
-							<element ref="ts:ethereum"/>
+							<element ref="ts:ethereum" minOccurs="0" maxOccurs="unbounded"/>
 							<element name="attestation" minOccurs="0" maxOccurs="unbounded" type="ts:attest-ref"/>
 						</sequence>
 					</complexType>
