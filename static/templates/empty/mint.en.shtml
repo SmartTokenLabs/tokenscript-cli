@@ -21,7 +21,7 @@
 
 		render() {
 			return `
-        &lt;h3&gt;Mint Ape with Ticket ...&lt;/h3&gt;`;
+        <h3>Mint $tst{TOKENSCRIPT_NAME} ...</h3>`;
 		}
 	}
 
