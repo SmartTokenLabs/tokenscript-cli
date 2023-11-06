@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<ts:token xmlns:ts="http://tokenscript.org/2020/06/tokenscript" xmlns:xhtml="http://www.w3.org/1999/xhtml"
-          xmlns:xml="http://www.w3.org/XML/1998/namespace"
-          xsi:schemaLocation="http://tokenscript.org/2020/06/tokenscript http://tokenscript.org/2020/06/tokenscript.xsd"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:asnx="urn:ietf:params:xml:ns:asnx"
-          xmlns:ethereum="urn:ethereum:constantinople" custodian="false"
-          name="$tst{TOKENSCRIPT_NAME}">
-    <ts:label>
+<ts:token xmlns:ts="http://tokenscript.org/2022/09/tokenscript"
+		  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+		  xsi:schemaLocation="http://tokenscript.org/2022/09/tokenscript http://tokenscript.org/2022/09/tokenscript.xsd"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xmlns:ethereum="urn:ethereum:constantinople"
+		  xmlns:xhmtl="http://www.w3.org/1999/xhtml"
+		  name="$tst{TOKENSCRIPT_TRIM}">
+	<ts:label>
         <ts:plurals xml:lang="en">
             <ts:string quantity="one">$tst{TOKENSCRIPT_NAME}</ts:string>
             <ts:string quantity="other">$tst{TOKENSCRIPT_NAME}</ts:string>
@@ -55,18 +56,18 @@
 
                         render() {
                             return `
-        &lt;h3&gt;Sign the challenge to unlock ...&lt;/h3&gt;
-        &lt;div id="msg"&gt;Preparing to unlock the entrance door.&lt;/div&gt;
-        &lt;div id="inputBox"&gt;
-                 &lt;h3&gt;Door open time&lt;/h3&gt;
-                 &lt;input id="openTime" type="number" value='120' /&gt;
-              &lt;/div&gt;
-        &lt;div id="contractAddress"&gt;${this.props.contractAddress}&lt;/div&gt;
-        &lt;div id="status"/&gt;`;
+        <h3>Sign the challenge to unlock ...</h3>
+        <div id="msg">Preparing to unlock the entrance door.</div>
+        <div id="inputBox">
+                 <h3>Door open time</h3>
+                 <input id="openTime" type="number" value='120' />
+              </div>
+        <div id="contractAddress">${this.props.contractAddress}</div>
+        <div id="status"/>`;
                         }
                     }
 
-                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) =&gt; {
+                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
                         const currentTokenInstance = updatedTokens.currentInstance;
                         document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
                     };
@@ -174,14 +175,14 @@
 
                         render() {
                             return `
-        &lt;h3&gt;Sign the challenge to lock ...&lt;/h3&gt;
-        &lt;div id="msg"&gt;Preparing to lock the door.&lt;/div&gt;
-        &lt;div id="contractAddress"&gt;${this.props.contractAddress}&lt;/div&gt;
-        &lt;div id="status"/&gt;`;
+        <h3>Sign the challenge to lock ...</h3>
+        <div id="msg">Preparing to lock the door.</div>
+        <div id="contractAddress">${this.props.contractAddress}</div>
+        <div id="status"/>`;
                         }
                     }
 
-                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) =&gt; {
+                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
                         const currentTokenInstance = updatedTokens.currentInstance;
                         document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
                     };
@@ -282,12 +283,11 @@
                         }
 
                         render() {
-                            return `
-        &lt;h3&gt;Mint Ape with Ticket ...&lt;/h3&gt;`;
+                            return `<h3>Mint Ape with Ticket ...</h3>`;
                         }
                     }
 
-                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) =&gt; {
+                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
                         const currentTokenInstance = updatedTokens.currentInstance;
                         document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
                     };
@@ -334,11 +334,11 @@
 
                         render() {
                             return `
-        &lt;h3&gt;Mint Ape with Ticket ...&lt;/h3&gt;`;
+                            <h3>Mint $tst{TOKENSCRIPT_NAME} ...</h3>`;
                         }
                     }
 
-                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) =&gt; {
+                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
                         const currentTokenInstance = updatedTokens.currentInstance;
                         document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
                     };
@@ -384,12 +384,11 @@
                         }
 
                         render() {
-                            return `
-        &lt;h3&gt;Mint STL Logo token ...&lt;/h3&gt;`;
+                            return `<h3>Mint STL Logo token ...</h3>`;
                         }
                     }
 
-                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) =&gt; {
+                    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
                         const currentTokenInstance = updatedTokens.currentInstance;
                         document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
                     };

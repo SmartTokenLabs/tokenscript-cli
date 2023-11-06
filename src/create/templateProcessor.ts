@@ -7,7 +7,7 @@ export interface ITemplateFields {
 	token: string;
 	updatePrefix?: string;
 	prompt: string;
-	value: string;
+	value?: string;
 }
 
 export interface ITemplateData {
@@ -29,6 +29,9 @@ export class TemplateProcessor {
 
 		if (this.templateData.templateFields.length != values.length)
 			throw new Error("Template values length must match field length");
+
+		// Add trimmed name into replacement template.
+		values = this.insertTrimmedName(values);
 
 		const results = await replaceInFile({
 			files: [
@@ -72,6 +75,16 @@ export class TemplateProcessor {
 		}
 
 		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
+	}
+
+	insertTrimmedName(values: any[]): any[] {
+		const nameIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_NAME');
+		const trimVal = values[nameIndex].replace(/\s/g, "");
+		let trimEntry: ITemplateFields = {name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: ''};
+		this.templateData.templateFields.push(trimEntry);
+        
+        values.push(trimVal);
+		return values;
 	}
 
 	escapeRegExp(string: string) {
