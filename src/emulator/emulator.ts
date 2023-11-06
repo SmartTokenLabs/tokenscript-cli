@@ -75,13 +75,14 @@ export class Emulator {
 
 		const urlToOpen = isRemoteEmulator ? "=" + encodeURIComponent(tsHost) : "";
 
-		if (!fs.existsSync(join(this.projectDir, "out", "tokenscript.tsml"))){
+		// TODO: Store hashes of previous src build & compare.
+		//if (!fs.existsSync(join(this.projectDir, "out", "tokenscript.tsml"))){
 			this.buildProject(() => {
-				open(this.emulatorHost + "?emulator=" + urlToOpen + "#card=0");
+				open(this.emulatorHost + "?emulator" + urlToOpen + "#card=0");
 			})
-		} else {
+		/*} else {
 			open(this.emulatorHost + "?emulator" + urlToOpen + "#card=0");
-		}
+		}*/
 
 	}
 
