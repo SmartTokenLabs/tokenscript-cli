@@ -35,12 +35,13 @@
 			<sequence>
 				<element ref="asnx:module" minOccurs="0" maxOccurs="unbounded"/>
 				<element minOccurs="0" name="label" type="ts:text"/>
+				<element minOccurs="0" ref="ts:meta" />
 				<element minOccurs="0" maxOccurs="unbounded" ref="ts:contract"/>
 				<element minOccurs="0" maxOccurs="unbounded" ref="ts:attestation"/>
 				<element name="origins" minOccurs="0">
 					<complexType>
 						<sequence>
-							<element ref="ts:ethereum"/>
+							<element ref="ts:ethereum" minOccurs="0" maxOccurs="unbounded"/>
 							<element name="attestation" minOccurs="0" maxOccurs="unbounded" type="ts:attest-ref"/>
 						</sequence>
 					</complexType>
@@ -231,6 +232,22 @@
 			<attribute name="interface" type="NCName"/>
 		</complexType>
 	</element>
+	<element name="meta">
+		<complexType>
+			<choice maxOccurs="unbounded">
+				<element name="description" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
+				<element name="aboutUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
+			</choice>
+		</complexType>
+	</element>
+	<complexType name="meta-tag">
+		<simpleContent>
+			<extension base="string">
+				<attribute ref="xml:lang"/>
+				<attribute name="quantity" type="ts:quantity"/>
+			</extension>
+		</simpleContent>
+	</complexType>
 	<element name="interface" type="NCName"/>
 	<element name="include" type="NCName"/>
 	<complexType name="view">
@@ -250,6 +267,7 @@
 		<attribute ref="xml:lang"/>
 		<attribute name="url" type="anyURI" />
 		<attribute name="urlFragment" type="anyURI" />
+		<attribute name="uiButton" type="boolean" />
 	</complexType>
 	<complexType name="viewInclude">
 		<attribute name="type" use="required">
