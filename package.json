@@ -1,6 +1,6 @@
 {
   "name": "@tokenscript/cli",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A tool for managing tokenscript projects",
   "author": "Michael Wallace @micwallace",
   "bin": {
