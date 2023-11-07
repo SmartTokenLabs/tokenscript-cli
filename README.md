@@ -19,7 +19,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.0.6 linux-x64 node-v16.18.1
+@tokenscript/cli/1.0.8 linux-x64 node-v16.18.1
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -97,7 +97,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.6/dist/commands/build.ts)_
+_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.8/dist/commands/build.ts)_
 
 ## `tokenscript certificate COMMAND`
 
@@ -113,9 +113,9 @@ ARGUMENTS
 FLAGS
   -c, --cn=<value>                    The CN for the certificate, or issuer CN if signing
   -k, --privateKeyFile=<value>        [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-signing.key] Hex
-                                      encoded private key filename
+                                      encoded private key filename (for creating CSR)
   -m, --masterPrivateKeyFile=<value>  [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-master.key] Hex
-                                      encoded master private key filename
+                                      encoded master private key filename (for signing CSR)
   -r, --certFile=<value>              [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-certificate.pem]
                                       Certificate PEM input or output filename
   -r, --certRequestFile=<value>       [default:
@@ -126,7 +126,7 @@ DESCRIPTION
   Create a certificate request or sign an existing request.
 ```
 
-_See code: [dist/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.6/dist/commands/certificate.ts)_
+_See code: [dist/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.8/dist/commands/certificate.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -143,7 +143,7 @@ DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.6/dist/commands/create.ts)_
+_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.8/dist/commands/create.ts)_
 
 ## `tokenscript emulate`
 
@@ -160,7 +160,7 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.6/dist/commands/emulate.ts)_
+_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.8/dist/commands/emulate.ts)_
 
 ## `tokenscript help [COMMAND]`
 
@@ -433,7 +433,7 @@ DESCRIPTION
   sign the built .tsml
 ```
 
-_See code: [dist/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.6/dist/commands/sign.ts)_
+_See code: [dist/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.8/dist/commands/sign.ts)_
 
 ## `tokenscript validate`
 
@@ -447,5 +447,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.6/dist/commands/validate.ts)_
+_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.0.8/dist/commands/validate.ts)_
 <!-- commandsstop -->
