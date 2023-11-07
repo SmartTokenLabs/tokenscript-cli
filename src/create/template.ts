@@ -15,9 +15,6 @@ export class Templates {
 	static DEV_PATH = join(__dirname, "..", "..", "static/templates");
 	static PROD_PATH = join(__dirname, "templates");
 
-	//static DEV_PATH = resolve(__dirname, "..", "..", "static/templates");
-	//static PROD_PATH = resolve(__dirname, "templates");
-
 	static templateDir = fs.existsSync(Templates.DEV_PATH) ? Templates.DEV_PATH : Templates.PROD_PATH;
 
 	static templatesList: ITemplateListItem[] = [
