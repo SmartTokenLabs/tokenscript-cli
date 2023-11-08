@@ -13,7 +13,7 @@ export interface ITemplateListItem {
 export class Templates {
 
 	static DEV_PATH = join(__dirname, "..", "..", "static/templates");
-	static PROD_PATH = join(__dirname, "templates");
+	static PROD_PATH = join(__dirname, "..", "templates");
 
 	static templateDir = fs.existsSync(Templates.DEV_PATH) ? Templates.DEV_PATH : Templates.PROD_PATH;
 
