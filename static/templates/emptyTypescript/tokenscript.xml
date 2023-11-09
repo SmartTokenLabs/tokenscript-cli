@@ -4,7 +4,6 @@
 		  xsi:schemaLocation="http://tokenscript.org/2022/09/tokenscript http://tokenscript.org/2022/09/tokenscript.xsd"
 		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		  xmlns:ethereum="urn:ethereum:constantinople"
-		  xmlns:xhmtl="http://www.w3.org/1999/xhtml"
 		  name="$tst{TOKENSCRIPT_TRIM}">
 	<ts:label>
 		<ts:plurals xml:lang="en">
@@ -21,6 +20,20 @@
 	</ts:origins>
 	<ts:cards>
 
+		<ts:viewContent name="common" xmlns="http://www.w3.org/1999/xhtml">
+			<ts:include type="css" src="./src/styles.css"/>
+			<ts:include type="html" src="./dist/index.html"/>
+		</ts:viewContent>
+
+		<ts:card type="token" name="Info">
+			<ts:label>
+				<ts:string xml:lang="en">Info</ts:string>
+			</ts:label>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" urlFragment="info">
+				<ts:viewContent name="common" />
+			</ts:view>
+		</ts:card>
+
 		<ts:card type="action" name="Mint">
 			<!-- this action is of the model confirm-back.
 			window.onConfirm is called if user hit "confirm";
@@ -35,8 +48,8 @@
 					</ts:data>
 				</ethereum:transaction>
 			</ts:transaction>
-			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-				<ts:include type="html" src="./dist/index.html"/>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" urlFragment="mint">
+				<ts:viewContent name="common" />
 			</ts:view>
 		</ts:card>
 
