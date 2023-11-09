@@ -1,18 +1,3 @@
-<style type="text/css">
-	html {
-	}
-
-	body {
-		padding: 0px;
-		margin: 0px;
-	}
-
-	div {
-		margin: 0px;
-		padding: 0px;
-	}
-
-</style>
 <script type="text/javascript">
 	class Token {
 		constructor(tokenInstance) {
@@ -21,7 +6,12 @@
 
 		render() {
 			return `
-        <h3>Mint $tst{TOKENSCRIPT_NAME} ...</h3>`;
+        		<h3>Welcome to TokenScript</h3>
+        		<p>When a card loads in TokenScript, it gets access to the token context data through TokenScript engine</p>
+        		<pre>
+        			${JSON.stringify(currentTokenInstance, null, 2)}
+				</pre>
+			`;
 		}
 	}
 
