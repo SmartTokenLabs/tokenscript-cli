@@ -4,7 +4,7 @@
   "description": "Plain typescript project for TokenScript",
   "scripts": {
     "start": "webpack serve --open",
-    "build": "vite build && npm run build:ts",
+    "build": "webpack build && npm run build:ts",
     "build:ts": "tokenscript build",
     "sign": "tokenscript sign",
     "emulate": "tokenscript emulate",
