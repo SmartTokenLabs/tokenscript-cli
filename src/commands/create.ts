@@ -59,22 +59,27 @@ export default class Create extends Command {
 
 		let values = await this.collectFieldValues(templateDef.templateFields);
 
+		CliUx.ux.action.start("Initializing template...");
+
 		Templates.copyTemplate(template, this.dir);
 
 		await this.processTemplateUpdate(templateDef, values);
 
+		CliUx.ux.action.stop();
+
 		// If this is a node-based project, run "npm i" to install dependencies
 		if (fs.existsSync(join(this.dir, "package.json"))){
 			try {
-				exec.execSync("npm i");
+				CliUx.ux.action.start("Running NPM install...");
+				exec.execSync("cd " + this.dir + " && npm i");
 			} catch (e: any){
 				CliUx.ux.error(e);
 				CliUx.ux.info("Failed to run 'npm i', please perform this step manually");
 			}
 		}
 
+		CliUx.ux.action.stop();
 		CliUx.ux.info("Project successfully initialized!\r\n");
-		CliUx.ux.done()
 	}
 
 	private async processTemplateUpdate(templateDef: ITemplateData, values: any[]){

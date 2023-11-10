@@ -33,11 +33,13 @@ export class TemplateProcessor {
 		// Add trimmed name into replacement template.
 		values = this.insertTrimmedName(values);
 
+		// TODO: Add src & JS files?
 		const results = await replaceInFile({
 			files: [
 				join(this.workspace, "*.xml"),
 				join(this.workspace, "*.html")
 			],
+			allowEmptyPaths: true,
 			from: this.templateData.templateFields.map((field) => {
 				if (field.value){
 					let value = this.escapeRegExp(field.value);
