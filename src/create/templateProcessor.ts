@@ -36,7 +36,7 @@ export class TemplateProcessor {
 		const results = await replaceInFile({
 			files: [
 				join(this.workspace, "*.xml"),
-				join(this.workspace, "*.shtml")
+				join(this.workspace, "*.html")
 			],
 			from: this.templateData.templateFields.map((field) => {
 				if (field.value){
@@ -82,7 +82,7 @@ export class TemplateProcessor {
 		const trimVal = values[nameIndex].replace(/\s/g, "");
 		let trimEntry: ITemplateFields = {name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: ''};
 		this.templateData.templateFields.push(trimEntry);
-        
+
         values.push(trimVal);
 		return values;
 	}

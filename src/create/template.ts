@@ -19,17 +19,29 @@ export class Templates {
 
 	static templatesList: ITemplateListItem[] = [
 		{
+			id: "empty_svelte",
+			name: "Empty Svelte Project",
+			description: "An empty TokenScript project with Svelte & Vite",
+			location: "templates/emptySvelte"
+		},
+		{
+			id: "empty_typescript",
+			name: "Empty TypeScript Project",
+			description: "An empty TokenScript project with TypeScript & Webpack",
+			location: "templates/emptyTypescript"
+		},
+		{
 			id: "empty",
 			name: "Empty Project",
 			description: "An empty TokenScript project",
 			location: "templates/empty"
 		},
-		{
+		/*{
 			id: "entryToken",
 			name: "Entry Token",
 			description: "An example of using TokenScript to interact with ioT devices",
 			location: "templates/entryToken"
-		}
+		}*/
 	];
 
 	static getTemplateDescriptor(id: string){

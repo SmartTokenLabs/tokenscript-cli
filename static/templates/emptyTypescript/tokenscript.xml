@@ -11,6 +11,11 @@
 			<ts:string quantity="other">$tst{TOKENSCRIPT_NAME} Tokens</ts:string>
 		</ts:plurals>
 	</ts:label>
+	<ts:meta>
+		<ts:description xml:lang="en">$tst{DESCRIPTION}</ts:description>
+		<ts:aboutUrl xml:lang="en">$tst{ABOUT_URL}</ts:aboutUrl>
+		<ts:iconUrl xml:lang="en">$tst{ICON_URL}</ts:iconUrl>
+	</ts:meta>
 	<ts:contract interface="erc721" name="Token">
 		<ts:address network="$tst{CONTRACT_CHAIN}">$tst{CONTRACT_ADDRESS}</ts:address>
 	</ts:contract>

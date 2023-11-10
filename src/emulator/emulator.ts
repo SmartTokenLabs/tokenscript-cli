@@ -88,11 +88,23 @@ export class Emulator {
 
 	watchProject(){
 
-		chokidar.watch([
-			join(this.projectDir, "src"),
-			join(this.projectDir, "tokenscript.xml")
-		], {
-			ignoreInitial: true
+		// For package.json projects we are only interested in monitoring src and tokenscript.xml.
+		// But for legacy projects we monitor the entire directory, ignoring some folders
+		const watchedPaths = [];
+
+		if (existsSync(join(this.projectDir, "src"))){
+			watchedPaths.push(join(this.projectDir, "src"));
+			watchedPaths.push(join(this.projectDir, "tokenscript.xml"))
+		} else {
+			watchedPaths.push(this.projectDir);
+		}
+
+		chokidar.watch(watchedPaths, {
+			ignoreInitial: true,
+			ignored: [
+				join(this.projectDir, "out"),
+				join(this.projectDir, "node_modules"),
+			]
 		}).on('all', (event, path) => {
 
 			if (this.buildTimer)
@@ -114,7 +126,9 @@ export class Emulator {
 
 		console.log("Build started..");
 
-		this.buildProcess = exec.exec("cd " + this.projectDir + " && npm run build", (error, stdout, stderr) => {
+		const buildCommand = existsSync(join(this.projectDir, "package.json")) ? "npm run build" : "tokenscript build";
+
+		this.buildProcess = exec.exec("cd " + this.projectDir + " && " + buildCommand, (error, stdout, stderr) => {
 
 			if (error){
 				const errMsg = "Failed to build TokenScript project: ";

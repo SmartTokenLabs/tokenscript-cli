@@ -1,7 +1,7 @@
 {
 	"$schema": "../tstemplate.schema.json",
-	"name": "Empty Typescript Project",
-	"description": "An empty TokenScript project",
+	"name": "Empty Svelte Project - recommended",
+	"description": "An empty Svelte project",
 	"templateFields": [
 		{
 			"name": "TokenScript name",
