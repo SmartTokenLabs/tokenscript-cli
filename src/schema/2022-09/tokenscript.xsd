@@ -237,6 +237,7 @@
 			<choice maxOccurs="unbounded">
 				<element name="description" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 				<element name="aboutUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
+				<element name="iconUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 			</choice>
 		</complexType>
 	</element>

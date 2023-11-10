@@ -4,6 +4,7 @@ import {ITemplateData, ITemplateFields, TemplateProcessor} from "../create/templ
 import * as fs from "fs-extra";
 import inquirer from "inquirer";
 import {resolve, join} from "path";
+import exec from "child_process";
 
 export default class Create extends Command {
 
@@ -61,6 +62,19 @@ export default class Create extends Command {
 		Templates.copyTemplate(template, this.dir);
 
 		await this.processTemplateUpdate(templateDef, values);
+
+		// If this is a node-based project, run "npm i" to install dependencies
+		if (fs.existsSync(join(this.dir, "package.json"))){
+			try {
+				exec.execSync("npm i");
+			} catch (e: any){
+				CliUx.ux.error(e);
+				CliUx.ux.info("Failed to run 'npm i', please perform this step manually");
+			}
+		}
+
+		CliUx.ux.info("Project successfully initialized!\r\n");
+		CliUx.ux.done()
 	}
 
 	private async processTemplateUpdate(templateDef: ITemplateData, values: any[]){
@@ -68,8 +82,6 @@ export default class Create extends Command {
 		let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 
 		await templateProcessor.processTemplateUpdate(values);
-
-		console.log("Project successfully initialized!\r\n");
 	}
 
 	private async handleExistingProject() {
