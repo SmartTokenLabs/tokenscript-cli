@@ -18,11 +18,11 @@
 
 <div>
 	{#if token}
-		<h3>Welcome to TokenScript</h3>
-		<p>When a card loads in TokenScript, it gets access to the token context data through TokenScript engine</p>
-		<pre>
-			${JSON.stringify(token, null, 2)}
-		</pre>
+		<div style="text-align: center;">
+			<h3>Welcome to TokenScript</h3>
+			<p>When a card loads in TokenScript, it gets access to the token context data through TokenScript engine</p>
+		</div>
+		<pre>{JSON.stringify(token, null, 2)}</pre>
 	{/if}
 	<Loader show={loading}/>
 </div>
