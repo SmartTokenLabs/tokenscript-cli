@@ -21,11 +21,11 @@ function init(){
 
 	function renderInfo(currentTokenInstance){
 		return `
-			<h3>Welcome to TokenScript</h3>
-			<p>When a card loads in TokenScript, it gets access to the token context data through TokenScript engine</p>
-			<pre>
-				${JSON.stringify(currentTokenInstance, null, 2)}
-			</pre>
+			<div style="text-align: center;">
+				<h3>Welcome to TokenScript</h3>
+				<p>When a card loads in TokenScript, it gets access to the token context data through TokenScript engine</p>
+			</div>
+			<pre>${JSON.stringify(currentTokenInstance, null, 2)}</pre>
 		`;
 	}
 
