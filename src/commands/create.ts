@@ -133,10 +133,17 @@ export default class Create extends Command {
 	private async collectFieldValues(templateDef: ITemplateFields[]){
 
 		let responses: any = await inquirer.prompt(templateDef.map((fieldDef) => {
+
+			const type = fieldDef.options?.length ? "list" : "input";
+			const choices = fieldDef.options?.length ? fieldDef.options.map((option) => {
+				return { name: option, value: option };
+			}) : undefined;
+
 			return {
 				name: fieldDef.name,
 				message: fieldDef.prompt + ":",
-				type: "input",
+				type,
+				choices,
 				validate: (val) => {
 					return val != "";
 				}

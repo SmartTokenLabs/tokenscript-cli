@@ -9,6 +9,13 @@
 			"prompt": "Enter a name for the TokenScript project"
 		},
 		{
+			"name": "Token type",
+			"token": "TOKEN_TYPE",
+			"updatePrefix": "interface=\"",
+			"prompt": "Select the token type",
+			"options": ["erc721", "erc20"]
+		},
+		{
 			"name": "Contract address",
 			"token": "CONTRACT_ADDRESS",
 			"prompt": "Enter the ethereum contract address for the TokenScript"

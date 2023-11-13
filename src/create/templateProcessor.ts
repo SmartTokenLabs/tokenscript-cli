@@ -7,6 +7,7 @@ export interface ITemplateFields {
 	token: string;
 	updatePrefix?: string;
 	prompt: string;
+	options?: string[];
 	value?: string;
 }
 
