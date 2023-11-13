@@ -39,6 +39,13 @@
 					"value": {
 						"description": "The user provided value. This is stored to allow updating these values later.",
 						"type": "string"
+					},
+					"options": {
+						"description": "An array of allowed values. These are displayed in a list for the user to select",
+						"type": "array",
+						"item": {
+							"type": "string"
+						}
 					}
 				},
 				"required": ["name","token","prompt"]
