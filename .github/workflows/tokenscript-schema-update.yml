@@ -3,7 +3,7 @@ name: "Update https://www.tokenscript.org/schemas/"
 on:
   push:
     branches:
-      - master
+      - prod
     paths:
       - src/schema/
   workflow_dispatch:
