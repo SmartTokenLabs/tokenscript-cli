@@ -26,7 +26,7 @@ export class TemplateProcessor {
 
 	}
 
-	async processTemplateUpdate(values: any[]){
+	async processTemplateUpdate(values: any[]) {
 
 		if (this.templateData.templateFields.length != values.length)
 			throw new Error("Template values length must match field length");
@@ -82,7 +82,7 @@ export class TemplateProcessor {
 
 	insertTrimmedName(values: any[]): any[] {
 		const nameIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_NAME');
-		const trimVal = values[nameIndex].replace(/\s/g, "");
+		const trimVal = values[nameIndex].replace(/\s/g, "-");
 		let trimEntry: ITemplateFields = {name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: ''};
 		this.templateData.templateFields.push(trimEntry);
 
