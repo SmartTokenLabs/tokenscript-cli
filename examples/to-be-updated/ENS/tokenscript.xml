@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE token  [
+        <!ENTITY style SYSTEM "shared.css">
+        <!ENTITY item-view-style SYSTEM "item-view.css">
+        <!ENTITY view-style SYSTEM "view.css">
+        <!ENTITY renew.en SYSTEM "renew.en.js">
+        <!ENTITY records.en SYSTEM "recordsBundle.en.js">
+        <!ENTITY view.en SYSTEM "viewBundle.en.js">
+        <!ENTITY item-view.en SYSTEM "item-view.en.js">
+        ]>
+      <ts:token xmlns:ts="http://tokenscript.org/2022/09/tokenscript"
+		  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+		  xsi:schemaLocation="http://tokenscript.org/2022/09/tokenscript http://tokenscript.org/2022/09/tokenscript.xsd"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xmlns:ethereum="urn:ethereum:constantinople"
+		  name="xdai-bridge">
+      <ts:label>
+        <ts:plurals xml:lang="en">
+          <ts:string quantity="one">xdai-bridge Token</ts:string>
+          <ts:string quantity="other">xdai-bridge Tokens</ts:string>
+        </ts:plurals>
+      </ts:label>
+	<ts:meta>
+		<ts:description xml:lang="en">xdai bridge</ts:description>
+		<ts:aboutUrl xml:lang="en">www.xdai.com</ts:aboutUrl>
+		<ts:iconUrl xml:lang="en">xdai.com/image</ts:iconUrl>
+	</ts:meta>
+<ts:token xmlns:ts="http://tokenscript.org/2020/06/tokenscript"
+          xmlns:xhtml="http://www.w3.org/1999/xhtml"
+          xmlns:xml="http://www.w3.org/XML/1998/namespace"
+          xsi:schemaLocation="http://tokenscript.org/2020/06/tokenscript http://tokenscript.org/2020/06/tokenscript.xsd"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns:asnx="urn:ietf:params:xml:ns:asnx"
+          xmlns:ethereum="urn:ethereum:constantinople"
+          name="ENS"
+>
+  <asnx:module name="ENS-Events">
+    <namedType name="NameRegistered">
+      <type>
+        <sequence>
+          <element name="name" ethereum:type="string"/>
+          <element name="label" ethereum:type="bytes32" ethereum:indexed="true"/>
+          <element name="owner" ethereum:type="address" ethereum:indexed="true"/>
+          <element name="cost" ethereum:type="uint"/>
+          <element name="expires" ethereum:type="uint"/>
+        </sequence>
+      </type>
+    </namedType>
+  </asnx:module>
+  <ts:label>
+    <ts:plurals xml:lang="en">
+      <ts:string quantity="one">ENS</ts:string>
+    </ts:plurals>
+  </ts:label>
+  <ts:contract interface="erc721" name="ENS">
+    <ts:address network="1">0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85</ts:address>
+  </ts:contract>
+  <ts:contract name="registry">
+    <ts:address network="1">0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e</ts:address>
+  </ts:contract>
+  <ts:contract name="PublicResolver">
+    <ts:address network="1">0x4976fb03C32e5B8cfe2b6cCB31c09Ba78EBaBa41</ts:address>
+  </ts:contract>
+
+  <!-- emitted via: function registerWithConfig(string memory name, address owner, uint duration, bytes32 secret, address resolver, address addr) public payable -->
+  <ts:contract name="ETHRegistrarController">
+    <ts:address network="1">0x283af0b28c62c092c9727f1ee09c02ca627eb7f5</ts:address>
+  </ts:contract>
+  <ts:origins>
+    <!-- Define the contract which holds the token that the user will use -->
+    <ts:ethereum contract="ENS"/>
+  </ts:origins>
+
+  <ts:cards>
+    <ts:card type="token" name="main">
+      <ts:item-view xml:lang="en">
+        <xhtml:style type="text/css">&item-view-style;</xhtml:style>
+        <xhtml:script type="text/javascript">&item-view.en;</xhtml:script>
+      </ts:item-view>
+      <ts:view xml:lang="en">
+        <xhtml:style type="text/css">&view-style;</xhtml:style>
+        <xhtml:script type="text/javascript">&view.en;</xhtml:script>
+      </ts:view>
+    </ts:card>
+
+    <ts:card type="action" name="records">
+      <ts:label>
+        <ts:string xml:lang="en">Records</ts:string>
+      </ts:label>
+
+      <ts:attribute name="newRecordValue">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:label>
+          <ts:string xml:lang="en">new record value</ts:string>
+        </ts:label>
+        <ts:origins>
+          <ts:user-entry as="utf8"/>
+        </ts:origins>
+      </ts:attribute>
+
+      <ts:attribute name="emailRecord">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>email</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+
+      <ts:transaction>
+        <ethereum:transaction function="setText" contract="PublicResolver" as="bool">
+          <ts:data>
+            <ts:bytes32 local-ref="nodeHash"/>
+            <ts:string>email</ts:string>
+            <ts:string ref="newRecordValue"/>
+          </ts:data>
+        </ethereum:transaction>
+      </ts:transaction>
+
+      <ts:view xml:lang="en">
+        <xhtml:style type="text/css">&style;</xhtml:style>
+        <xhtml:script type="text/javascript">&records.en;</xhtml:script>
+      </ts:view>
+
+    </ts:card>
+
+    <ts:card type="action" name="renew">
+      <ts:label>
+        <ts:string xml:lang="en">Renew</ts:string>
+      </ts:label>
+
+      <ts:attribute name="renewalPricePerYear">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.36</ts:syntax></ts:type>
+        <ts:label>
+          <ts:string xml:lang="en">renewal price per year</ts:string>
+        </ts:label>
+        <ts:origins>
+          <ethereum:call function="rentPrice" contract="ETHRegistrarController" as="uint">
+            <ts:data>
+              <ts:string local-ref="userEnsName"/>
+              <ts:uint256>31556952</ts:uint256>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+
+      <ts:transaction>
+        <ethereum:transaction function="renew" contract="ETHRegistrarController" as="uint">
+          <ts:data>
+            <ts:string local-ref="userEnsName"/>
+            <ts:uint256>31556952</ts:uint256>
+          </ts:data>
+          <ethereum:value local-ref="renewalPricePerYear"/>
+        </ethereum:transaction>
+      </ts:transaction>
+      <ts:view xml:lang="en">
+        <xhtml:style type="text/css">&style;</xhtml:style>
+        <xhtml:script type="text/javascript">&renew.en;</xhtml:script>
+      </ts:view>
+    </ts:card>
+
+  </ts:cards>
+
+  <ts:attribute name="ensName">
+      <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+    <ts:origins>
+      <ethereum:event type="NameRegistered" contract="ETHRegistrarController" filter="label=${tokenId}" select="name"/>
+    </ts:origins>
+  </ts:attribute>
+
+  <ts:attribute name="nameExpires">
+      <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.36</ts:syntax></ts:type>
+    <ts:origins>
+      <ethereum:call function="nameExpires" contract="ENS" as="uint">
+        <ts:data>
+          <ts:uint256 ref="tokenId"/>
+        </ts:data>
+      </ethereum:call>
+    </ts:origins>
+  </ts:attribute>
+
+  <ts:attribute name="resolverAddress">
+      <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+    <ts:origins>
+      <ethereum:call function="resolver" contract="registry" as="address">
+        <ts:data>
+          <ts:bytes32 local-ref="nodeHash"/>
+        </ts:data>
+      </ethereum:call>
+    </ts:origins>
+  </ts:attribute>
+
+</ts:token>
