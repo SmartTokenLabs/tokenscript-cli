@@ -28,6 +28,7 @@
     "@peculiar/x509": "^1.9.2",
     "@tokenscript/libxmljs2-xsd": "^0.32.0",
     "@xmldom/xmldom": "^0.9.0-beta.6",
+    "axios": "^1.6.0",
     "chokidar": "^3.5.3",
     "cors": "^2.8.5",
     "elliptic": "^6.5.4",
@@ -41,6 +42,7 @@
     "open": "^8.4.0",
     "patch-package": "^6.5.1",
     "replace-in-file": "^6.3.5",
+    "xml-formatter": "^3.6.0",
     "xmldsigjs": "^2.5.1"
   },
   "devDependencies": {
