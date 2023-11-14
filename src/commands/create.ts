@@ -22,6 +22,28 @@ const Types = {
 	EVENT: "event"
 };
 
+const FunctionTypes = {
+	NON_PAYABLE: "nonpayable",
+	VIEW: "view",
+	PURE: "pure",
+	PAYABLE: "payable"
+};
+
+//TODO: move this out into the build spec file (.env/tsproject.json)
+const DoNotGenerate: string[] = [
+	"balanceOf",
+	"isApprovedForAll",
+	"name",
+	"ownerOf",
+	"symbol",
+	"scriptURI",
+	"supportsInterface",
+	"tokenByIndex",
+	"tokenOfOwnerByIndex",
+	"tokenURI",
+	"approve"
+];
+
 interface EventContractObject {element?: any, address?: any};
 interface EventObject {event?: HTMLElement, contractObject?: EventContractObject};
 
@@ -47,6 +69,7 @@ export default class Create extends Command {
 	static flags = {
 		// can pass either --force or -f
 		template: Flags.string({char: "t", options: Templates.templatesList.map((template) => template.id)}),
+		hardHat: Flags.string({char: "h"})
 	}
 
 	static args = [
@@ -61,6 +84,7 @@ export default class Create extends Command {
 
 	async run(): Promise<void> {
 		const {flags, args} = await this.parse(Create);
+
 
 		this.dir = args.directory.indexOf("/") !== 0 ? resolve(process.cwd(), args.directory) : args.directory;
 
@@ -82,6 +106,8 @@ export default class Create extends Command {
 
 			fs.mkdirSync(this.dir, { recursive: true });
 		}
+
+		let hardHat = flags.hardHat as string;
 
 		let template = flags.template as string;
 		if (!template)
@@ -115,18 +141,56 @@ export default class Create extends Command {
 
 
 		// pull contract address and chain
+		let contractABI: any;
 		let tokenAddress = this.getContract(values, templateDef);
 
-		tokenAddress.address = await this.getLogicAddress(tokenAddress);
+		if (hardHat) {
+			console.log("HardHat: ");
+			console.log(hardHat);
 
-		this.networkId = tokenAddress.chainId;
-		this.originContract = tokenAddress.address;
+			//import ABI from hardhat directory
+			//first look for hardhat.config.ts in the dir
+			if (!fs.existsSync(join(hardHat, "hardhat.config.ts"))) {
+				throw new Error("-h <directory> must point to HardHat project");
+			}
 
-		const contractABI = await this.getABI(tokenAddress);
+			if (!fs.existsSync(join(hardHat, "artifacts", "contracts"))) {
+				throw new Error("linked HardHat project must be built");
+			}
+
+			let contractABIs: string[] = fs.readdirSync(join(hardHat, "artifacts", "contracts"));
+
+			for (let i = 0; i < contractABIs.length; i++) {
+				let contractDir = contractABIs[i];
+				let abiFiles: string[] = fs.readdirSync(join(hardHat, "artifacts", "contracts", contractDir));
+
+				for (let j = 0; j < abiFiles.length; j++) {
+					let abiFile = abiFiles[j];
+					console.log("abiFiles: %s", abiFile);
+					if (abiFile.includes(".dbg.json")) {
+						console.log("Skip: %s", abiFile);
+					} else if (abiFile.endsWith(".json")) {
+						console.log("Adding: %s", abiFile);
+						//got our ABI file
+						let abiFileContent = fs.readFileSync(join(hardHat, "artifacts", "contracts", contractDir, abiFile), "utf-8");
+						let json = JSON.parse(abiFileContent);
+						let innerAbi = json["abi"];
+
+						this.start(innerAbi, tokenAddress.address, "Token", tokenAddress.chainId);
+					}
+				}
+			}
+		} else {
+			// pull contract address and chain
+			tokenAddress.address = await this.getLogicAddress(tokenAddress);
+			this.networkId = tokenAddress.chainId;
+			this.originContract = tokenAddress.address;
+
+			contractABI = await this.getABI(tokenAddress);
+			this.start(this.convertABI(contractABI), tokenAddress.address, "Token", tokenAddress.chainId);
+		}
 
 		// now process ABI
-		this.start(contractABI, tokenAddress.address, "Token", tokenAddress.chainId);
-
 		console.log("Finish");
 	}
 
@@ -146,8 +210,6 @@ export default class Create extends Command {
 
 	private start(abi: any, contractAddress: string, contractName: string, network: string) {
 
-		//xmlFile = domParser.parseFromString(templates.erc721XML, "application/xml");
-
 		var xmlFile: string = "";
 
 		let domParser = new DOMParser();
@@ -156,19 +218,36 @@ export default class Create extends Command {
 
 		this.xmlDoc = domParser.parseFromString(xmlFileContent, "application/xml");
 
-		this.setValuesFromABI(this.convertABI(abi), xmlFile, contractAddress, contractName);
+		this.setValuesFromABI(abi, xmlFile, contractAddress, contractName);
     }
 
 	private setValuesFromABI(abi: any, xmlFile: string, contractAddress: string, contractName: string) {
         let attributesToAdd = [];
         let eventsToAdd: any[] = [];
+		let viewCards = [];
 		//console.log("JSON BEGIN: ", abi);
         for(let func of abi) {
             switch(func.type) {
                 case Types.FUNCTION:
-                    let attribute = this.parseFunctionToAttribute(func, contractName);
-                    if(attribute !== "") attributesToAdd.push(attribute);
-                    break;
+					if (DoNotGenerate.includes(func.name)) {
+						continue;
+					}
+
+					switch (func.stateMutability)
+					{
+						case FunctionTypes.PURE:
+						case FunctionTypes.VIEW:
+							let attribute = this.getAttribute(func, contractName);
+							attributesToAdd.push(attribute);
+							break;
+						case FunctionTypes.NON_PAYABLE:
+						case FunctionTypes.PAYABLE:
+							//handle view card
+							let viewCard = this.parseFunctionToViewCard(func, contractName);
+							//if (viewCard !== "") viewCards.push(viewCard);
+							break;
+					}
+					break;
                 case Types.EVENT:
                     //let event: EventObject = this.getEvent(func.name, contractName, contractAddress, func);
                     //eventsToAdd.push(event.event);
@@ -202,7 +281,6 @@ export default class Create extends Command {
         }*/
         return this.xmlDoc!!;
     }
-
 
 	private getEvent(eventName:string, contractName: string, contractAddress:string, eventABI:any): EventObject {
         let eventObject: EventObject = { };
@@ -268,7 +346,8 @@ export default class Create extends Command {
         contractObjectFromEvent.setAttribute("name", "contractWithEvent" + contractName);
         let addressNode = this.getDocument().createElement("ts:address");
         addressNode.setAttribute("network", this.networkId);
-        addressNode.innerText = contractAddress;
+		addressNode.appendChild(this.getDocument().createTextNode(contractAddress));
+        //addressNode.innerText = contractAddress;
         contractObjectFromEvent.appendChild(addressNode);
         eventContractObject.element = contractObjectFromEvent;
         eventContractObject.address = contractAddress;
@@ -277,12 +356,52 @@ export default class Create extends Command {
 
 	private parseFunctionToAttribute(func: any, contractName: string) {
         //can only handle simple gets without inputs
-        if((func.stateMutability === "view" || func.stateMutability === "pure") && func.inputs.length === 0) {
-            return this.getAttribute(func, contractName);
+        if(!DoNotGenerate.includes(func.name)) {
+			console.log("Func: ");
+			console.log(func.name);
+			console.log("---");
+			console.log(func);
+			return this.getAttribute(func, contractName);
         } else {
             return "";
         }
     }
+
+	private parseFunctionToViewCard(func: any, contractName: string) {
+		let data = this.getData(func);
+        let attributeTypeNode = this.getDocument().createElement("ts:attribute");
+        attributeTypeNode.setAttribute("name", func.name);
+        let type = this.getDocument().createElement("ts:type");
+        let syntaxElement = this.getDocument().createElement("ts:syntax");
+        let syntax = this.getSyntax(func.outputs);
+        if(syntax !== "") {
+			syntaxElement.appendChild(this.getDocument().createTextNode(syntax));
+        }
+        type.appendChild(syntaxElement);
+        attributeTypeNode.appendChild(type);
+		console.log(attributeTypeNode);
+        let nameNode = this.getDocument().createElement("ts:label");
+        let stringNodeName = this.getDocument().createElement("ts:string");
+        stringNodeName.setAttribute("xml:lang", "en");
+        //stringNodeName.innerText = func.name;
+		stringNodeName.appendChild(this.getDocument().createTextNode(func.name))
+        nameNode.appendChild(stringNodeName);
+        attributeTypeNode.appendChild(nameNode);
+        let originNode = this.getDocument().createElement("ts:origins");
+        let ethereumNode = this.getDocument().createElement("ethereum:call");
+        ethereumNode.setAttribute("function", func.name);
+        ethereumNode.setAttribute("contract", contractName);
+        let AS = this.getAS(func.outputs);
+        if(AS !== "") {
+            ethereumNode.setAttribute("as", AS);
+        } else {
+            //do not include as
+        }
+        ethereumNode.appendChild(data);
+        originNode.appendChild(ethereumNode);
+        attributeTypeNode.appendChild(originNode);
+        return attributeTypeNode;
+	}
 
 	private getAttribute(func: any, contractName: string) {
         let data = this.getData(func);
@@ -292,14 +411,16 @@ export default class Create extends Command {
         let syntaxElement = this.getDocument().createElement("ts:syntax");
         let syntax = this.getSyntax(func.outputs);
         if(syntax !== "") {
-            syntaxElement.innerHTML = syntax;
+			syntaxElement.appendChild(this.getDocument().createTextNode(syntax));
         }
         type.appendChild(syntaxElement);
         attributeTypeNode.appendChild(type);
+		console.log(attributeTypeNode);
         let nameNode = this.getDocument().createElement("ts:label");
         let stringNodeName = this.getDocument().createElement("ts:string");
         stringNodeName.setAttribute("xml:lang", "en");
-        stringNodeName.innerText = func.name;
+        //stringNodeName.innerText = func.name;
+		stringNodeName.appendChild(this.getDocument().createTextNode(func.name))
         nameNode.appendChild(stringNodeName);
         attributeTypeNode.appendChild(nameNode);
         let originNode = this.getDocument().createElement("ts:origins");
@@ -319,10 +440,11 @@ export default class Create extends Command {
     }
 
 	private getData(func: any): HTMLElement {
-        let dataElement = document.createElement("ts:data");
+        let dataElement = this.getDocument().createElement("ts:data");
         if(func.inputs.length !== 0) {
             for(let input of func.inputs) {
-                let paramNode = document.createTextNode(`ts:${input.type}`);
+				let paramNode = this.getDocument().createElement(`ts:${input.type}`);
+				paramNode.setAttribute("ref", input.name);
                 dataElement.appendChild(paramNode);
             }
             return dataElement;
@@ -352,6 +474,8 @@ export default class Create extends Command {
     }
 
 	private getSyntax(outputs: any[]) {
+		console.log("output: ");
+		console.log(outputs);
         if(outputs.length == 0) {
             return "";
         } else if(outputs[0].type.includes("uint") || outputs[0].type.includes("int")) {
@@ -364,8 +488,6 @@ export default class Create extends Command {
             return "1.3.6.1.4.1.1466.115.121.1.15";
         }
     }
-	
-	
 
 	private async getABI(token: ContractLocator): Promise<any> {
 		const urlQuery = polygonScanAPI + '&action=getabi&address=' + token.address + polygonScanKey;
