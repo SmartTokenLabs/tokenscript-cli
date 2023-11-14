@@ -31,7 +31,7 @@ function init(){
 
 	function renderMint(currentTokenInstance){
 		return `
-			<h3>Mint $tst{TOKENSCRIPT_NAME} ...</h3>
+			<h3>Mint...</h3>
 			<p>Actions allow you to invoke a smart contract transaction or invoke a Javascript function within the view.</p>
 		`;
 	}
