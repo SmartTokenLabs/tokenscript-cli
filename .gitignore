@@ -14,3 +14,4 @@ test-project
 *.key
 *.pub
 *.pem
+*.DS_Store
