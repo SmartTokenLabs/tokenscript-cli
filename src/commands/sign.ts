@@ -41,11 +41,6 @@ export default class Sign extends Command {
 
 		let tsmlSrc = join(process.cwd(), "out", "tokenscript.tsml");
 
-		if (!fs.existsSync(tsmlSrc)) {
-			this.error("Build .tsml first", {exit: 2});
-			return;
-		}
-
 		xmldsigjs.Application.setEngine("OpenSSL", crypto);
 
 		if (flags.verify) {
@@ -64,6 +59,11 @@ export default class Sign extends Command {
 			let keyImporter = KeyImporter.fromPublic(pubKeyStr);
 
 			await this.verifySignedXml(await keyImporter.getPublicKey());
+			return;
+		}
+
+		if (!fs.existsSync(tsmlSrc)) {
+			this.error("Build .tsml first", {exit: 2});
 			return;
 		}
 
