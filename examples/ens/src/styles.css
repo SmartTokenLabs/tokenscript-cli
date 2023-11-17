@@ -38,6 +38,7 @@ p.light {
 	height: 100%;
 }
 
+button.record-option-btn:hover,
 button.years-selection-btn:hover {
 	opacity: 0.8;
 }

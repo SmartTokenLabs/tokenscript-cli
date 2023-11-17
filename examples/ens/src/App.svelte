@@ -7,6 +7,7 @@
 	// @ts-ignore
 	import * as namehash from "@ensdomains/eth-ens-namehash";
 	import Renew from "./routes/Renew.svelte";
+	import Record from "./routes/Record.svelte";
 
 	let token;
 	let initialised = false;
@@ -14,7 +15,8 @@
 
 	const routingMap = {
 		'#info': Info,
-		'#renew': Renew
+		'#renew': Renew,
+		'#record': Record
 	};
 
 	let page;
