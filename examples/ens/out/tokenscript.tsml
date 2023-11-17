@@ -26901,6 +26901,7 @@ function create_if_block(ctx) {
   let p2;
   let t15;
   let input;
+  let input_placeholder_value;
   let mounted;
   let dispose;
   let each_value = ensure_array_like(Object.keys(
@@ -27006,6 +27007,8 @@ function create_if_block(ctx) {
       set_style(p1, "font-weight", "600");
       set_style(p2, "color", "#9A9A9A");
       set_style(p2, "font-weight", "600");
+      attr(input, "placeholder", input_placeholder_value = "update " + /*selectedRecord*/
+      ctx[3].contractKey + " value here");
       attr(input, "id", "newRecordValue");
       set_style(input, "padding", "20px");
       set_style(input, "width", "100%");
@@ -27146,6 +27149,11 @@ function create_if_block(ctx) {
       } else if (if_block1) {
         if_block1.d(1);
         if_block1 = null;
+      }
+      if (dirty &amp; /*selectedRecord*/
+      8 &amp;&amp; input_placeholder_value !== (input_placeholder_value = "update " + /*selectedRecord*/
+      ctx2[3].contractKey + " value here")) {
+        attr(input, "placeholder", input_placeholder_value);
       }
     },
     d(detaching) {
@@ -27338,12 +27346,10 @@ function create_each_block(key_1, ctx) {
   };
 }
 function create_if_block_2(ctx) {
-  let p;
   let img;
   let img_src_value;
   return {
     c() {
-      p = element("p");
       img = element("img");
       set_style(img, "width", "100px");
       set_style(img, "border-radius", "80px");
@@ -27353,11 +27359,9 @@ function create_if_block_2(ctx) {
         ctx[3].contractKey
       ]))
         attr(img, "src", img_src_value);
-      set_style(p, "color", "#9A9A9A");
     },
     m(target, anchor) {
-      insert(target, p, anchor);
-      append(p, img);
+      insert(target, img, anchor);
     },
     p(ctx2, dirty) {
       if (dirty &amp; /*token, selectedRecord*/
@@ -27371,39 +27375,55 @@ function create_if_block_2(ctx) {
     },
     d(detaching) {
       if (detaching) {
-        detach(p);
+        detach(img);
       }
     }
   };
 }
 function create_if_block_1(ctx) {
+  let p;
   let t_value = (
     /*token*/
-    ctx[0][
+    (ctx[0][
       /*selectedRecord*/
       ctx[3].contractKey
-    ] + ""
+    ] ? (
+      /*token*/
+      ctx[0][
+        /*selectedRecord*/
+        ctx[3].contractKey
+      ]
+    ) : "Record not found") + ""
   );
   let t;
   return {
     c() {
+      p = element("p");
       t = text(t_value);
+      set_style(p, "color", "#9A9A9A");
     },
     m(target, anchor) {
-      insert(target, t, anchor);
+      insert(target, p, anchor);
+      append(p, t);
     },
     p(ctx2, dirty) {
       if (dirty &amp; /*token, selectedRecord*/
       9 &amp;&amp; t_value !== (t_value = /*token*/
-      ctx2[0][
+      (ctx2[0][
         /*selectedRecord*/
         ctx2[3].contractKey
-      ] + ""))
+      ] ? (
+        /*token*/
+        ctx2[0][
+          /*selectedRecord*/
+          ctx2[3].contractKey
+        ]
+      ) : "Record not found") + ""))
         set_data(t, t_value);
     },
     d(detaching) {
       if (detaching) {
-        detach(t);
+        detach(p);
       }
     }
   };
@@ -27499,7 +27519,7 @@ function instance$1($$self, $$props, $$invalidate) {
   let expiry;
   let loading = true;
   let evmProvider;
-  let selectedRecord = { title: "Mail", contractKey: "email" };
+  let selectedRecord = { title: "Avatar", contractKey: "avatar" };
   const renewABI = [
     {
       "constant": false,
@@ -27544,7 +27564,6 @@ function instance$1($$self, $$props, $$invalidate) {
       return;
     $$invalidate(0, token = value.token);
     $$invalidate(1, expiry = dateToUIDate(token.nameExpires * 1e3));
-    console.log("....", token);
     $$invalidate(2, loading = false);
   });
   function selectRecordType(renewOption) {
@@ -27856,6 +27875,90 @@ button.years-selection-btn:hover {
             <ts:data>
               <ts:bytes32 local-ref="nodeHash"/>
               <ts:string>email</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+
+			<ts:attribute name="location">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>location</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="notice">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>notice</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="display">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>display</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="url">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>url</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="phone">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>phone</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="keywords">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>keywords</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="description">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>description</ts:string>
             </ts:data>
           </ethereum:call>
         </ts:origins>

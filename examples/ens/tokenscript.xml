@@ -149,6 +149,90 @@
           </ethereum:call>
         </ts:origins>
       </ts:attribute>
+
+			<ts:attribute name="location">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>location</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="notice">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>notice</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="display">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>display</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="url">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>url</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="phone">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>phone</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="keywords">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>keywords</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="description">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>description</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
 			
 			<ts:attribute name="avatar">
           <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
