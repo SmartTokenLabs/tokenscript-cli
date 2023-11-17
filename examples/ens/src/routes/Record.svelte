@@ -15,6 +15,8 @@
 	let estimatedGasPriceEth:any = 0;
 	let evmProvider:any;
 	let maxYears:number = 3;
+	let selectedRecord = "Avatar";
+	let selectedRecordCurrentValue = "Undefined";
 
 	const renewABI = [
 		{
@@ -35,6 +37,18 @@
 			"stateMutability": "payable",
 			"type": "function"
 		}
+	]
+
+	const renewOptions = [
+		{ title: "Avatar", selected: true },
+		{ title: "Mail", selected: false },
+		{ title: "Description", selected: false },
+		{ title: "Keywords", selected: false },
+		{ title: "Phone", selected: false },
+		{ title: "Url", selected: false },
+		{ title: "Display", selected: false },
+		{ title: "Notice", selected: false },
+		{ title: "Location", selected: false }
 	]
 
 	const ethereumProviderConfig = {
@@ -71,13 +85,8 @@
 		return new Date(dateValue).toLocaleDateString(userLocale, options as Intl.DateTimeFormatOptions);
 	}
 
-	function updateYearsSelected (increment:boolean) {
-		if(increment && years < maxYears) {
-			years ++;
-		} else if(!increment && years > 1) {
-				years --;
-		}
-		setRenewalYears();
+	function selectRecordType (renewOption:any) {
+		selectedRecord = renewOption.title;
 	}
 
 	function setRenewalYears () {
@@ -124,36 +133,33 @@
 				<img style="width: 104px; margin-top: 4px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
 			</div>
 		</div>
-		<div style="margin: 14px 0; background-color: white; border-radius: 7px; border: solid #C2C2C2 1px; width: 100%; height: 472px; display: flex; justify-content: space-between; flex-direction: column;">
+		<div style="margin: 14px 0; background-color: white; border-radius: 7px; border: solid #C2C2C2 1px; width: 100%; display: flex; justify-content: space-between; flex-direction: column;">
 			<div style="width: 100%;">
 					<p style="
 						font-size: 19px;
 						font-weight: 500;
 						text-align: center;
-						">Extend Name</p>
+						">Update Record</p>
 			</div>
 			<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-					<div style="height: 69px; border-radius: 60px; display: flex; justify-content: space-between; align-items: center; background-color: white; border: solid #C2C2C2 1px; width: 320px;">
-						<button class="years-selection-btn" on:click={() => { updateYearsSelected(false)}} style="background-color: #C2C2C2; border-radius: 38px; height: 58px; width: 58px; margin: 5px; text-align: center; border: none; cursor: pointer;">-</button>
-						<div style="
-								font-weight: 500;
-								">{years > 1 ? years + ' Years' : years + ' Year' }</div>
-						<button class="years-selection-btn" on:click={() => { updateYearsSelected(true)}} style="background-color: #3888FF; border-radius: 38px; color: white; height: 58px;width: 58px; margin: 5px; text-align: center; cursor: pointer; border: none;">+</button>
+					<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; width: 310px;">
+						{#each renewOptions as renewOption, index (index)}
+							{#if renewOption.title === selectedRecord}
+								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOption.title}</button>
+							{/if}
+							{#if renewOption.title !== selectedRecord}
+								<button class="record-option-btn" on:click={() => { selectRecordType(renewOption)}} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOption.title}</button>
+							{/if}
+					 {/each}
 					</div>
-					<div style="background-color: #F5F5F5; width: 310px; height: 200px; border-radius: 20px; margin: 52px; padding: 24px;">
-						<div style="color: #B6B6BF; display: flex; justify-content: space-between">
-								<p>{years > 1 ? years + ' years' : years +' year' } extension</p>
-								<p>{renewalPriceEth.toFixed(4)} ETH</p>
-						</div>
-						<div style="color: #B6B6BF; display: flex; justify-content: space-between">
-								<p>Transaction </p>
-								<p>{estimatedGasPriceEth.toFixed(4)} ETH</p>
-						</div>
-						<div style="color: black;display: flex; justify-content: space-between">
-								<p>Estimated total</p>
-								<p>{(renewalPriceEth + estimatedGasPriceEth).toFixed(4) } ETH</p>
-						</div>
+					<div style="display: flex; flex-direction: column; align-items: center;">
+					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
+						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord} Value</p>
+						<p style="color: #9A9A9A;">{selectedRecordCurrentValue}</p>
+						<p style="color: #9A9A9A; font-weight: 600;">Update </p>
+						<input style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
 					</div>
+			</div>
 			</div>
 		</div>
 	{/if}

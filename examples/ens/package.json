@@ -34,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"@ensdomains/eth-ens-namehash": "^2.0.15",
-		"buffer": "^6.0.3"
+		"buffer": "^6.0.3",
+		"ethers": "^6.8.1"
 	}
 }
