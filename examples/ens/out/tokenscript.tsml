@@ -26757,7 +26757,7 @@ function instance$2($$self, $$props, $$invalidate) {
   let token;
   let expiry;
   let loading = true;
-  let years2 = 1;
+  let years = 1;
   let renewalPriceWei = 0;
   let renewalPriceEth = 0;
   let contract;
@@ -26800,17 +26800,17 @@ function instance$2($$self, $$props, $$invalidate) {
     }
   }
   function updateYearsSelected(increment) {
-    if (increment &amp;&amp; years2 &lt; maxYears) {
-      $$invalidate(3, years2++, years2);
-    } else if (!increment &amp;&amp; years2 &gt; 1) {
-      $$invalidate(3, years2--, years2);
+    if (increment &amp;&amp; years &lt; maxYears) {
+      $$invalidate(3, years++, years);
+    } else if (!increment &amp;&amp; years &gt; 1) {
+      $$invalidate(3, years--, years);
     }
     setRenewalYears();
   }
   function setRenewalYears() {
     if (ethers) {
-      renewalSeconds = years2 * 31556952;
-      renewalPriceWei = years2 * token.renewalPricePerYear;
+      renewalSeconds = years * 31556952;
+      renewalPriceWei = years * token.renewalPricePerYear;
       $$invalidate(4, renewalPriceEth = Number(formatEther(renewalPriceWei)));
       web3.action.setProps({ renewalSeconds, renewalPriceWei });
       estimateGasPrice();
@@ -26838,7 +26838,7 @@ function instance$2($$self, $$props, $$invalidate) {
     token,
     expiry,
     loading,
-    years2,
+    years,
     renewalPriceEth,
     estimatedGasPriceEth,
     updateYearsSelected,
@@ -26854,8 +26854,8 @@ class Renew extends SvelteComponent {
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[20] = list[i];
-  child_ctx[22] = i;
+  child_ctx[14] = list[i];
+  child_ctx[16] = i;
   return child_ctx;
 }
 function create_if_block(ctx) {
@@ -26889,27 +26889,41 @@ function create_if_block(ctx) {
   let div8;
   let div7;
   let p1;
+  let t9_value = (
+    /*selectedRecord*/
+    ctx[3].title + ""
+  );
   let t9;
   let t10;
   let t11;
-  let p2;
+  let t12;
   let t13;
-  let p3;
+  let p2;
   let t15;
   let input;
-  let each_value = ensure_array_like(
+  let mounted;
+  let dispose;
+  let each_value = ensure_array_like(Object.keys(
     /*renewOptions*/
     ctx[4]
-  );
+  ));
   const get_key = (ctx2) =&gt; (
     /*index*/
-    ctx2[22]
+    ctx2[16]
   );
   for (let i = 0; i &lt; each_value.length; i += 1) {
     let child_ctx = get_each_context(ctx, each_value, i);
     let key = get_key(child_ctx);
     each_1_lookup.set(key, each_blocks[i] = create_each_block(key, child_ctx));
   }
+  let if_block0 = (
+    /*selectedRecord*/
+    ctx[3].contractKey === "avatar" &amp;&amp; create_if_block_2(ctx)
+  );
+  let if_block1 = (
+    /*selectedRecord*/
+    ctx[3].contractKey !== "avatar" &amp;&amp; create_if_block_1(ctx)
+  );
   return {
     c() {
       div4 = element("div");
@@ -26941,17 +26955,17 @@ function create_if_block(ctx) {
       div8 = element("div");
       div7 = element("div");
       p1 = element("p");
-      t9 = text(
-        /*selectedRecord*/
-        ctx[3]
-      );
+      t9 = text(t9_value);
       t10 = text(" Value");
       t11 = space();
-      p2 = element("p");
-      p2.textContent = `${selectedRecordCurrentValue}`;
+      if (if_block0)
+        if_block0.c();
+      t12 = space();
+      if (if_block1)
+        if_block1.c();
       t13 = space();
-      p3 = element("p");
-      p3.textContent = "Update";
+      p2 = element("p");
+      p2.textContent = "Update";
       t15 = space();
       input = element("input");
       set_style(h3, "font-size", "24px");
@@ -26991,8 +27005,8 @@ function create_if_block(ctx) {
       set_style(p1, "color", "#9A9A9A");
       set_style(p1, "font-weight", "600");
       set_style(p2, "color", "#9A9A9A");
-      set_style(p3, "color", "#9A9A9A");
-      set_style(p3, "font-weight", "600");
+      set_style(p2, "font-weight", "600");
+      attr(input, "id", "newRecordValue");
       set_style(input, "padding", "20px");
       set_style(input, "width", "100%");
       set_style(input, "border-radius", "4px");
@@ -27050,11 +27064,24 @@ function create_if_block(ctx) {
       append(p1, t9);
       append(p1, t10);
       append(div7, t11);
-      append(div7, p2);
+      if (if_block0)
+        if_block0.m(div7, null);
+      append(div7, t12);
+      if (if_block1)
+        if_block1.m(div7, null);
       append(div7, t13);
-      append(div7, p3);
+      append(div7, p2);
       append(div7, t15);
       append(div7, input);
+      if (!mounted) {
+        dispose = listen(
+          input,
+          "input",
+          /*input_handler*/
+          ctx[7]
+        );
+        mounted = true;
+      }
     },
     p(ctx2, dirty) {
       if (dirty &amp; /*token*/
@@ -27078,21 +27105,48 @@ function create_if_block(ctx) {
       ctx2[0].description)) {
         attr(img, "alt", img_alt_value);
       }
-      if (dirty &amp; /*selectRecordType, renewOptions, selectedRecord*/
+      if (dirty &amp; /*selectRecordType, renewOptions, Object, selectedRecord*/
       56) {
-        each_value = ensure_array_like(
+        each_value = ensure_array_like(Object.keys(
           /*renewOptions*/
           ctx2[4]
-        );
+        ));
         each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx2, each_value, each_1_lookup, div6, destroy_block, create_each_block, null, get_each_context);
       }
       if (dirty &amp; /*selectedRecord*/
-      8)
-        set_data(
-          t9,
-          /*selectedRecord*/
-          ctx2[3]
-        );
+      8 &amp;&amp; t9_value !== (t9_value = /*selectedRecord*/
+      ctx2[3].title + ""))
+        set_data(t9, t9_value);
+      if (
+        /*selectedRecord*/
+        ctx2[3].contractKey === "avatar"
+      ) {
+        if (if_block0) {
+          if_block0.p(ctx2, dirty);
+        } else {
+          if_block0 = create_if_block_2(ctx2);
+          if_block0.c();
+          if_block0.m(div7, t12);
+        }
+      } else if (if_block0) {
+        if_block0.d(1);
+        if_block0 = null;
+      }
+      if (
+        /*selectedRecord*/
+        ctx2[3].contractKey !== "avatar"
+      ) {
+        if (if_block1) {
+          if_block1.p(ctx2, dirty);
+        } else {
+          if_block1 = create_if_block_1(ctx2);
+          if_block1.c();
+          if_block1.m(div7, t13);
+        }
+      } else if (if_block1) {
+        if_block1.d(1);
+        if_block1 = null;
+      }
     },
     d(detaching) {
       if (detaching) {
@@ -27103,16 +27157,25 @@ function create_if_block(ctx) {
       for (let i = 0; i &lt; each_blocks.length; i += 1) {
         each_blocks[i].d();
       }
+      if (if_block0)
+        if_block0.d();
+      if (if_block1)
+        if_block1.d();
+      mounted = false;
+      dispose();
     }
   };
 }
-function create_if_block_2(ctx) {
+function create_if_block_4(ctx) {
   let button;
   return {
     c() {
       button = element("button");
-      button.textContent = `${/*renewOption*/
-      ctx[20].title}`;
+      button.textContent = `${/*renewOptions*/
+      ctx[4][
+        /*renewOptionKey*/
+        ctx[14]
+      ].title}`;
       attr(button, "class", "record-option-btn");
       set_style(button, "padding", "0 16px");
       set_style(button, "float", "left");
@@ -27137,7 +27200,7 @@ function create_if_block_2(ctx) {
     }
   };
 }
-function create_if_block_1(ctx) {
+function create_if_block_3(ctx) {
   let button;
   let mounted;
   let dispose;
@@ -27145,16 +27208,19 @@ function create_if_block_1(ctx) {
     return (
       /*click_handler*/
       ctx[6](
-        /*renewOption*/
-        ctx[20]
+        /*renewOptionKey*/
+        ctx[14]
       )
     );
   }
   return {
     c() {
       button = element("button");
-      button.textContent = `${/*renewOption*/
-      ctx[20].title}`;
+      button.textContent = `${/*renewOptions*/
+      ctx[4][
+        /*renewOptionKey*/
+        ctx[14]
+      ].title}`;
       attr(button, "class", "record-option-btn");
       set_style(button, "padding", "0 16px");
       set_style(button, "float", "left");
@@ -27192,14 +27258,14 @@ function create_each_block(key_1, ctx) {
   let t;
   let if_block1_anchor;
   let if_block0 = (
-    /*renewOption*/
-    ctx[20].title === /*selectedRecord*/
-    ctx[3] &amp;&amp; create_if_block_2(ctx)
+    /*renewOptionKey*/
+    ctx[14] === /*selectedRecord*/
+    ctx[3].title &amp;&amp; create_if_block_4(ctx)
   );
   let if_block1 = (
-    /*renewOption*/
-    ctx[20].title !== /*selectedRecord*/
-    ctx[3] &amp;&amp; create_if_block_1(ctx)
+    /*renewOptionKey*/
+    ctx[14] !== /*selectedRecord*/
+    ctx[3].title &amp;&amp; create_if_block_3(ctx)
   );
   return {
     key: key_1,
@@ -27226,14 +27292,14 @@ function create_each_block(key_1, ctx) {
     p(new_ctx, dirty) {
       ctx = new_ctx;
       if (
-        /*renewOption*/
-        ctx[20].title === /*selectedRecord*/
-        ctx[3]
+        /*renewOptionKey*/
+        ctx[14] === /*selectedRecord*/
+        ctx[3].title
       ) {
         if (if_block0) {
           if_block0.p(ctx, dirty);
         } else {
-          if_block0 = create_if_block_2(ctx);
+          if_block0 = create_if_block_4(ctx);
           if_block0.c();
           if_block0.m(t.parentNode, t);
         }
@@ -27242,14 +27308,14 @@ function create_each_block(key_1, ctx) {
         if_block0 = null;
       }
       if (
-        /*renewOption*/
-        ctx[20].title !== /*selectedRecord*/
-        ctx[3]
+        /*renewOptionKey*/
+        ctx[14] !== /*selectedRecord*/
+        ctx[3].title
       ) {
         if (if_block1) {
           if_block1.p(ctx, dirty);
         } else {
-          if_block1 = create_if_block_1(ctx);
+          if_block1 = create_if_block_3(ctx);
           if_block1.c();
           if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
         }
@@ -27268,6 +27334,77 @@ function create_each_block(key_1, ctx) {
         if_block0.d(detaching);
       if (if_block1)
         if_block1.d(detaching);
+    }
+  };
+}
+function create_if_block_2(ctx) {
+  let p;
+  let img;
+  let img_src_value;
+  return {
+    c() {
+      p = element("p");
+      img = element("img");
+      set_style(img, "width", "100px");
+      set_style(img, "border-radius", "80px");
+      if (!src_url_equal(img.src, img_src_value = /*token*/
+      ctx[0][
+        /*selectedRecord*/
+        ctx[3].contractKey
+      ]))
+        attr(img, "src", img_src_value);
+      set_style(p, "color", "#9A9A9A");
+    },
+    m(target, anchor) {
+      insert(target, p, anchor);
+      append(p, img);
+    },
+    p(ctx2, dirty) {
+      if (dirty &amp; /*token, selectedRecord*/
+      9 &amp;&amp; !src_url_equal(img.src, img_src_value = /*token*/
+      ctx2[0][
+        /*selectedRecord*/
+        ctx2[3].contractKey
+      ])) {
+        attr(img, "src", img_src_value);
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(p);
+      }
+    }
+  };
+}
+function create_if_block_1(ctx) {
+  let t_value = (
+    /*token*/
+    ctx[0][
+      /*selectedRecord*/
+      ctx[3].contractKey
+    ] + ""
+  );
+  let t;
+  return {
+    c() {
+      t = text(t_value);
+    },
+    m(target, anchor) {
+      insert(target, t, anchor);
+    },
+    p(ctx2, dirty) {
+      if (dirty &amp; /*token, selectedRecord*/
+      9 &amp;&amp; t_value !== (t_value = /*token*/
+      ctx2[0][
+        /*selectedRecord*/
+        ctx2[3].contractKey
+      ] + ""))
+        set_data(t, t_value);
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(t);
+      }
     }
   };
 }
@@ -27343,8 +27480,6 @@ function create_fragment$1(ctx) {
     }
   };
 }
-let years = 1;
-let selectedRecordCurrentValue = "Undefined";
 function dateToUIDate(dateValue) {
   if (!dateValue)
     return "Could not be found";
@@ -27356,15 +27491,15 @@ function dateToUIDate(dateValue) {
   };
   return new Date(dateValue).toLocaleDateString(userLocale, options);
 }
+function updateRecordInput(event) {
+  web3.action.setProps({ newRecordValue: event.currentTarget });
+}
 function instance$1($$self, $$props, $$invalidate) {
   let token;
   let expiry;
   let loading = true;
-  let renewalPriceWei = 0;
-  let contract;
-  let renewalSeconds;
   let evmProvider;
-  let selectedRecord = "Avatar";
+  let selectedRecord = { title: "Mail", contractKey: "email" };
   const renewABI = [
     {
       "constant": false,
@@ -27379,17 +27514,26 @@ function instance$1($$self, $$props, $$invalidate) {
       "type": "function"
     }
   ];
-  const renewOptions = [
-    { title: "Avatar", selected: true },
-    { title: "Mail", selected: false },
-    { title: "Description", selected: false },
-    { title: "Keywords", selected: false },
-    { title: "Phone", selected: false },
-    { title: "Url", selected: false },
-    { title: "Display", selected: false },
-    { title: "Notice", selected: false },
-    { title: "Location", selected: false }
-  ];
+  const renewOptions = {
+    "Avatar": { title: "Avatar", contractKey: "avatar" },
+    "Mail": { title: "Mail", contractKey: "email" },
+    "Description": {
+      title: "Description",
+      contractKey: "description"
+    },
+    "Keywords": {
+      title: "Keywords",
+      contractKey: "keywords"
+    },
+    "Phone": { title: "Phone", contractKey: "phone" },
+    "Url": { title: "Url", contractKey: "url" },
+    "Display": { title: "Display", contractKey: "display" },
+    "Notice": { title: "Notice", contractKey: "notice" },
+    "Location": {
+      title: "Location",
+      contractKey: "location"
+    }
+  };
   const ethereumProviderConfig = {
     name: "ETHEREUM",
     rpc: "https://nodes.mewapi.io/rpc/eth",
@@ -27400,41 +27544,28 @@ function instance$1($$self, $$props, $$invalidate) {
       return;
     $$invalidate(0, token = value.token);
     $$invalidate(1, expiry = dateToUIDate(token.nameExpires * 1e3));
+    console.log("....", token);
     $$invalidate(2, loading = false);
   });
-  function estimateGasPrice() {
-    if (evmProvider &amp;&amp; ethers &amp;&amp; contract &amp;&amp; renewalSeconds &amp;&amp; token.ensName) {
-      evmProvider.getFeeData().then(({ gasPrice }) =&gt; {
-        Number(Math.round(formatUnits(gasPrice, "wei"))).toFixed(2);
-      });
-    }
-  }
   function selectRecordType(renewOption) {
-    $$invalidate(3, selectedRecord = renewOption.title);
-  }
-  function setRenewalYears() {
-    if (ethers) {
-      renewalSeconds = years * 31556952;
-      renewalPriceWei = years * token.renewalPricePerYear;
-      Number(formatEther(renewalPriceWei));
-      web3.action.setProps({ renewalSeconds, renewalPriceWei });
-      estimateGasPrice();
-    }
+    $$invalidate(3, selectedRecord = renewOption);
+    web3.action.setProps({ newRecordKey: selectedRecord.contractKey });
   }
   function setContractAndProvider() {
     if (ethers &amp;&amp; JsonRpcProvider) {
       evmProvider = new JsonRpcProvider(ethereumProviderConfig.rpc, "mainnet");
-      contract = new Contract("0x283af0b28c62c092c9727f1ee09c02ca627eb7f5", renewABI, evmProvider);
+      new Contract("0x283af0b28c62c092c9727f1ee09c02ca627eb7f5", renewABI, evmProvider);
     }
   }
   function init2() {
-    setRenewalYears();
     setContractAndProvider();
-    estimateGasPrice();
   }
   init2();
-  const click_handler = (renewOption) =&gt; {
-    selectRecordType(renewOption);
+  const click_handler = (renewOptionKey) =&gt; {
+    selectRecordType(renewOptions[renewOptionKey]);
+  };
+  const input_handler = (event) =&gt; {
+    updateRecordInput(event);
   };
   return [
     token,
@@ -27443,7 +27574,8 @@ function instance$1($$self, $$props, $$invalidate) {
     selectedRecord,
     renewOptions,
     selectRecordType,
-    click_handler
+    click_handler,
+    input_handler
   ];
 }
 class Record extends SvelteComponent {
@@ -27691,48 +27823,63 @@ button.years-selection-btn:hover {
 				<ts:viewContent name="common"/>
 			</ts:view>
 		</ts:card>
-		
+
 		<ts:card name="Record" type="action">
 			<ts:label>
 				<ts:string xml:lang="en">Update</ts:string>
 			</ts:label>
 
-			<ts:attribute name="renewalSeconds">
-				<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.27</ts:syntax></ts:type>
-				<ts:origins>
-						<ts:user-entry as="uint"/>
-				</ts:origins>
-			</ts:attribute>
-			
-			<ts:attribute name="renewalPrice">
-				<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.27</ts:syntax></ts:type>
-				<ts:origins>
-						<ts:user-entry as="uint"/>
-				</ts:origins>
-			</ts:attribute>
-
-			<ts:attribute name="renewalPricePerYear">
-          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.36</ts:syntax></ts:type>
+			<ts:attribute name="newRecordValue">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
         <ts:label>
-          <ts:string xml:lang="en">renewal price per year</ts:string>
+          <ts:string xml:lang="en">new record value</ts:string>
         </ts:label>
         <ts:origins>
-          <ethereum:call as="uint" contract="ETHRegistrarController" function="rentPrice">
+          <ts:user-entry as="utf8"/>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="newRecordKey">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:label>
+          <ts:string xml:lang="en">new record key</ts:string>
+        </ts:label>
+        <ts:origins>
+          <ts:user-entry as="utf8"/>
+        </ts:origins>
+      </ts:attribute>
+
+			<ts:attribute name="email">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
             <ts:data>
-              <ts:string ref="ensName"/>
-              <ts:uint256>31556952</ts:uint256>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>email</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="avatar">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>avatar</ts:string>
             </ts:data>
           </ethereum:call>
         </ts:origins>
       </ts:attribute>
 
-			<ts:transaction>
-        <ethereum:transaction as="uint" contract="ETHRegistrarController" function="renew">
+      <ts:transaction>
+        <ethereum:transaction as="bool" contract="PublicResolver" function="setText">
           <ts:data>
-            <ts:string ref="ensName"/>
-            <ts:uint256 local-ref="renewalSeconds"/>
+            <ts:bytes32 local-ref="nodeHash"/>
+            <ts:string ref="newRecordKey"/>
+            <ts:string ref="newRecordValue"/>
           </ts:data>
-          <ethereum:value local-ref="renewalPrice"/>
         </ethereum:transaction>
       </ts:transaction>
 			
@@ -27767,28 +27914,6 @@ button.years-selection-btn:hover {
 					<ethereum:call as="address" contract="registry" function="resolver">
 						<ts:data>
 							<ts:bytes32 local-ref="nodeHash"/>
-						</ts:data>
-					</ethereum:call>
-				</ts:origins>
-			</ts:attribute>
-
-			<ts:attribute name="newRecordValue">
-					<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
-				<ts:label>
-					<ts:string xml:lang="en">new record value</ts:string>
-				</ts:label>
-				<ts:origins>
-					<ts:user-entry as="utf8"/>
-				</ts:origins>
-			</ts:attribute>
-
-			<ts:attribute name="emailRecord">
-					<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
-				<ts:origins>
-					<ethereum:call as="utf8" contract="PublicResolver" function="text">
-						<ts:data>
-							<ts:bytes32 local-ref="nodeHash"/>
-							<ts:string>email</ts:string>
 						</ts:data>
 					</ethereum:call>
 				</ts:origins>
