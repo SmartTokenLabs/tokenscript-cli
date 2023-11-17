@@ -2,22 +2,14 @@
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
 	import { ethers } from "ethers";
-
+	
 	let token: any;
 	let expiry:string;
 	let loading = true;
-	let years = 1;
-	let renewalPriceWei:number = 0;
-	let renewalPriceEth:number = 0;
 	let contract: any;
-	let renewalSeconds: any;
-	let estimatedGasPriceWei:any = 0;
-	let estimatedGasPriceEth:any = 0;
 	let evmProvider:any;
-	let maxYears:number = 3;
-	let selectedRecord = "Avatar";
-	let selectedRecordCurrentValue = "Undefined";
-
+	let selectedRecord = { title: "Mail", contractKey: "email" };
+	
 	const renewABI = [
 		{
 			"constant": false,
@@ -39,18 +31,18 @@
 		}
 	]
 
-	const renewOptions = [
-		{ title: "Avatar", selected: true },
-		{ title: "Mail", selected: false },
-		{ title: "Description", selected: false },
-		{ title: "Keywords", selected: false },
-		{ title: "Phone", selected: false },
-		{ title: "Url", selected: false },
-		{ title: "Display", selected: false },
-		{ title: "Notice", selected: false },
-		{ title: "Location", selected: false }
-	]
-
+	const renewOptions = {
+		"Avatar": { title: "Avatar", contractKey: "avatar" },
+		"Mail": { title: "Mail", contractKey: "email" },
+		"Description": { title: "Description", contractKey: "description" },
+		"Keywords": { title: "Keywords", contractKey: "keywords" },
+		"Phone": { title: "Phone", contractKey: "phone" },
+		"Url": { title: "Url", contractKey: "url" },
+		"Display": { title: "Display", contractKey: "display" },
+		"Notice": { title: "Notice", contractKey: "notice" },
+		"Location": { title: "Location", contractKey: "location" }
+	}
+	
 	const ethereumProviderConfig = {
 		name: 'ETHEREUM',
     rpc: 'https://nodes.mewapi.io/rpc/eth',
@@ -63,20 +55,11 @@
 		token = value.token;
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
+		console.log('....', token);
+
 		// You can load other data before hiding the loader
 		loading = false;
 	});
-
-	function estimateGasPrice () {
-		if(evmProvider && ethers && contract && renewalSeconds && token.ensName) {
-			// @ts-ignore
-			evmProvider.getFeeData().then(({ gasPrice }) => {
-				// @ts-ignore
-				estimatedGasPriceWei = Number(Math.round(ethers.formatUnits(gasPrice, 'wei'))).toFixed(2);
-				estimatedGasPriceEth = estimatedGasPriceWei / 10000000000000;
-			})
-		}
-	}
 
 	function dateToUIDate(dateValue:number):string {
 		if(!dateValue) return 'Could not be found';
@@ -86,19 +69,9 @@
 	}
 
 	function selectRecordType (renewOption:any) {
-		selectedRecord = renewOption.title;
-	}
-
-	function setRenewalYears () {
-		if(ethers) {
-			renewalSeconds = years * 31556952;
-			renewalPriceWei = years * token.renewalPricePerYear;
-			// @ts-ignore
-			renewalPriceEth = Number(ethers.formatEther(renewalPriceWei));
-			// @ts-ignore
-			web3.action.setProps({renewalSeconds, renewalPriceWei});
-			estimateGasPrice();
-		}
+		selectedRecord = renewOption;
+		// @ts-ignore
+		web3.action.setProps({ newRecordKey: selectedRecord.contractKey });
 	}
 
 	function setContractAndProvider () {
@@ -110,10 +83,13 @@
 		}
 	}
 
+	function updateRecordInput (event:Event) {
+		// @ts-ignore
+		web3.action.setProps({ newRecordValue: event.currentTarget });
+	}
+
 	function init() {
-		setRenewalYears();
 		setContractAndProvider();
-		estimateGasPrice();
 	}
 
 	init();
@@ -143,23 +119,30 @@
 			</div>
 			<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
 					<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; width: 310px;">
-						{#each renewOptions as renewOption, index (index)}
-							{#if renewOption.title === selectedRecord}
-								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOption.title}</button>
+						{#each Object.keys(renewOptions) as renewOptionKey, index (index)}
+							{#if renewOptionKey === selectedRecord.title}
+								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOptions[renewOptionKey].title}</button>
 							{/if}
-							{#if renewOption.title !== selectedRecord}
-								<button class="record-option-btn" on:click={() => { selectRecordType(renewOption)}} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOption.title}</button>
+							{#if renewOptionKey !== selectedRecord.title}
+								<button class="record-option-btn" on:click={() => { selectRecordType(renewOptions[renewOptionKey]) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOptions[renewOptionKey].title}</button>
 							{/if}
 					 {/each}
 					</div>
 					<div style="display: flex; flex-direction: column; align-items: center;">
 					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
-						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord} Value</p>
-						<p style="color: #9A9A9A;">{selectedRecordCurrentValue}</p>
+						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord.title} Value</p>
+						{#if selectedRecord.contractKey === "avatar" }
+						<p style="color: #9A9A9A;">
+							<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey] }>
+						</p>
+						{/if}
+						{#if selectedRecord.contractKey !== "avatar" }
+							{ token[selectedRecord.contractKey] }
+						{/if}
 						<p style="color: #9A9A9A; font-weight: 600;">Update </p>
-						<input style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
+						<input id="newRecordValue" on:input={(event) => { updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
 					</div>
-			</div>
+				</div>
 			</div>
 		</div>
 	{/if}

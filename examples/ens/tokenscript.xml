@@ -112,48 +112,63 @@
 				<ts:viewContent name="common"/>
 			</ts:view>
 		</ts:card>
-		
+
 		<ts:card type="action" name="Record">
 			<ts:label>
 				<ts:string xml:lang="en">Update</ts:string>
 			</ts:label>
 
-			<ts:attribute name="renewalSeconds">
-				<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.27</ts:syntax></ts:type>
-				<ts:origins>
-						<ts:user-entry as="uint" />
-				</ts:origins>
-			</ts:attribute>
-			
-			<ts:attribute name="renewalPrice">
-				<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.27</ts:syntax></ts:type>
-				<ts:origins>
-						<ts:user-entry as="uint" />
-				</ts:origins>
-			</ts:attribute>
-
-			<ts:attribute name="renewalPricePerYear">
-          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.36</ts:syntax></ts:type>
+			<ts:attribute name="newRecordValue">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
         <ts:label>
-          <ts:string xml:lang="en">renewal price per year</ts:string>
+          <ts:string xml:lang="en">new record value</ts:string>
         </ts:label>
         <ts:origins>
-          <ethereum:call function="rentPrice" contract="ETHRegistrarController" as="uint">
+          <ts:user-entry as="utf8"/>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="newRecordKey">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:label>
+          <ts:string xml:lang="en">new record key</ts:string>
+        </ts:label>
+        <ts:origins>
+          <ts:user-entry as="utf8"/>
+        </ts:origins>
+      </ts:attribute>
+
+			<ts:attribute name="email">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
             <ts:data>
-              <ts:string ref="ensName"/>
-              <ts:uint256>31556952</ts:uint256>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>email</ts:string>
+            </ts:data>
+          </ethereum:call>
+        </ts:origins>
+      </ts:attribute>
+			
+			<ts:attribute name="avatar">
+          <ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
+        <ts:origins>
+          <ethereum:call as="utf8" contract="PublicResolver" function="text">
+            <ts:data>
+              <ts:bytes32 local-ref="nodeHash"/>
+              <ts:string>avatar</ts:string>
             </ts:data>
           </ethereum:call>
         </ts:origins>
       </ts:attribute>
 
-			<ts:transaction>
-        <ethereum:transaction function="renew" contract="ETHRegistrarController" as="uint">
+      <ts:transaction>
+        <ethereum:transaction function="setText" contract="PublicResolver" as="bool">
           <ts:data>
-            <ts:string ref="ensName"/>
-            <ts:uint256 local-ref="renewalSeconds"/>
+            <ts:bytes32 local-ref="nodeHash"/>
+            <ts:string ref="newRecordKey" />
+            <ts:string ref="newRecordValue"/>
           </ts:data>
-          <ethereum:value local-ref="renewalPrice"/>
         </ethereum:transaction>
       </ts:transaction>
 			
@@ -188,28 +203,6 @@
 					<ethereum:call function="resolver" contract="registry" as="address">
 						<ts:data>
 							<ts:bytes32 local-ref="nodeHash"/>
-						</ts:data>
-					</ethereum:call>
-				</ts:origins>
-			</ts:attribute>
-
-			<ts:attribute name="newRecordValue">
-					<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
-				<ts:label>
-					<ts:string xml:lang="en">new record value</ts:string>
-				</ts:label>
-				<ts:origins>
-					<ts:user-entry as="utf8"/>
-				</ts:origins>
-			</ts:attribute>
-
-			<ts:attribute name="emailRecord">
-					<ts:type><ts:syntax>1.3.6.1.4.1.1466.115.121.1.15</ts:syntax></ts:type>
-				<ts:origins>
-					<ethereum:call as="utf8" contract="PublicResolver" function="text">
-						<ts:data>
-							<ts:bytes32 local-ref="nodeHash"/>
-							<ts:string>email</ts:string>
 						</ts:data>
 					</ethereum:call>
 				</ts:origins>
