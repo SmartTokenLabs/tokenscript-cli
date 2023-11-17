@@ -8,7 +8,7 @@
 	let loading = true;
 	let contract: any;
 	let evmProvider:any;
-	let selectedRecord = { title: "Mail", contractKey: "email" };
+	let selectedRecord = { title: "Avatar", contractKey: "avatar" };
 	
 	const renewABI = [
 		{
@@ -54,8 +54,6 @@
 	
 		token = value.token;
 		expiry = dateToUIDate(token.nameExpires * 1000);
-
-		console.log('....', token);
 
 		// You can load other data before hiding the loader
 		loading = false;
@@ -132,15 +130,15 @@
 					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
 						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord.title} Value</p>
 						{#if selectedRecord.contractKey === "avatar" }
-						<p style="color: #9A9A9A;">
 							<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey] }>
-						</p>
 						{/if}
 						{#if selectedRecord.contractKey !== "avatar" }
-							{ token[selectedRecord.contractKey] }
+							<p style="color: #9A9A9A;">
+								{ token[selectedRecord.contractKey] ? token[selectedRecord.contractKey] : "Record not found" }
+							</p>
 						{/if}
 						<p style="color: #9A9A9A; font-weight: 600;">Update </p>
-						<input id="newRecordValue" on:input={(event) => { updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
+						<input placeholder="update { selectedRecord.contractKey } value here" id="newRecordValue" on:input={(event) => { updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
 					</div>
 				</div>
 			</div>
