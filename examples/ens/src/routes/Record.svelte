@@ -155,7 +155,7 @@
 							</p>
 						{/if}
 						<p style="color: #9A9A9A; font-weight: 600;">Update </p>
-						<input placeholder="update { selectedRecord.contractKey } value here" id="newRecordValue" on:input={(event) => { event.stopPropagation(), updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
+						<input placeholder="update { selectedRecord.contractKey } value here" id="newRecordValue" on:input={(event) => { updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
 					</div>
 				</div>
 			</div>
