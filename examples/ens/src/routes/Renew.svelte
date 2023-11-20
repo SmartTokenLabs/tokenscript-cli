@@ -2,18 +2,18 @@
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
 	import { ethers } from "ethers";
+	import { TokenInterface, token, updateToken } from "../types/tokenTypes";
 
-	let token: any;
 	let expiry:string;
 	let loading = true;
 	let years = 1;
 	let renewalPriceWei:number = 0;
 	let renewalPriceEth:number = 0;
-	let contract: any;
 	let renewalSeconds: any;
 	let estimatedGasPriceWei:any = 0;
 	let estimatedGasPriceEth:any = 0;
 	let evmProvider:any;
+	let contract: unknown;
 	let maxYears:number = 3;
 
 	const renewABI = [
@@ -46,7 +46,8 @@
 	context.data.subscribe(async (value) => {
 		if (!value.token) return;
 	
-		token = value.token;
+		updateToken(value.token);
+		
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
 		// You can load other data before hiding the loader

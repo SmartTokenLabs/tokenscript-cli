@@ -1,12 +1,12 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
+	import { TokenInterface, token, updateToken } from "../types/tokenTypes";
 	import { ethers } from "ethers";
 	
-	let token: any;
 	let expiry:string;
 	let loading = true;
-	let contract: any;
+	let contract: unknown;
 	let evmProvider:any;
 	let selectedRecord = { title: "Avatar", contractKey: "avatar" };
 	
@@ -33,7 +33,7 @@
 
 	const renewOptions = {
 		"Avatar": { title: "Avatar", contractKey: "avatar" },
-		"Mail": { title: "Mail", contractKey: "email" },
+		"Email": { title: "Email", contractKey: "email" },
 		"Description": { title: "Description", contractKey: "description" },
 		"Keywords": { title: "Keywords", contractKey: "keywords" },
 		"Phone": { title: "Phone", contractKey: "phone" },
@@ -42,7 +42,22 @@
 		"Notice": { title: "Notice", contractKey: "notice" },
 		"Location": { title: "Location", contractKey: "location" }
 	}
-	
+
+	interface RenewOptionsInterface {
+  	[key: string]: { title: string, contractKey: string }
+	}
+
+	function getRenewOption(renewOptions: RenewOptionsInterface, renewOptionKey: string): { title: string, contractKey: string } {
+  	return renewOptions[renewOptionKey];
+	}
+
+	function getTokenDataByKey (token:TokenInterface, selectedKey: string): string | number | undefined {
+		let recordData: string | number | undefined = "Record not found";
+		const tokenData = token[selectedKey];
+		if(tokenData) recordData = tokenData;
+		return recordData;
+	}
+
 	const ethereumProviderConfig = {
 		name: 'ETHEREUM',
     rpc: 'https://nodes.mewapi.io/rpc/eth',
@@ -52,7 +67,7 @@
 	context.data.subscribe(async (value) => {
 		if (!value.token) return;
 	
-		token = value.token;
+		updateToken(value.token);
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
 		// You can load other data before hiding the loader
@@ -119,10 +134,10 @@
 					<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; width: 310px;">
 						{#each Object.keys(renewOptions) as renewOptionKey, index (index)}
 							{#if renewOptionKey === selectedRecord.title}
-								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOptions[renewOptionKey].title}</button>
+								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
 							{/if}
 							{#if renewOptionKey !== selectedRecord.title}
-								<button class="record-option-btn" on:click={() => { selectRecordType(renewOptions[renewOptionKey]) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{renewOptions[renewOptionKey].title}</button>
+								<button class="record-option-btn" on:click={() => { selectRecordType(getRenewOption(renewOptions, renewOptionKey)) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
 							{/if}
 					 {/each}
 					</div>
@@ -130,15 +145,17 @@
 					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
 						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord.title} Value</p>
 						{#if selectedRecord.contractKey === "avatar" }
-							<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey] }>
+							<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey]} alt={selectedRecord.title}>
 						{/if}
 						{#if selectedRecord.contractKey !== "avatar" }
 							<p style="color: #9A9A9A;">
-								{ token[selectedRecord.contractKey] ? token[selectedRecord.contractKey] : "Record not found" }
+								{
+									getTokenDataByKey(token, selectedRecord.contractKey)
+								}
 							</p>
 						{/if}
 						<p style="color: #9A9A9A; font-weight: 600;">Update </p>
-						<input placeholder="update { selectedRecord.contractKey } value here" id="newRecordValue" on:input={(event) => { updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
+						<input placeholder="update { selectedRecord.contractKey } value here" id="newRecordValue" on:input={(event) => { event.stopPropagation(), updateRecordInput(event) }} style="padding: 20px; width: 100%; border-radius: 4px; border: none;" type="text" />
 					</div>
 				</div>
 			</div>

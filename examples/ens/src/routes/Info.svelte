@@ -3,7 +3,23 @@
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
 
-	let token;
+	let token: {
+		resolverAddress:string;
+		nameExpires:number;
+		name:string;
+		ensName:string;
+		description:string;
+		image_preview_url?: string;
+		renewalPricePerYear: number;
+		avatar?: string;
+		email?: string;
+		keywords?: string;
+		phone?: string;
+		url?: string;
+		display?: string;
+		notice?: string;
+		location?: string;
+	};
 	let expiry:string;
 	let loading = true;
 	let resolvedENS:Boolean;
