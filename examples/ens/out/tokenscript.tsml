@@ -602,10 +602,10 @@ function writable(value, start = noop) {
 const data = writable({
   token: null
 });
-function setToken(token) {
+function setToken(token2) {
   data.set({
     ...data,
-    token
+    token: token2
   });
 }
 const context = {
@@ -1001,19 +1001,19 @@ function dateToUIDate$2(dateValue) {
   return new Date(dateValue).toLocaleDateString(userLocale, options);
 }
 function instance$3($$self, $$props, $$invalidate) {
-  let token;
+  let token2;
   let expiry;
   let loading = true;
   let resolvedENS;
   context.data.subscribe(async (value) =&gt; {
     if (!value.token)
       return;
-    $$invalidate(0, token = value.token);
-    $$invalidate(1, expiry = dateToUIDate$2(token.nameExpires * 1e3));
+    $$invalidate(0, token2 = value.token);
+    $$invalidate(1, expiry = dateToUIDate$2(token2.nameExpires * 1e3));
     $$invalidate(2, loading = false);
   });
   function resolvedText() {
-    if (parseInt(token.resolverAddress, 16) !== 0) {
+    if (parseInt(token2.resolverAddress, 16) !== 0) {
       $$invalidate(3, resolvedENS = true);
     } else {
       $$invalidate(3, resolvedENS = false);
@@ -1023,7 +1023,7 @@ function instance$3($$self, $$props, $$invalidate) {
     resolvedText();
   }
   init2();
-  return [token, expiry, loading, resolvedENS];
+  return [token2, expiry, loading, resolvedENS];
 }
 class Info extends SvelteComponent {
   constructor(options) {
@@ -14007,8 +14007,8 @@ const _TokenString = class _TokenString {
   toString() {
     const tokens = [];
     for (let i = __privateGet(this, _offset2); i &lt; __privateGet(this, _tokens).length; i++) {
-      const token = __privateGet(this, _tokens)[i];
-      tokens.push(`${token.type}:${token.text}`);
+      const token2 = __privateGet(this, _tokens)[i];
+      tokens.push(`${token2.type}:${token2.text}`);
     }
     return `&lt;TokenString ${tokens.join(" ")}&gt;`;
   }
@@ -14029,8 +14029,8 @@ let TokenString = _TokenString;
 function lex(text2) {
   const tokens = [];
   const throwError2 = (message) =&gt; {
-    const token = offset &lt; text2.length ? JSON.stringify(text2[offset]) : "$EOI";
-    throw new Error(`invalid token ${token} at ${offset}: ${message}`);
+    const token2 = offset &lt; text2.length ? JSON.stringify(text2[offset]) : "$EOI";
+    throw new Error(`invalid token ${token2} at ${offset}: ${message}`);
   };
   let brackets = [];
   let commas = [];
@@ -14042,12 +14042,12 @@ function lex(text2) {
       offset += match[1].length;
       cur = text2.substring(offset);
     }
-    const token = { depth: brackets.length, linkBack: -1, linkNext: -1, match: -1, type: "", text: "", offset, value: -1 };
-    tokens.push(token);
+    const token2 = { depth: brackets.length, linkBack: -1, linkNext: -1, match: -1, type: "", text: "", offset, value: -1 };
+    tokens.push(token2);
     let type = SimpleTokens[cur[0]] || "";
     if (type) {
-      token.type = type;
-      token.text = cur[0];
+      token2.type = type;
+      token2.text = cur[0];
       offset++;
       if (type === "OPEN_PAREN") {
         brackets.push(tokens.length - 1);
@@ -14056,17 +14056,17 @@ function lex(text2) {
         if (brackets.length === 0) {
           throwError2("no matching open bracket");
         }
-        token.match = brackets.pop();
-        tokens[token.match].match = tokens.length - 1;
-        token.depth--;
-        token.linkBack = commas.pop();
-        tokens[token.linkBack].linkNext = tokens.length - 1;
+        token2.match = brackets.pop();
+        tokens[token2.match].match = tokens.length - 1;
+        token2.depth--;
+        token2.linkBack = commas.pop();
+        tokens[token2.linkBack].linkNext = tokens.length - 1;
       } else if (type === "COMMA") {
-        token.linkBack = commas.pop();
-        tokens[token.linkBack].linkNext = tokens.length - 1;
+        token2.linkBack = commas.pop();
+        tokens[token2.linkBack].linkNext = tokens.length - 1;
         commas.push(tokens.length - 1);
       } else if (type === "OPEN_BRACKET") {
-        token.type = "BRACKET";
+        token2.type = "BRACKET";
       } else if (type === "CLOSE_BRACKET") {
         let suffix = tokens.pop().text;
         if (tokens.length &gt; 0 &amp;&amp; tokens[tokens.length - 1].type === "NUMBER") {
@@ -14083,24 +14083,24 @@ function lex(text2) {
     }
     match = cur.match(regexIdPrefix);
     if (match) {
-      token.text = match[1];
-      offset += token.text.length;
-      if (Keywords.has(token.text)) {
-        token.type = "KEYWORD";
+      token2.text = match[1];
+      offset += token2.text.length;
+      if (Keywords.has(token2.text)) {
+        token2.type = "KEYWORD";
         continue;
       }
-      if (token.text.match(regexType)) {
-        token.type = "TYPE";
+      if (token2.text.match(regexType)) {
+        token2.type = "TYPE";
         continue;
       }
-      token.type = "ID";
+      token2.type = "ID";
       continue;
     }
     match = cur.match(regexNumberPrefix);
     if (match) {
-      token.text = match[1];
-      token.type = "NUMBER";
-      offset += token.text.length;
+      token2.text = match[1];
+      token2.type = "NUMBER";
+      offset += token2.text.length;
       continue;
     }
     throw new Error(`unexpected token ${JSON.stringify(cur[0])} at position ${offset}`);
@@ -23534,21 +23534,21 @@ class QuickNodeProvider extends JsonRpcProvider {
   /**
    *  Creates a new **QuickNodeProvider**.
    */
-  constructor(_network3, token) {
+  constructor(_network3, token2) {
     if (_network3 == null) {
       _network3 = "mainnet";
     }
     const network = Network.from(_network3);
-    if (token == null) {
-      token = defaultToken;
+    if (token2 == null) {
+      token2 = defaultToken;
     }
-    const request = QuickNodeProvider.getRequest(network, token);
+    const request = QuickNodeProvider.getRequest(network, token2);
     super(request, network, { staticNetwork: network });
     /**
      *  The API token.
      */
     __publicField(this, "token");
-    defineProperties(this, { token });
+    defineProperties(this, { token: token2 });
   }
   _getProvider(chainId) {
     try {
@@ -23564,13 +23564,13 @@ class QuickNodeProvider extends JsonRpcProvider {
    *  Returns a new request prepared for %%network%% and the
    *  %%token%%.
    */
-  static getRequest(network, token) {
-    if (token == null) {
-      token = defaultToken;
+  static getRequest(network, token2) {
+    if (token2 == null) {
+      token2 = defaultToken;
     }
-    const request = new FetchRequest(`https://${getHost$1(network.name)}/${token}`);
+    const request = new FetchRequest(`https://${getHost$1(network.name)}/${token2}`);
     request.allowGzip = true;
-    if (token === defaultToken) {
+    if (token2 === defaultToken) {
       request.retryFunc = async (request2, response, attempt) =&gt; {
         showThrottleMessage("QuickNodeProvider");
         return true;
@@ -24177,8 +24177,8 @@ function getDefaultProvider(network, options) {
   }
   if (allowService("quicknode")) {
     try {
-      let token = options.quicknode;
-      providers.push(new QuickNodeProvider(network, token));
+      let token2 = options.quicknode;
+      providers.push(new QuickNodeProvider(network, token2));
     } catch (error2) {
     }
   }
@@ -26301,15 +26301,14 @@ const ethers = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProper
   zeroPadBytes,
   zeroPadValue
 }, Symbol.toStringTag, { value: "Module" }));
+let token;
+function updateToken(newToken) {
+  token = { ...token, ...newToken };
+}
 function create_if_block$1(ctx) {
   let div4;
   let div2;
   let h3;
-  let t0_value = (
-    /*token*/
-    ctx[0].name + ""
-  );
-  let t0;
   let t1;
   let div1;
   let div0;
@@ -26317,9 +26316,6 @@ function create_if_block$1(ctx) {
   let t3;
   let t4;
   let div3;
-  let img;
-  let img_src_value;
-  let img_alt_value;
   let t5;
   let div13;
   let div5;
@@ -26331,12 +26327,12 @@ function create_if_block$1(ctx) {
   let div6;
   let t10_value = (
     /*years*/
-    ctx[3] &gt; 1 ? (
+    ctx[2] &gt; 1 ? (
       /*years*/
-      ctx[3] + " Years"
+      ctx[2] + " Years"
     ) : (
       /*years*/
-      ctx[3] + " Year"
+      ctx[2] + " Year"
     )
   );
   let t10;
@@ -26348,12 +26344,12 @@ function create_if_block$1(ctx) {
   let p1;
   let t14_value = (
     /*years*/
-    ctx[3] &gt; 1 ? (
+    ctx[2] &gt; 1 ? (
       /*years*/
-      ctx[3] + " years"
+      ctx[2] + " years"
     ) : (
       /*years*/
-      ctx[3] + " year"
+      ctx[2] + " year"
     )
   );
   let t14;
@@ -26362,7 +26358,7 @@ function create_if_block$1(ctx) {
   let p2;
   let t17_value = (
     /*renewalPriceEth*/
-    ctx[4].toFixed(4) + ""
+    ctx[3].toFixed(4) + ""
   );
   let t17;
   let t18;
@@ -26373,7 +26369,7 @@ function create_if_block$1(ctx) {
   let p4;
   let t22_value = (
     /*estimatedGasPriceEth*/
-    ctx[5].toFixed(4) + ""
+    ctx[4].toFixed(4) + ""
   );
   let t22;
   let t23;
@@ -26384,8 +26380,8 @@ function create_if_block$1(ctx) {
   let p6;
   let t27_value = (
     /*renewalPriceEth*/
-    (ctx[4] + /*estimatedGasPriceEth*/
-    ctx[5]).toFixed(4) + ""
+    (ctx[3] + /*estimatedGasPriceEth*/
+    ctx[4]).toFixed(4) + ""
   );
   let t27;
   let t28;
@@ -26396,18 +26392,18 @@ function create_if_block$1(ctx) {
       div4 = element("div");
       div2 = element("div");
       h3 = element("h3");
-      t0 = text(t0_value);
+      h3.textContent = `${token.name}`;
       t1 = space();
       div1 = element("div");
       div0 = element("div");
       t2 = text("Valid until: ");
       t3 = text(
         /*expiry*/
-        ctx[1]
+        ctx[0]
       );
       t4 = space();
       div3 = element("div");
-      img = element("img");
+      div3.innerHTML = `&lt;img style="width: 104px; margin-top: 4px; margin-right: 15px;" src="${token.image_preview_url}" alt="${"image of " + token.description}"/&gt;`;
       t5 = space();
       div13 = element("div");
       div5 = element("div");
@@ -26460,14 +26456,6 @@ function create_if_block$1(ctx) {
       set_style(div1, "justify-content", "center");
       set_style(div1, "align-items", "center");
       set_style(div2, "margin", "15px");
-      set_style(img, "width", "104px");
-      set_style(img, "margin-top", "4px");
-      set_style(img, "margin-right", "15px");
-      if (!src_url_equal(img.src, img_src_value = /*token*/
-      ctx[0].image_preview_url))
-        attr(img, "src", img_src_value);
-      attr(img, "alt", img_alt_value = "image of " + /*token*/
-      ctx[0].description);
       set_style(div4, "margin", "14px 0");
       set_style(div4, "display", "flex");
       set_style(div4, "justify-content", "space-between");
@@ -26539,7 +26527,6 @@ function create_if_block$1(ctx) {
       insert(target, div4, anchor);
       append(div4, div2);
       append(div2, h3);
-      append(h3, t0);
       append(div2, t1);
       append(div2, div1);
       append(div1, div0);
@@ -26547,7 +26534,6 @@ function create_if_block$1(ctx) {
       append(div0, t3);
       append(div4, t4);
       append(div4, div3);
-      append(div3, img);
       insert(target, t5, anchor);
       insert(target, div13, anchor);
       append(div13, div5);
@@ -26590,72 +26576,58 @@ function create_if_block$1(ctx) {
             button0,
             "click",
             /*click_handler*/
-            ctx[7]
+            ctx[6]
           ),
           listen(
             button1,
             "click",
             /*click_handler_1*/
-            ctx[8]
+            ctx[7]
           )
         ];
         mounted = true;
       }
     },
     p(ctx2, dirty) {
-      if (dirty &amp; /*token*/
-      1 &amp;&amp; t0_value !== (t0_value = /*token*/
-      ctx2[0].name + ""))
-        set_data(t0, t0_value);
       if (dirty &amp; /*expiry*/
-      2)
+      1)
         set_data(
           t3,
           /*expiry*/
-          ctx2[1]
+          ctx2[0]
         );
-      if (dirty &amp; /*token*/
-      1 &amp;&amp; !src_url_equal(img.src, img_src_value = /*token*/
-      ctx2[0].image_preview_url)) {
-        attr(img, "src", img_src_value);
-      }
-      if (dirty &amp; /*token*/
-      1 &amp;&amp; img_alt_value !== (img_alt_value = "image of " + /*token*/
-      ctx2[0].description)) {
-        attr(img, "alt", img_alt_value);
-      }
       if (dirty &amp; /*years*/
-      8 &amp;&amp; t10_value !== (t10_value = /*years*/
-      ctx2[3] &gt; 1 ? (
+      4 &amp;&amp; t10_value !== (t10_value = /*years*/
+      ctx2[2] &gt; 1 ? (
         /*years*/
-        ctx2[3] + " Years"
+        ctx2[2] + " Years"
       ) : (
         /*years*/
-        ctx2[3] + " Year"
+        ctx2[2] + " Year"
       )))
         set_data(t10, t10_value);
       if (dirty &amp; /*years*/
-      8 &amp;&amp; t14_value !== (t14_value = /*years*/
-      ctx2[3] &gt; 1 ? (
+      4 &amp;&amp; t14_value !== (t14_value = /*years*/
+      ctx2[2] &gt; 1 ? (
         /*years*/
-        ctx2[3] + " years"
+        ctx2[2] + " years"
       ) : (
         /*years*/
-        ctx2[3] + " year"
+        ctx2[2] + " year"
       )))
         set_data(t14, t14_value);
       if (dirty &amp; /*renewalPriceEth*/
-      16 &amp;&amp; t17_value !== (t17_value = /*renewalPriceEth*/
-      ctx2[4].toFixed(4) + ""))
+      8 &amp;&amp; t17_value !== (t17_value = /*renewalPriceEth*/
+      ctx2[3].toFixed(4) + ""))
         set_data(t17, t17_value);
       if (dirty &amp; /*estimatedGasPriceEth*/
-      32 &amp;&amp; t22_value !== (t22_value = /*estimatedGasPriceEth*/
-      ctx2[5].toFixed(4) + ""))
+      16 &amp;&amp; t22_value !== (t22_value = /*estimatedGasPriceEth*/
+      ctx2[4].toFixed(4) + ""))
         set_data(t22, t22_value);
       if (dirty &amp; /*renewalPriceEth, estimatedGasPriceEth*/
-      48 &amp;&amp; t27_value !== (t27_value = /*renewalPriceEth*/
-      (ctx2[4] + /*estimatedGasPriceEth*/
-      ctx2[5]).toFixed(4) + ""))
+      24 &amp;&amp; t27_value !== (t27_value = /*renewalPriceEth*/
+      (ctx2[3] + /*estimatedGasPriceEth*/
+      ctx2[4]).toFixed(4) + ""))
         set_data(t27, t27_value);
     },
     d(detaching) {
@@ -26674,13 +26646,10 @@ function create_fragment$2(ctx) {
   let t;
   let loader;
   let current;
-  let if_block = (
-    /*token*/
-    ctx[0] &amp;&amp; create_if_block$1(ctx)
-  );
+  let if_block = token &amp;&amp; create_if_block$1(ctx);
   loader = new Loader({ props: { show: (
     /*loading*/
-    ctx[2]
+    ctx[1]
   ) } });
   return {
     c() {
@@ -26699,26 +26668,13 @@ function create_fragment$2(ctx) {
       current = true;
     },
     p(ctx2, [dirty]) {
-      if (
-        /*token*/
-        ctx2[0]
-      ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-        } else {
-          if_block = create_if_block$1(ctx2);
-          if_block.c();
-          if_block.m(div, t);
-        }
-      } else if (if_block) {
-        if_block.d(1);
-        if_block = null;
-      }
+      if (token)
+        if_block.p(ctx2, dirty);
       const loader_changes = {};
       if (dirty &amp; /*loading*/
-      4)
+      2)
         loader_changes.show = /*loading*/
-        ctx2[2];
+        ctx2[1];
       loader.$set(loader_changes);
     },
     i(local) {
@@ -26754,17 +26710,16 @@ function dateToUIDate$1(dateValue) {
   return new Date(dateValue).toLocaleDateString(userLocale, options);
 }
 function instance$2($$self, $$props, $$invalidate) {
-  let token;
   let expiry;
   let loading = true;
   let years = 1;
   let renewalPriceWei = 0;
   let renewalPriceEth = 0;
-  let contract;
   let renewalSeconds;
   let estimatedGasPriceWei = 0;
   let estimatedGasPriceEth = 0;
   let evmProvider;
+  let contract;
   const renewABI = [
     {
       "constant": false,
@@ -26787,23 +26742,23 @@ function instance$2($$self, $$props, $$invalidate) {
   context.data.subscribe(async (value) =&gt; {
     if (!value.token)
       return;
-    $$invalidate(0, token = value.token);
-    $$invalidate(1, expiry = dateToUIDate$1(token.nameExpires * 1e3));
-    $$invalidate(2, loading = false);
+    updateToken(value.token);
+    $$invalidate(0, expiry = dateToUIDate$1(token.nameExpires * 1e3));
+    $$invalidate(1, loading = false);
   });
   function estimateGasPrice() {
     if (evmProvider &amp;&amp; ethers &amp;&amp; contract &amp;&amp; renewalSeconds &amp;&amp; token.ensName) {
       evmProvider.getFeeData().then(({ gasPrice }) =&gt; {
         estimatedGasPriceWei = Number(Math.round(formatUnits(gasPrice, "wei"))).toFixed(2);
-        $$invalidate(5, estimatedGasPriceEth = estimatedGasPriceWei / 1e13);
+        $$invalidate(4, estimatedGasPriceEth = estimatedGasPriceWei / 1e13);
       });
     }
   }
   function updateYearsSelected(increment) {
     if (increment &amp;&amp; years &lt; maxYears) {
-      $$invalidate(3, years++, years);
+      $$invalidate(2, years++, years);
     } else if (!increment &amp;&amp; years &gt; 1) {
-      $$invalidate(3, years--, years);
+      $$invalidate(2, years--, years);
     }
     setRenewalYears();
   }
@@ -26811,7 +26766,7 @@ function instance$2($$self, $$props, $$invalidate) {
     if (ethers) {
       renewalSeconds = years * 31556952;
       renewalPriceWei = years * token.renewalPricePerYear;
-      $$invalidate(4, renewalPriceEth = Number(formatEther(renewalPriceWei)));
+      $$invalidate(3, renewalPriceEth = Number(formatEther(renewalPriceWei)));
       web3.action.setProps({ renewalSeconds, renewalPriceWei });
       estimateGasPrice();
     }
@@ -26835,7 +26790,6 @@ function instance$2($$self, $$props, $$invalidate) {
     updateYearsSelected(true);
   };
   return [
-    token,
     expiry,
     loading,
     years,
@@ -26854,19 +26808,14 @@ class Renew extends SvelteComponent {
 }
 function get_each_context(ctx, list, i) {
   const child_ctx = ctx.slice();
-  child_ctx[14] = list[i];
-  child_ctx[16] = i;
+  child_ctx[13] = list[i];
+  child_ctx[15] = i;
   return child_ctx;
 }
 function create_if_block(ctx) {
   let div4;
   let div2;
   let h3;
-  let t0_value = (
-    /*token*/
-    ctx[0].name + ""
-  );
-  let t0;
   let t1;
   let div1;
   let div0;
@@ -26874,9 +26823,6 @@ function create_if_block(ctx) {
   let t3;
   let t4;
   let div3;
-  let img;
-  let img_src_value;
-  let img_alt_value;
   let t5;
   let div10;
   let div5;
@@ -26891,7 +26837,7 @@ function create_if_block(ctx) {
   let p1;
   let t9_value = (
     /*selectedRecord*/
-    ctx[3].title + ""
+    ctx[2].title + ""
   );
   let t9;
   let t10;
@@ -26906,11 +26852,11 @@ function create_if_block(ctx) {
   let dispose;
   let each_value = ensure_array_like(Object.keys(
     /*renewOptions*/
-    ctx[4]
+    ctx[3]
   ));
   const get_key = (ctx2) =&gt; (
     /*index*/
-    ctx2[16]
+    ctx2[15]
   );
   for (let i = 0; i &lt; each_value.length; i += 1) {
     let child_ctx = get_each_context(ctx, each_value, i);
@@ -26919,29 +26865,29 @@ function create_if_block(ctx) {
   }
   let if_block0 = (
     /*selectedRecord*/
-    ctx[3].contractKey === "avatar" &amp;&amp; create_if_block_2(ctx)
+    ctx[2].contractKey === "avatar" &amp;&amp; create_if_block_2(ctx)
   );
   let if_block1 = (
     /*selectedRecord*/
-    ctx[3].contractKey !== "avatar" &amp;&amp; create_if_block_1(ctx)
+    ctx[2].contractKey !== "avatar" &amp;&amp; create_if_block_1(ctx)
   );
   return {
     c() {
       div4 = element("div");
       div2 = element("div");
       h3 = element("h3");
-      t0 = text(t0_value);
+      h3.textContent = `${token.name}`;
       t1 = space();
       div1 = element("div");
       div0 = element("div");
       t2 = text("Valid until: ");
       t3 = text(
         /*expiry*/
-        ctx[1]
+        ctx[0]
       );
       t4 = space();
       div3 = element("div");
-      img = element("img");
+      div3.innerHTML = `&lt;img style="width: 104px; margin-top: 4px; margin-right: 15px;" src="${token.image_preview_url}" alt="${"image of " + token.description}"/&gt;`;
       t5 = space();
       div10 = element("div");
       div5 = element("div");
@@ -26980,14 +26926,6 @@ function create_if_block(ctx) {
       set_style(div1, "justify-content", "center");
       set_style(div1, "align-items", "center");
       set_style(div2, "margin", "15px");
-      set_style(img, "width", "104px");
-      set_style(img, "margin-top", "4px");
-      set_style(img, "margin-right", "15px");
-      if (!src_url_equal(img.src, img_src_value = /*token*/
-      ctx[0].image_preview_url))
-        attr(img, "src", img_src_value);
-      attr(img, "alt", img_alt_value = "image of " + /*token*/
-      ctx[0].description);
       set_style(div4, "margin", "14px 0");
       set_style(div4, "display", "flex");
       set_style(div4, "justify-content", "space-between");
@@ -27008,7 +26946,7 @@ function create_if_block(ctx) {
       set_style(p2, "color", "#9A9A9A");
       set_style(p2, "font-weight", "600");
       attr(input, "placeholder", input_placeholder_value = "update " + /*selectedRecord*/
-      ctx[3].contractKey + " value here");
+      ctx[2].contractKey + " value here");
       attr(input, "id", "newRecordValue");
       set_style(input, "padding", "20px");
       set_style(input, "width", "100%");
@@ -27040,7 +26978,6 @@ function create_if_block(ctx) {
       insert(target, div4, anchor);
       append(div4, div2);
       append(div2, h3);
-      append(h3, t0);
       append(div2, t1);
       append(div2, div1);
       append(div1, div0);
@@ -27048,7 +26985,6 @@ function create_if_block(ctx) {
       append(div0, t3);
       append(div4, t4);
       append(div4, div3);
-      append(div3, img);
       insert(target, t5, anchor);
       insert(target, div10, anchor);
       append(div10, div5);
@@ -27081,48 +27017,34 @@ function create_if_block(ctx) {
           input,
           "input",
           /*input_handler*/
-          ctx[7]
+          ctx[6]
         );
         mounted = true;
       }
     },
     p(ctx2, dirty) {
-      if (dirty &amp; /*token*/
-      1 &amp;&amp; t0_value !== (t0_value = /*token*/
-      ctx2[0].name + ""))
-        set_data(t0, t0_value);
       if (dirty &amp; /*expiry*/
-      2)
+      1)
         set_data(
           t3,
           /*expiry*/
-          ctx2[1]
+          ctx2[0]
         );
-      if (dirty &amp; /*token*/
-      1 &amp;&amp; !src_url_equal(img.src, img_src_value = /*token*/
-      ctx2[0].image_preview_url)) {
-        attr(img, "src", img_src_value);
-      }
-      if (dirty &amp; /*token*/
-      1 &amp;&amp; img_alt_value !== (img_alt_value = "image of " + /*token*/
-      ctx2[0].description)) {
-        attr(img, "alt", img_alt_value);
-      }
-      if (dirty &amp; /*selectRecordType, renewOptions, Object, selectedRecord*/
-      56) {
+      if (dirty &amp; /*selectRecordType, getRenewOption, renewOptions, Object, selectedRecord*/
+      28) {
         each_value = ensure_array_like(Object.keys(
           /*renewOptions*/
-          ctx2[4]
+          ctx2[3]
         ));
         each_blocks = update_keyed_each(each_blocks, dirty, get_key, 1, ctx2, each_value, each_1_lookup, div6, destroy_block, create_each_block, null, get_each_context);
       }
       if (dirty &amp; /*selectedRecord*/
-      8 &amp;&amp; t9_value !== (t9_value = /*selectedRecord*/
-      ctx2[3].title + ""))
+      4 &amp;&amp; t9_value !== (t9_value = /*selectedRecord*/
+      ctx2[2].title + ""))
         set_data(t9, t9_value);
       if (
         /*selectedRecord*/
-        ctx2[3].contractKey === "avatar"
+        ctx2[2].contractKey === "avatar"
       ) {
         if (if_block0) {
           if_block0.p(ctx2, dirty);
@@ -27137,7 +27059,7 @@ function create_if_block(ctx) {
       }
       if (
         /*selectedRecord*/
-        ctx2[3].contractKey !== "avatar"
+        ctx2[2].contractKey !== "avatar"
       ) {
         if (if_block1) {
           if_block1.p(ctx2, dirty);
@@ -27151,8 +27073,8 @@ function create_if_block(ctx) {
         if_block1 = null;
       }
       if (dirty &amp; /*selectedRecord*/
-      8 &amp;&amp; input_placeholder_value !== (input_placeholder_value = "update " + /*selectedRecord*/
-      ctx2[3].contractKey + " value here")) {
+      4 &amp;&amp; input_placeholder_value !== (input_placeholder_value = "update " + /*selectedRecord*/
+      ctx2[2].contractKey + " value here")) {
         attr(input, "placeholder", input_placeholder_value);
       }
     },
@@ -27179,11 +27101,12 @@ function create_if_block_4(ctx) {
   return {
     c() {
       button = element("button");
-      button.textContent = `${/*renewOptions*/
-      ctx[4][
+      button.textContent = `${getRenewOption(
+        /*renewOptions*/
+        ctx[3],
         /*renewOptionKey*/
-        ctx[14]
-      ].title}`;
+        ctx[13]
+      ).title}`;
       attr(button, "class", "record-option-btn");
       set_style(button, "padding", "0 16px");
       set_style(button, "float", "left");
@@ -27215,20 +27138,21 @@ function create_if_block_3(ctx) {
   function click_handler() {
     return (
       /*click_handler*/
-      ctx[6](
+      ctx[5](
         /*renewOptionKey*/
-        ctx[14]
+        ctx[13]
       )
     );
   }
   return {
     c() {
       button = element("button");
-      button.textContent = `${/*renewOptions*/
-      ctx[4][
+      button.textContent = `${getRenewOption(
+        /*renewOptions*/
+        ctx[3],
         /*renewOptionKey*/
-        ctx[14]
-      ].title}`;
+        ctx[13]
+      ).title}`;
       attr(button, "class", "record-option-btn");
       set_style(button, "padding", "0 16px");
       set_style(button, "float", "left");
@@ -27267,13 +27191,13 @@ function create_each_block(key_1, ctx) {
   let if_block1_anchor;
   let if_block0 = (
     /*renewOptionKey*/
-    ctx[14] === /*selectedRecord*/
-    ctx[3].title &amp;&amp; create_if_block_4(ctx)
+    ctx[13] === /*selectedRecord*/
+    ctx[2].title &amp;&amp; create_if_block_4(ctx)
   );
   let if_block1 = (
     /*renewOptionKey*/
-    ctx[14] !== /*selectedRecord*/
-    ctx[3].title &amp;&amp; create_if_block_3(ctx)
+    ctx[13] !== /*selectedRecord*/
+    ctx[2].title &amp;&amp; create_if_block_3(ctx)
   );
   return {
     key: key_1,
@@ -27301,8 +27225,8 @@ function create_each_block(key_1, ctx) {
       ctx = new_ctx;
       if (
         /*renewOptionKey*/
-        ctx[14] === /*selectedRecord*/
-        ctx[3].title
+        ctx[13] === /*selectedRecord*/
+        ctx[2].title
       ) {
         if (if_block0) {
           if_block0.p(ctx, dirty);
@@ -27317,8 +27241,8 @@ function create_each_block(key_1, ctx) {
       }
       if (
         /*renewOptionKey*/
-        ctx[14] !== /*selectedRecord*/
-        ctx[3].title
+        ctx[13] !== /*selectedRecord*/
+        ctx[2].title
       ) {
         if (if_block1) {
           if_block1.p(ctx, dirty);
@@ -27348,29 +27272,35 @@ function create_each_block(key_1, ctx) {
 function create_if_block_2(ctx) {
   let img;
   let img_src_value;
+  let img_alt_value;
   return {
     c() {
       img = element("img");
       set_style(img, "width", "100px");
       set_style(img, "border-radius", "80px");
-      if (!src_url_equal(img.src, img_src_value = /*token*/
-      ctx[0][
+      if (!src_url_equal(img.src, img_src_value = token[
         /*selectedRecord*/
-        ctx[3].contractKey
+        ctx[2].contractKey
       ]))
         attr(img, "src", img_src_value);
+      attr(img, "alt", img_alt_value = /*selectedRecord*/
+      ctx[2].title);
     },
     m(target, anchor) {
       insert(target, img, anchor);
     },
     p(ctx2, dirty) {
-      if (dirty &amp; /*token, selectedRecord*/
-      9 &amp;&amp; !src_url_equal(img.src, img_src_value = /*token*/
-      ctx2[0][
+      if (dirty &amp; /*selectedRecord*/
+      4 &amp;&amp; !src_url_equal(img.src, img_src_value = token[
         /*selectedRecord*/
-        ctx2[3].contractKey
+        ctx2[2].contractKey
       ])) {
         attr(img, "src", img_src_value);
+      }
+      if (dirty &amp; /*selectedRecord*/
+      4 &amp;&amp; img_alt_value !== (img_alt_value = /*selectedRecord*/
+      ctx2[2].title)) {
+        attr(img, "alt", img_alt_value);
       }
     },
     d(detaching) {
@@ -27382,19 +27312,11 @@ function create_if_block_2(ctx) {
 }
 function create_if_block_1(ctx) {
   let p;
-  let t_value = (
-    /*token*/
-    (ctx[0][
-      /*selectedRecord*/
-      ctx[3].contractKey
-    ] ? (
-      /*token*/
-      ctx[0][
-        /*selectedRecord*/
-        ctx[3].contractKey
-      ]
-    ) : "Record not found") + ""
-  );
+  let t_value = getTokenDataByKey(
+    token,
+    /*selectedRecord*/
+    ctx[2].contractKey
+  ) + "";
   let t;
   return {
     c() {
@@ -27407,18 +27329,12 @@ function create_if_block_1(ctx) {
       append(p, t);
     },
     p(ctx2, dirty) {
-      if (dirty &amp; /*token, selectedRecord*/
-      9 &amp;&amp; t_value !== (t_value = /*token*/
-      (ctx2[0][
+      if (dirty &amp; /*selectedRecord*/
+      4 &amp;&amp; t_value !== (t_value = getTokenDataByKey(
+        token,
         /*selectedRecord*/
-        ctx2[3].contractKey
-      ] ? (
-        /*token*/
-        ctx2[0][
-          /*selectedRecord*/
-          ctx2[3].contractKey
-        ]
-      ) : "Record not found") + ""))
+        ctx2[2].contractKey
+      ) + ""))
         set_data(t, t_value);
     },
     d(detaching) {
@@ -27433,13 +27349,10 @@ function create_fragment$1(ctx) {
   let t;
   let loader;
   let current;
-  let if_block = (
-    /*token*/
-    ctx[0] &amp;&amp; create_if_block(ctx)
-  );
+  let if_block = token &amp;&amp; create_if_block(ctx);
   loader = new Loader({ props: { show: (
     /*loading*/
-    ctx[2]
+    ctx[1]
   ) } });
   return {
     c() {
@@ -27458,26 +27371,13 @@ function create_fragment$1(ctx) {
       current = true;
     },
     p(ctx2, [dirty]) {
-      if (
-        /*token*/
-        ctx2[0]
-      ) {
-        if (if_block) {
-          if_block.p(ctx2, dirty);
-        } else {
-          if_block = create_if_block(ctx2);
-          if_block.c();
-          if_block.m(div, t);
-        }
-      } else if (if_block) {
-        if_block.d(1);
-        if_block = null;
-      }
+      if (token)
+        if_block.p(ctx2, dirty);
       const loader_changes = {};
       if (dirty &amp; /*loading*/
-      4)
+      2)
         loader_changes.show = /*loading*/
-        ctx2[2];
+        ctx2[1];
       loader.$set(loader_changes);
     },
     i(local) {
@@ -27500,6 +27400,16 @@ function create_fragment$1(ctx) {
     }
   };
 }
+function getRenewOption(renewOptions2, renewOptionKey) {
+  return renewOptions2[renewOptionKey];
+}
+function getTokenDataByKey(token2, selectedKey) {
+  let recordData = "Record not found";
+  const tokenData = token2[selectedKey];
+  if (tokenData)
+    recordData = tokenData;
+  return recordData;
+}
 function dateToUIDate(dateValue) {
   if (!dateValue)
     return "Could not be found";
@@ -27515,7 +27425,6 @@ function updateRecordInput(event) {
   web3.action.setProps({ newRecordValue: event.currentTarget });
 }
 function instance$1($$self, $$props, $$invalidate) {
-  let token;
   let expiry;
   let loading = true;
   let evmProvider;
@@ -27536,7 +27445,7 @@ function instance$1($$self, $$props, $$invalidate) {
   ];
   const renewOptions = {
     "Avatar": { title: "Avatar", contractKey: "avatar" },
-    "Mail": { title: "Mail", contractKey: "email" },
+    "Email": { title: "Email", contractKey: "email" },
     "Description": {
       title: "Description",
       contractKey: "description"
@@ -27562,12 +27471,12 @@ function instance$1($$self, $$props, $$invalidate) {
   context.data.subscribe(async (value) =&gt; {
     if (!value.token)
       return;
-    $$invalidate(0, token = value.token);
-    $$invalidate(1, expiry = dateToUIDate(token.nameExpires * 1e3));
-    $$invalidate(2, loading = false);
+    updateToken(value.token);
+    $$invalidate(0, expiry = dateToUIDate(token.nameExpires * 1e3));
+    $$invalidate(1, loading = false);
   });
   function selectRecordType(renewOption) {
-    $$invalidate(3, selectedRecord = renewOption);
+    $$invalidate(2, selectedRecord = renewOption);
     web3.action.setProps({ newRecordKey: selectedRecord.contractKey });
   }
   function setContractAndProvider() {
@@ -27581,13 +27490,12 @@ function instance$1($$self, $$props, $$invalidate) {
   }
   init2();
   const click_handler = (renewOptionKey) =&gt; {
-    selectRecordType(renewOptions[renewOptionKey]);
+    selectRecordType(getRenewOption(renewOptions, renewOptionKey));
   };
   const input_handler = (event) =&gt; {
-    updateRecordInput(event);
+    event.stopPropagation(), updateRecordInput(event);
   };
   return [
-    token,
     expiry,
     loading,
     selectedRecord,
@@ -27691,7 +27599,7 @@ function create_fragment(ctx) {
   };
 }
 function instance($$self, $$props, $$invalidate) {
-  let token;
+  let token2;
   let initialised = false;
   window.Buffer = buffer.Buffer;
   const routingMap = {
@@ -27707,11 +27615,11 @@ function instance($$self, $$props, $$invalidate) {
     if (initialised)
       return;
     context.setToken(updatedTokens.currentInstance);
-    token = updatedTokens.currentInstance;
-    token.baseNode = ".eth";
-    token.fullName = token.ensName + token.baseNode;
-    if (!token.resolverAddress) {
-      web3.action.setProps({ nodeHash: distExports.hash(token.fullName) });
+    token2 = updatedTokens.currentInstance;
+    token2.baseNode = ".eth";
+    token2.fullName = token2.ensName + token2.baseNode;
+    if (!token2.resolverAddress) {
+      web3.action.setProps({ nodeHash: distExports.hash(token2.fullName) });
       return;
     }
     initialised = true;
