@@ -89,21 +89,25 @@
 						">Update Record</p>
 			</div>
 			<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-					<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; width: 310px;">
-						{#each Object.keys(renewOptions) as renewOptionKey, index (index)}
-							{#if renewOptionKey === selectedRecord.title}
-								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
-							{/if}
-							{#if renewOptionKey !== selectedRecord.title}
-								<button class="record-option-btn" on:click={() => { selectRecordType(getRenewOption(renewOptions, renewOptionKey)) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
-							{/if}
-					 {/each}
-					</div>
-					<div style="display: flex; flex-direction: column; align-items: center;">
-					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
+				<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; max-width: 450px;">
+					{#each Object.keys(renewOptions) as renewOptionKey, index (index)}
+						{#if renewOptionKey === selectedRecord.title}
+							<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
+						{/if}
+						{#if renewOptionKey !== selectedRecord.title}
+							<button class="record-option-btn" on:click={() => { selectRecordType(getRenewOption(renewOptions, renewOptionKey)) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
+						{/if}
+				 {/each}
+				</div>
+				<div style="display: flex; flex-direction: column; align-items: center; max-width: 450px; width: 100%;">
+					<div style="background-color: #F5F5F5; border-radius: 20px; margin: 30px; padding: 24px; width: 100%;">
 						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord.title} Value</p>
 						{#if selectedRecord.contractKey === "avatar" }
-							<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey]} alt={selectedRecord.title}>
+							{#if token[selectedRecord.contractKey] }
+								<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey]} alt={selectedRecord.title}>
+							{:else }
+								<p style="color: #9A9A9A;">Record not found</p>
+							{/if}
 						{/if}
 						{#if selectedRecord.contractKey !== "avatar" }
 							<p style="color: #9A9A9A;">

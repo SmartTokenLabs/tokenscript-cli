@@ -21924,7 +21924,7 @@ function create_if_block$1(ctx) {
       set_style(div6, "border-radius", "20px");
       set_style(div6, "background-color", "white");
       set_style(div6, "border", "solid #C2C2C2 1px");
-      set_style(div6, "width", "310px");
+      set_style(div6, "max-width", "450px");
       set_style(p1, "color", "#9A9A9A");
       set_style(p1, "font-weight", "600");
       set_style(p2, "color", "#9A9A9A");
@@ -21938,13 +21938,15 @@ function create_if_block$1(ctx) {
       set_style(input, "border", "none");
       attr(input, "type", "text");
       set_style(div7, "background-color", "#F5F5F5");
-      set_style(div7, "width", "310px");
       set_style(div7, "border-radius", "20px");
-      set_style(div7, "margin", "52px");
+      set_style(div7, "margin", "30px");
       set_style(div7, "padding", "24px");
+      set_style(div7, "width", "100%");
       set_style(div8, "display", "flex");
       set_style(div8, "flex-direction", "column");
       set_style(div8, "align-items", "center");
+      set_style(div8, "max-width", "450px");
+      set_style(div8, "width", "100%");
       set_style(div9, "display", "flex");
       set_style(div9, "justify-content", "center");
       set_style(div9, "flex-direction", "column");
@@ -22080,7 +22082,7 @@ function create_if_block$1(ctx) {
     }
   };
 }
-function create_if_block_4(ctx) {
+function create_if_block_5(ctx) {
   let button;
   return {
     c() {
@@ -22115,7 +22117,7 @@ function create_if_block_4(ctx) {
     }
   };
 }
-function create_if_block_3(ctx) {
+function create_if_block_4(ctx) {
   let button;
   let mounted;
   let dispose;
@@ -22176,12 +22178,12 @@ function create_each_block(key_1, ctx) {
   let if_block0 = (
     /*renewOptionKey*/
     ctx[9] === /*selectedRecord*/
-    ctx[2].title &amp;&amp; create_if_block_4(ctx)
+    ctx[2].title &amp;&amp; create_if_block_5(ctx)
   );
   let if_block1 = (
     /*renewOptionKey*/
     ctx[9] !== /*selectedRecord*/
-    ctx[2].title &amp;&amp; create_if_block_3(ctx)
+    ctx[2].title &amp;&amp; create_if_block_4(ctx)
   );
   return {
     key: key_1,
@@ -22215,7 +22217,7 @@ function create_each_block(key_1, ctx) {
         if (if_block0) {
           if_block0.p(ctx, dirty);
         } else {
-          if_block0 = create_if_block_4(ctx);
+          if_block0 = create_if_block_5(ctx);
           if_block0.c();
           if_block0.m(t.parentNode, t);
         }
@@ -22231,7 +22233,7 @@ function create_each_block(key_1, ctx) {
         if (if_block1) {
           if_block1.p(ctx, dirty);
         } else {
-          if_block1 = create_if_block_3(ctx);
+          if_block1 = create_if_block_4(ctx);
           if_block1.c();
           if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
         }
@@ -22254,6 +22256,66 @@ function create_each_block(key_1, ctx) {
   };
 }
 function create_if_block_2(ctx) {
+  let if_block_anchor;
+  function select_block_type(ctx2, dirty) {
+    if (token[
+      /*selectedRecord*/
+      ctx2[2].contractKey
+    ])
+      return create_if_block_3;
+    return create_else_block;
+  }
+  let current_block_type = select_block_type(ctx);
+  let if_block = current_block_type(ctx);
+  return {
+    c() {
+      if_block.c();
+      if_block_anchor = empty$1();
+    },
+    m(target, anchor) {
+      if_block.m(target, anchor);
+      insert(target, if_block_anchor, anchor);
+    },
+    p(ctx2, dirty) {
+      if (current_block_type === (current_block_type = select_block_type(ctx2)) &amp;&amp; if_block) {
+        if_block.p(ctx2, dirty);
+      } else {
+        if_block.d(1);
+        if_block = current_block_type(ctx2);
+        if (if_block) {
+          if_block.c();
+          if_block.m(if_block_anchor.parentNode, if_block_anchor);
+        }
+      }
+    },
+    d(detaching) {
+      if (detaching) {
+        detach(if_block_anchor);
+      }
+      if_block.d(detaching);
+    }
+  };
+}
+function create_else_block(ctx) {
+  let p;
+  return {
+    c() {
+      p = element("p");
+      p.textContent = "Record not found";
+      set_style(p, "color", "#9A9A9A");
+    },
+    m(target, anchor) {
+      insert(target, p, anchor);
+    },
+    p: noop,
+    d(detaching) {
+      if (detaching) {
+        detach(p);
+      }
+    }
+  };
+}
+function create_if_block_3(ctx) {
   let img;
   let img_src_value;
   let img_alt_value;
