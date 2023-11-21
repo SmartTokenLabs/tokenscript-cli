@@ -53,12 +53,23 @@
 
 </script>
 
+<style>
+	.init-loader {
+		min-height: 97vh !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
+
 <svelte:window on:hashchange={routeChange} />
 
 <div>
 	<div id="token-container">
 		{#if !initialised}
-			<Loader />
+			<div class="init-loader">
+				<Loader show={true} />
+			</div>
 		{/if}
 		<svelte:component this={page} />
 	</div>
