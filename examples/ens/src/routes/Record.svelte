@@ -1,35 +1,14 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
-	import { TokenInterface, token, updateToken } from "../types/tokenTypes";
-	import { ethers } from "ethers";
-	
+	import { token, updateToken } from "../types/tokenTypes";
+	import type { TokenInterface } from "../types/tokenTypes";
+
 	let expiry:string;
 	let loading = true;
 	let contract: unknown;
 	let evmProvider:any;
 	let selectedRecord = { title: "Avatar", contractKey: "avatar" };
-	
-	const renewABI = [
-		{
-			"constant": false,
-			"inputs": [
-				{
-					"name": "name",
-					"type": "string"
-				},
-				{
-					"name": "duration",
-					"type": "uint256"
-				}
-			],
-			"name": "renew",
-			"outputs": [],
-			"payable": true,
-			"stateMutability": "payable",
-			"type": "function"
-		}
-	]
 
 	const renewOptions = {
 		"Avatar": { title: "Avatar", contractKey: "avatar" },
@@ -44,11 +23,11 @@
 	}
 
 	interface RenewOptionsInterface {
-  	[key: string]: { title: string, contractKey: string }
+  		[key: string]: { title: string, contractKey: string }
 	}
 
 	function getRenewOption(renewOptions: RenewOptionsInterface, renewOptionKey: string): { title: string, contractKey: string } {
-  	return renewOptions[renewOptionKey];
+  		return renewOptions[renewOptionKey];
 	}
 
 	function getTokenDataByKey (token:TokenInterface, selectedKey: string): string | number | undefined {
@@ -58,19 +37,11 @@
 		return recordData;
 	}
 
-	const ethereumProviderConfig = {
-		name: 'ETHEREUM',
-    rpc: 'https://nodes.mewapi.io/rpc/eth',
-    explorer: 'https://etherscan.com/tx/'
-	}
-
 	context.data.subscribe(async (value) => {
 		if (!value.token) return;
-	
+
 		updateToken(value.token);
 		expiry = dateToUIDate(token.nameExpires * 1000);
-
-		init();
 
 		// You can load other data before hiding the loader
 		loading = false;
@@ -89,22 +60,9 @@
 		web3.action.setProps({ newRecordKey: selectedRecord.contractKey });
 	}
 
-	function setContractAndProvider () {
-		// @ts-ignore
-		if(ethers && ethers.JsonRpcProvider) {
-			// @ts-ignore
-			evmProvider = new ethers.JsonRpcProvider(ethereumProviderConfig.rpc, "mainnet");
-			contract = new ethers.Contract("0x283af0b28c62c092c9727f1ee09c02ca627eb7f5", renewABI, evmProvider);
-		}
-	}
-
 	function updateRecordInput (event:Event) {
 		// @ts-ignore
-		web3.action.setProps({ newRecordValue: event.currentTarget });
-	}
-
-	function init() {
-		setContractAndProvider();
+		web3.action.setProps({ newRecordValue: (event.currentTarget as HTMLInputElement).value });
 	}
 
 </script>
@@ -164,4 +122,3 @@
 	<Loader show={loading}/>
 </div>
 
-		

@@ -61,7 +61,13 @@ export class InlineIncludes implements IBuildStep {
 				parent.append(...contentElem.head.childNodes);
 				parent.append(...contentElem.body.childNodes);
 			} else {
-				parent.innerHTML += content;
+				try {
+					parent.innerHTML += content;
+				} catch (e){
+					console.warn(e);
+					const contentElem = this.context.parseXml(content, "text/xml");
+					parent.append(contentElem.documentElement);
+				}
 			}
 		}
 

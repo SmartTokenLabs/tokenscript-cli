@@ -1,20 +1,15 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
-	import { ethers } from "ethers";
-	import { TokenInterface, token, updateToken } from "../types/tokenTypes";
+	import {ethers, Network} from "ethers";
+	import {token, updateToken} from "../types/tokenTypes";
 
-	let expiry:string;
-	let loading = true;
-	let years = 1;
-	let renewalPrice:number = 0; // wei
-	let renewalPriceEth:number = 0;
-	let renewalSeconds: any;
-	let estimatedGasPriceWei:any = 0;
-	let estimatedGasPriceEth:any = 0;
-	let evmProvider:any;
-	let contract: unknown;
-	let maxYears:number = 3;
+	const ethereumProviderConfig = {
+		name: 'ETHEREUM',
+		// TODO: Switch to engine provided RPC (rpcURL global var) when better mainnet RPC is in place
+		rpc: 'https://nodes.mewapi.io/rpc/eth',
+		explorer: 'https://etherscan.com/tx/'
+	}
 
 	const renewABI = [
 		{
@@ -35,19 +30,28 @@
 			"stateMutability": "payable",
 			"type": "function"
 		}
-	]
+	];
 
-	const ethereumProviderConfig = {
-		name: 'ETHEREUM',
-    rpc: 'https://nodes.mewapi.io/rpc/eth',
-    explorer: 'https://etherscan.com/tx/'
-	}
+	const evmProvider = new ethers.JsonRpcProvider(ethereumProviderConfig.rpc, "mainnet", {
+		staticNetwork: Network.from("mainnet")
+	});
+	const contract = new ethers.Contract("0x283af0b28c62c092c9727f1ee09c02ca627eb7f5", renewABI, evmProvider);
+	const maxYears: number = 10;
+
+	let expiry: string;
+	let loading = true;
+	let years = 1;
+	let renewalPrice: bigint = 0n; // wei
+	let renewalPriceEth: string = "0";
+	let renewalSeconds: bigint;
+	let estimatedGasPriceWei: bigint = 0n;
+	let estimatedGasPriceEth: string = "0";
 
 	context.data.subscribe(async (value) => {
 		if (!value.token) return;
-	
+
 		updateToken(value.token);
-		
+
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
 		init();
@@ -56,15 +60,12 @@
 		loading = false;
 	});
 
-	function estimateGasPrice () {
-		if(evmProvider && ethers && contract && renewalSeconds && token.ensName) {
-			// @ts-ignore
-			evmProvider.getFeeData().then(({ gasPrice }) => {
-				// @ts-ignore
-				estimatedGasPriceWei = Number(Math.round(ethers.formatUnits(gasPrice, 'wei'))).toFixed(2);
-				estimatedGasPriceEth = estimatedGasPriceWei / 10000000000000;
-			})
-		}
+	async function estimateGasPrice() {
+		const feeData = await evmProvider.getFeeData();
+		const gasUnits = await contract.getFunction("renew").estimateGas(token.ensName, renewalSeconds, {value: renewalPrice});
+
+		estimatedGasPriceWei = feeData.gasPrice * gasUnits;
+		estimatedGasPriceEth = ethers.formatEther(estimatedGasPriceWei);
 	}
 
 	function dateToUIDate(dateValue:number):string {
@@ -74,39 +75,26 @@
 		return new Date(dateValue).toLocaleDateString(userLocale, options as Intl.DateTimeFormatOptions);
 	}
 
-	function updateYearsSelected (increment:boolean) {
+	function updateYearsSelected (increment: boolean) {
 		if(increment && years < maxYears) {
 			years ++;
 		} else if(!increment && years > 1) {
-				years --;
+			years --;
 		}
 		setRenewalYears();
 	}
 
-	function setRenewalYears () {
-		if(ethers) {
-			renewalSeconds = years * 31556952;
-			renewalPrice = years * token.renewalPricePerYear; // wei
-			// @ts-ignore
-			renewalPriceEth = Number(ethers.formatEther(renewalPrice));
-			// @ts-ignore
-			web3.action.setProps({renewalSeconds, renewalPrice});
-			estimateGasPrice();
-		}
-	}
-
-	function setContractAndProvider () {
+	function setRenewalYears() {
+		renewalSeconds = BigInt(years) * BigInt(31536000);
+		renewalPrice = BigInt(years) * BigInt(token.renewalPricePerYear); // wei
+		renewalPriceEth = ethers.formatEther(renewalPrice);
 		// @ts-ignore
-		if(ethers && ethers.JsonRpcProvider) {
-			// @ts-ignore
-			evmProvider = new ethers.JsonRpcProvider(ethereumProviderConfig.rpc, "mainnet");
-			contract = new ethers.Contract("0x283af0b28c62c092c9727f1ee09c02ca627eb7f5", renewABI, evmProvider);
-		}
+		web3.action.setProps({renewalSeconds, renewalPrice});
+		estimateGasPrice();
 	}
 
 	function init() {
 		setRenewalYears();
-		setContractAndProvider();
 		estimateGasPrice();
 	}
 
@@ -144,15 +132,15 @@
 					<div style="background-color: #F5F5F5; width: 310px; height: 200px; border-radius: 20px; margin: 52px; padding: 24px;">
 						<div style="color: #B6B6BF; display: flex; justify-content: space-between">
 								<p>{years > 1 ? years + ' years' : years +' year' } extension</p>
-								<p>{renewalPriceEth.toFixed(4)} ETH</p>
+								<p>{Number(renewalPriceEth).toFixed(4)} ETH</p>
 						</div>
 						<div style="color: #B6B6BF; display: flex; justify-content: space-between">
 								<p>Transaction </p>
-								<p>{estimatedGasPriceEth.toFixed(4)} ETH</p>
+								<p>{Number(estimatedGasPriceEth).toFixed(4)} ETH</p>
 						</div>
 						<div style="color: black;display: flex; justify-content: space-between">
 								<p>Estimated total</p>
-								<p>{(renewalPriceEth + estimatedGasPriceEth).toFixed(4) } ETH</p>
+								<p>{(Number(renewalPriceEth) + Number(estimatedGasPriceEth)).toFixed(4) } ETH</p>
 						</div>
 					</div>
 			</div>
@@ -161,4 +149,3 @@
 	<Loader show={loading}/>
 </div>
 
-		

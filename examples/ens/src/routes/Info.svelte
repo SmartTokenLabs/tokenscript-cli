@@ -44,11 +44,7 @@
 	}
 
 	function resolvedText() {
-		if(parseInt(token.resolverAddress, 16) !== 0) {
-			resolvedENS = true;
-		} else {
-			resolvedENS = false;
-		}
+		resolvedENS = parseInt(token.resolverAddress, 16) !== 0;
 	}
 
 	function init() {
@@ -85,7 +81,7 @@
 						<p style="color: #9A9A9A; font-weight: 600;">Address </p>
 						<p style="color: #9A9A9A; word-wrap: break-word;">{token.resolverAddress}</p>
 						<p style="color: #9A9A9A; font-weight: 600;">Description </p>
-						<p style="color: #9A9A9A; word-wrap: break-word;">{token.description}</p>
+						<p style="color: #9A9A9A; word-wrap: break-word;">{token.description ?? "N/A"}</p>
 					</div>
 			</div>
 		</div>
