@@ -43,8 +43,8 @@ declare module '$env/static/private' {
 	export const npm_config_noproxy: string;
 	export const npm_config_local_prefix: string;
 	export const PNPM_HOME: string;
-	export const USER: string;
 	export const NVM_DIR: string;
+	export const USER: string;
 	export const npm_config_globalconfig: string;
 	export const npm_package_peer: string;
 	export const SSH_AUTH_SOCK: string;
@@ -57,8 +57,8 @@ declare module '$env/static/private' {
 	export const LaunchInstanceID: string;
 	export const npm_config_userconfig: string;
 	export const npm_config_init_module: string;
-	export const __CFBundleIdentifier: string;
 	export const NVM_NODEJS_ORG_MIRROR: string;
+	export const __CFBundleIdentifier: string;
 	export const npm_command: string;
 	export const PWD: string;
 	export const npm_lifecycle_event: string;
@@ -130,8 +130,8 @@ declare module '$env/dynamic/private' {
 		npm_config_noproxy: string;
 		npm_config_local_prefix: string;
 		PNPM_HOME: string;
-		USER: string;
 		NVM_DIR: string;
+		USER: string;
 		npm_config_globalconfig: string;
 		npm_package_peer: string;
 		SSH_AUTH_SOCK: string;
@@ -144,8 +144,8 @@ declare module '$env/dynamic/private' {
 		LaunchInstanceID: string;
 		npm_config_userconfig: string;
 		npm_config_init_module: string;
-		__CFBundleIdentifier: string;
 		NVM_NODEJS_ORG_MIRROR: string;
+		__CFBundleIdentifier: string;
 		npm_command: string;
 		PWD: string;
 		npm_lifecycle_event: string;

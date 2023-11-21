@@ -27493,7 +27493,7 @@ function instance$1($$self, $$props, $$invalidate) {
     selectRecordType(getRenewOption(renewOptions, renewOptionKey));
   };
   const input_handler = (event) =&gt; {
-    event.stopPropagation(), updateRecordInput(event);
+    updateRecordInput(event);
   };
   return [
     expiry,
