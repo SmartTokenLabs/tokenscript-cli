@@ -1,0 +1,23 @@
+<script type="text/javascript">
+	class Token {
+		constructor(tokenInstance) {
+			this.props = tokenInstance
+		}
+
+		render() {
+			return `
+				<div style="text-align: center;">
+					<h3>Welcome to TokenScript</h3>
+					<p>When a card loads in TokenScript, it gets access to the token context data through TokenScript engine</p>
+				</div>
+				<pre>${JSON.stringify(this.props, null, 2)}</pre>
+			`;
+		}
+	}
+
+	web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
+		const currentTokenInstance = updatedTokens.currentInstance;
+		document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
+	};
+
+</script>

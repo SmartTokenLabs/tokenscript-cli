@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ts:token xmlns:ts="http://tokenscript.org/2022/09/tokenscript"
+		  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+		  xsi:schemaLocation="http://tokenscript.org/2022/09/tokenscript http://tokenscript.org/2022/09/tokenscript.xsd"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xmlns:ethereum="urn:ethereum:constantinople"
+		  name="xdai-bridge">
+	<ts:label>
+		<ts:plurals xml:lang="en">
+			<ts:string quantity="one">xdai-bridge Token</ts:string>
+			<ts:string quantity="other">xdai-bridge Tokens</ts:string>
+		</ts:plurals>
+		<ts:plurals xml:lang="zh">
+			<ts:string xml:lang="one">將xDAI轉爲DAI</ts:string>
+			<ts:string xml:lang="other">將xDAI轉爲DAI</ts:string>
+		</ts:plurals>
+	</ts:label>
+	<ts:meta>
+		<ts:description xml:lang="en">xdai bridge</ts:description>
+		<ts:aboutUrl xml:lang="en">www.xdai.com</ts:aboutUrl>
+		<ts:iconUrl xml:lang="en">xdai.com/image</ts:iconUrl>
+	</ts:meta>
+	<ts:contract name="dai-erc20">
+			<ts:address network="1">0x6b175474e89094c44da98b954eedeac495271d0f</ts:address>
+	</ts:contract>
+	<ts:origins>
+		<ts:ethereum contract="Token"/>
+	</ts:origins>
+	<ts:cards>
+		<ts:viewContent name="common" xmlns="http://www.w3.org/1999/xhtml">
+			<ts:include type="css" src="./styles.css"/>
+		</ts:viewContent>
+		<ts:card type="token" name="Info">
+			<ts:label>
+				<ts:string xml:lang="en">Info</ts:string>
+			</ts:label>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+				<ts:viewContent name="common"/>
+				<ts:include type="html" src="./index.html"/>
+			</ts:view>
+		</ts:card>
+		<ts:card type="action" name="Convert">
+			<ts:label>
+				<ts:string xml:lang="en">Convert</ts:string>
+			</ts:label>
+			<ts:transaction>
+        <ethereum:transaction>
+            <ethereum:to>0x7301CFA0e1756B71869E93d4e4Dca5c7d0eb0AA6</ethereum:to>
+            <ethereum:value ref="amount"/>
+        </ethereum:transaction>
+    	</ts:transaction>
+			<ts:view xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+				<ts:viewContent name="common"/>
+				<ts:include type="html" src="./convert.html"/>
+			</ts:view>
+		</ts:card>
+	</ts:cards>
+</ts:token>
