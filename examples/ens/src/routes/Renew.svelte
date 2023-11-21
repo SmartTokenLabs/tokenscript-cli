@@ -7,7 +7,7 @@
 	let expiry:string;
 	let loading = true;
 	let years = 1;
-	let renewalPriceWei:number = 0;
+	let renewalPrice:number = 0; // wei
 	let renewalPriceEth:number = 0;
 	let renewalSeconds: any;
 	let estimatedGasPriceWei:any = 0;
@@ -50,6 +50,8 @@
 		
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
+		init();
+
 		// You can load other data before hiding the loader
 		loading = false;
 	});
@@ -84,11 +86,11 @@
 	function setRenewalYears () {
 		if(ethers) {
 			renewalSeconds = years * 31556952;
-			renewalPriceWei = years * token.renewalPricePerYear;
+			renewalPrice = years * token.renewalPricePerYear; // wei
 			// @ts-ignore
-			renewalPriceEth = Number(ethers.formatEther(renewalPriceWei));
+			renewalPriceEth = Number(ethers.formatEther(renewalPrice));
 			// @ts-ignore
-			web3.action.setProps({renewalSeconds, renewalPriceWei});
+			web3.action.setProps({renewalSeconds, renewalPrice});
 			estimateGasPrice();
 		}
 	}
@@ -107,8 +109,6 @@
 		setContractAndProvider();
 		estimateGasPrice();
 	}
-
-	init();
 
 </script>
 

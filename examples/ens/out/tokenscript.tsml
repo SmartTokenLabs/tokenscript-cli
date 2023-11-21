@@ -1010,6 +1010,7 @@ function instance$3($$self, $$props, $$invalidate) {
       return;
     $$invalidate(0, token2 = value.token);
     $$invalidate(1, expiry = dateToUIDate$2(token2.nameExpires * 1e3));
+    init2();
     $$invalidate(2, loading = false);
   });
   function resolvedText() {
@@ -1022,7 +1023,6 @@ function instance$3($$self, $$props, $$invalidate) {
   function init2() {
     resolvedText();
   }
-  init2();
   return [token2, expiry, loading, resolvedENS];
 }
 class Info extends SvelteComponent {
@@ -26713,7 +26713,7 @@ function instance$2($$self, $$props, $$invalidate) {
   let expiry;
   let loading = true;
   let years = 1;
-  let renewalPriceWei = 0;
+  let renewalPrice = 0;
   let renewalPriceEth = 0;
   let renewalSeconds;
   let estimatedGasPriceWei = 0;
@@ -26744,6 +26744,7 @@ function instance$2($$self, $$props, $$invalidate) {
       return;
     updateToken(value.token);
     $$invalidate(0, expiry = dateToUIDate$1(token.nameExpires * 1e3));
+    init2();
     $$invalidate(1, loading = false);
   });
   function estimateGasPrice() {
@@ -26765,9 +26766,9 @@ function instance$2($$self, $$props, $$invalidate) {
   function setRenewalYears() {
     if (ethers) {
       renewalSeconds = years * 31556952;
-      renewalPriceWei = years * token.renewalPricePerYear;
-      $$invalidate(3, renewalPriceEth = Number(formatEther(renewalPriceWei)));
-      web3.action.setProps({ renewalSeconds, renewalPriceWei });
+      renewalPrice = years * token.renewalPricePerYear;
+      $$invalidate(3, renewalPriceEth = Number(formatEther(renewalPrice)));
+      web3.action.setProps({ renewalSeconds, renewalPrice });
       estimateGasPrice();
     }
   }
@@ -26782,7 +26783,6 @@ function instance$2($$self, $$props, $$invalidate) {
     setContractAndProvider();
     estimateGasPrice();
   }
-  init2();
   const click_handler = () =&gt; {
     updateYearsSelected(false);
   };
@@ -27473,6 +27473,7 @@ function instance$1($$self, $$props, $$invalidate) {
       return;
     updateToken(value.token);
     $$invalidate(0, expiry = dateToUIDate(token.nameExpires * 1e3));
+    init2();
     $$invalidate(1, loading = false);
   });
   function selectRecordType(renewOption) {
@@ -27488,7 +27489,6 @@ function instance$1($$self, $$props, $$invalidate) {
   function init2() {
     setContractAndProvider();
   }
-  init2();
   const click_handler = (renewOptionKey) =&gt; {
     selectRecordType(getRenewOption(renewOptions, renewOptionKey));
   };

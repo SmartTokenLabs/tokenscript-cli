@@ -70,6 +70,8 @@
 		updateToken(value.token);
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
+		init();
+
 		// You can load other data before hiding the loader
 		loading = false;
 	});
@@ -104,8 +106,6 @@
 	function init() {
 		setContractAndProvider();
 	}
-
-	init();
 
 </script>
 

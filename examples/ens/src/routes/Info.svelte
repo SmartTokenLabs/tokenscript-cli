@@ -25,10 +25,13 @@
 	let resolvedENS:Boolean;
 
 	context.data.subscribe(async (value) => {
-		if (!value.token)
-			return;
+		if (!value.token) return;
+
 		token = value.token;
 		expiry = dateToUIDate(token.nameExpires * 1000);
+
+		init();
+
 		// You can load other data before hiding the loader
 		loading = false;
 	});
@@ -51,8 +54,6 @@
 	function init() {
 		resolvedText();
 	}
-
-	init();
 
 </script>
 
