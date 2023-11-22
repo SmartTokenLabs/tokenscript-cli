@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
-import {ITemplateData} from "./templateProcessor";
 import {resolve} from "path";
 import {join} from "path";
+import {ITemplateData} from "../create/templateProcessor";
 
 export interface ITemplateListItem {
 	id: string;
@@ -16,6 +16,19 @@ export class Templates {
 	static PROD_PATH = join(__dirname, "..", "templates");
 
 	static templateDir = fs.existsSync(Templates.DEV_PATH) ? Templates.DEV_PATH : Templates.PROD_PATH;
+
+	// Used for replacing ACTION_NAME in card templates
+	static cardTemplate: ITemplateData = {
+		name: "",
+		description: "",
+		templateFields: [
+			{
+				name: "Card Name",
+				token: "ACTION_NAME",
+				prompt: ""
+			}
+		]
+	}
 
 	static templatesList: ITemplateListItem[] = [
 		{
@@ -56,7 +69,44 @@ export class Templates {
 		return templateDef;
 	}
 
-	static copyTemplate(id: string, dest: string){
+	static getCardTemplate(): ITemplateData {
+
+		return Templates.cardTemplate;
+	}
+
+	static copyTemplate(id: string, dest: string) {
 		fs.copySync(resolve(this.templateDir, id), dest, { recursive: true });
+	}
+
+	static initTemplate(dest: string, template: string) {
+		let files: string[] = fs.readdirSync(dest);
+
+		for (let fileName of files) {
+			if (fileName.endsWith("html")) {
+				fs.rmSync(fileName);
+			}
+		}
+
+		if (fs.existsSync(join(dest, "tokenscript.xml"))) {
+			fs.rmSync(join(dest, "tokenscript.xml"));
+		}
+
+		fs.rmSync(join(dest, "tstemplate.json"));
+		fs.copyFileSync(resolve(this.templateDir, template, "tstemplate.json"), join(dest, "tstemplate.json"));
+
+		this.copyHHInit(dest);
+
+		/*files = fs.readdirSync(join(this.templateDir, "hardhat")).filter(fileName => fileName.endsWith('.html'));
+		for (const file of files) {
+			fs.copyFileSync(resolve(this.templateDir, "hardhat", file), join(dest, file));
+		}*/
+	}
+
+	static copyHHInit(dest: string) {
+		const files = fs.readdirSync(join(this.templateDir, "hardhat")).filter(fileName => fileName.endsWith('.html'));
+		files.push("tokenscript.xml");
+		for (const file of files) {
+			fs.copyFileSync(resolve(this.templateDir, "hardhat", file), join(dest, file));
+		}
 	}
 }

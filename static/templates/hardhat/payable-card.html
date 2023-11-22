@@ -1,0 +1,21 @@
+<script type="text/javascript">
+	class Token {
+		constructor(tokenInstance) {
+			this.props = tokenInstance
+		}
+
+		render() {
+			return `
+        		<h3>$tst{ACTION_NAME} ...</h3>
+        		<p>Actions allow you to invoke a smart contract transaction or invoke a Javascript function within the view.</p>
+				<input type="number" id="valAmount" placeholder="Value Amount">
+			`;
+		}
+	}
+
+	web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
+		const currentTokenInstance = updatedTokens.currentInstance;
+		document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
+	};
+
+</script>
