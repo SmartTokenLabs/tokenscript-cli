@@ -2,54 +2,154 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
+	import { ethers } from "ethers";
 
 	let token: any;
 	let loading = true;
+	let collectionName:string;
+	let creatorRoyaltiesForSale: number;
 
 	context.data.subscribe(async (value) => {
 		if (!value.token)
 			return;
 		token = value.token;
-		debugger;
+
+		init();
+
 		// You can load other data before hiding the loader
 		loading = false;
 	});
-	// init();
+
+	function setCollectionName () {
+		if(token.name.includes("#")) {
+			collectionName = token.name.substring(0, token.name.indexOf("#"));
+		} else {
+			collectionName = token.name
+		}
+	}
+	
+	function setTokenId () {
+		// @ts-ignore
+		web3.action.setProps({ tokenId: token.tokenId });
+	}
+
+	async function checkCalculateRoyalty() {
+
+		const provider = new ethers.JsonRpcProvider("https://polygon-rpc.com/");
+		const contract = new ethers.Contract("0xd5ca946ac1c1f24eb26dae9e1a53ba6a02bd97fe", [
+		{
+			"constant": true,
+			"name": "royaltyInfo",
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "salePrice",
+					"type": "uint256"
+				}
+			],
+			"outputs": [
+					{
+							"internalType": "address",
+							"name": "receiver",
+							"type": "uint256"
+					},
+					{
+							"internalType": "uint256",
+							"name": "royaltyAmount",
+							"type": "uint256"
+					}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+		], provider);
+
+		const calculateRoyalty = await contract.royaltyInfo(4275773203, 100);
+		if(calculateRoyalty[1]) creatorRoyaltiesForSale = calculateRoyalty[1];
+	}
+
+	function setRoyalties () {
+		// if(ethers && token.royaltyInfo) {} // for handling via TS
+		checkCalculateRoyalty(); // Ethers
+	}
+
+	function init () {
+		setCollectionName();
+		setTokenId();
+		setRoyalties();
+	}
 
 </script>
 
-<div>
+<div style="background-color: #86c7ee; padding: 20px; border-radius: 6px;">
+	<!-- 
+		example hero image
+		<img style="width:100%" src="https://coolcats.com/images/og-image.png" alt={'hero image'} /> 
+	-->
+	{#if token.external_link_open_graph_image}
+		<img style="margin: 12px;" src={token.external_link_open_graph_image} alt={'hero image'} />
+	{/if}
 	{#if token}
-		<div style="margin: 14px 0; display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 7px; border: 1px solid rgb(194, 194, 194); height: 142px; width: 100%;">
-			<div style="margin: 15px;">
-					<h3 style="font-size: 24px;">{token.name}</h3>
-					<div style="padding: 0 14px; height: 29px; background-color: #E7F3EF; border-radius: 60px; display: flex; justify-content: center; align-items: center;">
-						<div style="color: #1FB184; font-size: 12px;">Value</div>
-					</div>
+		<div style="margin: 14px 0; display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 7px; height: 142px; width: 100%;">
+			<div style="margin: 15px; width: 50%;">
+					<h3 style="font-size: 18px; margin-bottom: 7px; word-wrap: break-word;">{token.name}</h3>
+					<p style="color: #989898; margin: 0; font-size: 14px">{collectionName} Collection</p>
 			</div>
 			<div>
-				<img style="width: 104px; margin-top: 4px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+				<img id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
 			</div>
 		</div>
-		<div style="margin: 14px 0; background-color: white; border-radius: 7px; border: solid #C2C2C2 1px; width: 100%; display: flex; justify-content: space-between; flex-direction: column;">
+		<div style="background-color: white; border-radius: 7px; width: 100%; display: flex; justify-content: space-between; flex-direction: column; padding: 14px;">
 			<div style="width: 100%;">
 					<p style="
 						font-size: 19px;
 						font-weight: 500;
 						text-align: center;
-						">Resolver</p>
+						margin: 38px 0 14px 0;
+						">Info</p>
 			</div>
-			<div style="display: flex; flex-direction: column; align-items: center;">
-					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
-						<p style="color: #9A9A9A; font-weight: 600;">Status </p>
-						<p style="color: #9A9A9A;">Value</p>
-						<p style="color: #9A9A9A; font-weight: 600;">Address </p>
-						<p style="color: #9A9A9A; word-wrap: break-word;">Value</p>
-						<p style="color: #9A9A9A; font-weight: 600;">Description </p>
-						<p style="color: #9A9A9A; word-wrap: break-word;">{token.description}</p>
+			<div style="margin-bottom: 14px; background-color: #F5F5F5; color: #989898; font-weight: 300; border-radius: 20px; padding: 12px 22px;">
+				<p style="color: #9A9A9A; font-weight: 600;">Traits</p>
+				<div style="display: flex; justify-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap;">
+				{#each token?.tokenInfo?.attributes as trait}
+					<div style="margin-right: 14px; margin-bottom: 14px; width: 148px; background-color: white; font-size: 12px; text-align: center; border-radius: 20px; font-weight: 300; padding: 12px;">
+						<p style="font-weight: 600;">{trait.trait_type}</p>
+						<p style="font-weight: 300;">{trait.value}</p>
+						<p style="font-weight: 300; color: #FF96CD">{trait.rarity ? trait.rarity : '(rarity percentage unknown)'}</p>
 					</div>
+				{/each}
+				</div>
+			</div>
+			<div style="margin-bottom: 14px; background-color: #F5F5F5; border-radius: 20px; font-weight: 300; padding: 24px;">
+				<p style="color: #9A9A9A; font-weight: 600;">Description</p>
+				<p style="color: #9A9A9A; word-wrap: break-word;">{token.description}</p>
+				<p style="color: #9A9A9A; font-weight: 600;">Contract</p>
+				<p style="color: #9A9A9A; word-wrap: break-word;">{token.contractAddress}</p>
+				<p style="color: #9A9A9A; font-weight: 600;">Token Standard </p>
+				<p style="color: #9A9A9A;">{token.tokenInfo.type}</p>
+				<p style="color: #9A9A9A; font-weight: 600;">Chain</p>
+				<p style="color: #9A9A9A; word-wrap: break-word;">{token.chainId}</p>
+				<p style="color: #9A9A9A; font-weight: 600;">Symbol</p>
+				<p style="color: #9A9A9A; word-wrap: break-word;">{token.symbol}</p>
+				{#if creatorRoyaltiesForSale}
+					<p style="color: #9A9A9A; font-weight: 600;">Creator Earnings Per Sale</p>
+					<p style="color: #9A9A9A; word-wrap: break-word;">{ creatorRoyaltiesForSale+'%' }</p>
+				{/if}
+				{#if token.external_link}
+					<p style="color: #9A9A9A; font-weight: 600;">Website</p>
+					<p style="color: #9A9A9A; word-wrap: break-word;">{token.external_link}</p>
+				{/if}
 			</div>
 		</div>
 	{/if}
 	<Loader show={loading}/>
 </div>
+
+
+
+			

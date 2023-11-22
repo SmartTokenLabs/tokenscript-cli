@@ -4,14 +4,11 @@
 	import Info from "./routes/Info.svelte";
 	import NotFound from "./routes/NotFound.svelte";
 
-	import Mint from "./routes/Mint.svelte";
-
 	let token;
 	let initialised = false;
 
 	const routingMap = {
-		'#info': Info,
-		'#mint': Mint
+		'#info': Info
 	};
 
 	let page;
