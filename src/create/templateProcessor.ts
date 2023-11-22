@@ -1,6 +1,7 @@
 import {replaceInFile} from "replace-in-file";
 import * as fs from "fs";
 import {join} from "path";
+import { Null } from "asn1js";
 
 export interface ITemplateFields {
 	name: string;
@@ -14,8 +15,10 @@ export interface ITemplateFields {
 export interface ITemplateData {
 	name: string;
 	description: string;
+	hardhat?: any[];
 	templateFields: ITemplateFields[];
 }
+
 
 export class TemplateProcessor {
 
@@ -31,17 +34,57 @@ export class TemplateProcessor {
 		if (this.templateData.templateFields.length != values.length)
 			throw new Error("Template values length must match field length");
 
-		// Add trimmed name into replacement template.
+		// Add trimmed name into replacement template
 		values = this.insertTrimmedName(values);
 
 		// TODO: Add src & JS files?
-		const results = await replaceInFile({
-			files: [
-				join(this.workspace, "*.xml"),
-				join(this.workspace, "*.html")
-			],
+		const results = await this.replaceInFiles(values, ["*.xml", "*.html"]);
+
+		let replacements = results.reduce((count, currentValue) => {
+			return count + (currentValue.hasChanged ? 1 : 0);
+		}, 0);
+
+		if (!replacements){
+			console.log("Nothing was updated in the project");
+			return;
+		}
+
+		for (let i = 0; i < values.length; i++){
+			this.templateData.templateFields[i].value = values[i];
+		}
+
+		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
+	}
+
+	async updateHardHat(file: string) {
+
+		let hardhatRelPath = { directory: join(this.workspace, file) }; 
+		this.templateData.hardhat?.push(hardhatRelPath);
+		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
+	}
+
+	getHardHatDirectory(): string {
+		var dir: string = "";
+		for (let element of this.templateData.hardhat!) {
+			if ('directory' in element) {
+				dir = element.directory;
+				break;
+			}
+		}
+		return dir;
+	}
+
+	async replaceInFiles(values: any[], fileNames: string[]) {
+		let filesForReplace: string[] = [];
+		for(let file of fileNames) {
+			filesForReplace.push(join(this.workspace, file));
+		}
+
+		return await replaceInFile({
+			files: filesForReplace,
 			allowEmptyPaths: true,
 			from: this.templateData.templateFields.map((field) => {
+
 				if (field.value){
 					let value = this.escapeRegExp(field.value);
 
@@ -63,30 +106,48 @@ export class TemplateProcessor {
 				return value;
 			})
 		});
+	}
 
-		let replacements = results.reduce((count, currentValue) => {
-			return count + (currentValue.hasChanged ? 1 : 0);
-		}, 0);
+	getValuesFromTSTemplate(): any[] {
+		let values: any[] = [];
+		let newTemplateFields: ITemplateFields[] = [];
+		for (let templateField of this.templateData.templateFields) {
+			let value = templateField.value;
+			values.push(value);
 
-		if (!replacements){
-			console.log("Nothing was updated in the project");
-			return;
+			let thisTemplateField: ITemplateFields = { name: templateField.name, token: templateField.token, prompt: templateField.prompt };
+			if ('updatePrefix' in templateField) {
+				thisTemplateField.updatePrefix = templateField.updatePrefix;
+			}
+			if ('options' in templateField) {
+				thisTemplateField.options = templateField.options;
+			}
+
+			newTemplateFields.push(thisTemplateField);
 		}
 
-		for (let i = 0; i < values.length; i++){
-			this.templateData.templateFields[i].value = values[i];
-		}
+		this.templateData.templateFields = newTemplateFields;
 
-		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
+		return values;
 	}
 
 	insertTrimmedName(values: any[]): any[] {
+		const trimIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_TRIM');
 		const nameIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_NAME');
-		const trimVal = values[nameIndex].replace(/\s/g, "-");
-		let trimEntry: ITemplateFields = {name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: ''};
-		this.templateData.templateFields.push(trimEntry);
+		
+		//If trim name exists (running a re-create) remove it first case the TokenScript name changed
+		if (trimIndex >= 0) {
+			this.templateData.templateFields.splice(trimIndex, 1);
+			values.splice(trimIndex, 1);
+		}
+		
+		if (nameIndex >= 0) {
+			const trimVal = values[nameIndex].replace(/\s/g, "-");
+			let trimEntry: ITemplateFields = { name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: '' };
+			this.templateData.templateFields.push(trimEntry);
 
-        values.push(trimVal);
+			values.push(trimVal);
+		}
 		return values;
 	}
 

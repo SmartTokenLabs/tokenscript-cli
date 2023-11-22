@@ -2,6 +2,8 @@
 	"$schema": "../tstemplate.schema.json",
 	"name": "Empty Project",
 	"description": "An empty TokenScript project",
+	"hardhat": [
+	],
 	"templateFields": [
 		{
 			"name": "TokenScript name",
@@ -40,12 +42,6 @@
 			"name": "Icon URL",
 			"token": "ICON_URL",
 			"prompt": "Enter an icon URL for the TokenScript (base64 image URLs are supported)"
-		},
-		{
-			"name": "Pull ABI",
-			"token": "__PULL_ABI",
-			"prompt": "Attempt to pull the ABI from Block Explorer?",
-			"options": ["yes", "no"]
 		}
 	]
 }
