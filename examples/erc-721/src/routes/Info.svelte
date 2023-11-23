@@ -94,13 +94,13 @@
 <div style="background-color: #86c7ee; padding: 20px; border-radius: 6px;">
 	<!-- 
 		example hero image
-		<img style="width:100%" src="https://coolcats.com/images/og-image.png" alt={'hero image'} /> 
+		<img style="width:100%; border-radius: 7px;" src="https://coolcats.com/images/og-image.png" alt={'hero image'} /> 
 	-->
 	{#if token.external_link_open_graph_image}
-		<img style="margin: 12px;" src={token.external_link_open_graph_image} alt={'hero image'} />
+		<img style="width:100%; border-radius: 7px;" src={token.external_link_open_graph_image} alt={'hero image'} />
 	{/if}
 	{#if token}
-		<div style="margin: 14px 0; display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 7px; height: 142px; width: 100%;">
+		<div style="margin: 14px 0px 18px 0; display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 7px; height: 142px; width: 100%;">
 			<div style="margin: 15px; width: 50%;">
 					<h3 style="font-size: 18px; margin-bottom: 7px; word-wrap: break-word;">{token.name}</h3>
 					<p style="color: #989898; margin: 0; font-size: 14px">{collectionName} Collection</p>
@@ -109,7 +109,7 @@
 				<img id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
 			</div>
 		</div>
-		<div style="background-color: white; border-radius: 7px; width: 100%; display: flex; justify-content: space-between; flex-direction: column; padding: 14px;">
+		<div style="background-color: white; border-radius: 7px; width: 100%; display: flex; justify-content: space-between; flex-direction: column; padding: 0 18px;">
 			<div style="width: 100%;">
 					<p style="
 						font-size: 19px;
@@ -119,12 +119,12 @@
 						">Info</p>
 			</div>
 			{#if token?.tokenInfo?.attributes}
-				<div style="margin-bottom: 14px; background-color: #F5F5F5; color: #989898; font-weight: 300; border-radius: 20px; padding: 12px 22px;">
+				<div style="margin-bottom: 18px; background-color: #F5F5F5; color: #989898; font-weight: 300; border-radius: 20px; padding: 12px 22px;">
 					<p style="color: #888; font-weight: 600;">Traits</p>
 					<div style="display: flex; justify-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap;">
 					
 					{#each token?.tokenInfo?.attributes as trait}
-						<div style="margin-right: 14px; margin-bottom: 14px; width: 148px; background-color: white; font-size: 12px; text-align: center; border-radius: 20px; font-weight: 300; padding: 12px;">
+						<div style="margin-right: 18px; margin-bottom: 18px; width: 148px; background-color: white; font-size: 12px; text-align: center; border-radius: 20px; font-weight: 300; padding: 12px;">
 							<p style="font-weight: 600; color: #777;">{trait.trait_type}</p>
 							<p style="font-weight: 300; color: #777;">{trait.value}</p>
 							<p style="font-weight: 300; color: #ff0086e0">{trait.rarity ? trait.rarity : '(rarity percentage unknown)'}</p>
@@ -133,7 +133,7 @@
 					</div>
 				</div>
 			{/if}				
-			<div style="margin-bottom: 14px; background-color: #F5F5F5; border-radius: 20px; font-weight: 300; padding: 24px;">
+			<div style="margin-bottom: 18px; background-color: #F5F5F5; border-radius: 20px; font-weight: 300; padding: 24px;">
 				{#if token.description}
 					<p style="color: #888; font-weight: 600;">Description</p>
 					<p style="color: #888; word-wrap: break-word;">{token.description}</p>
