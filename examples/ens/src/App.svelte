@@ -8,6 +8,7 @@
 	import * as namehash from "@ensdomains/eth-ens-namehash";
 	import Renew from "./routes/Renew.svelte";
 	import Record from "./routes/Record.svelte";
+	import Loader from "./components/Loader.svelte";
 
 	let token;
 	let initialised = false;
@@ -50,14 +51,26 @@
 
 	};
 
-
-
 </script>
+
+<style>
+	.init-loader {
+		min-height: 97vh !important;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
 
 <svelte:window on:hashchange={routeChange} />
 
 <div>
 	<div id="token-container">
+		{#if !initialised}
+			<div class="init-loader">
+				<Loader show={true} />
+			</div>
+		{/if}
 		<svelte:component this={page} />
 	</div>
 </div>

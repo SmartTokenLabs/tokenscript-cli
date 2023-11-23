@@ -1,35 +1,14 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
-	import { TokenInterface, token, updateToken } from "../types/tokenTypes";
-	import { ethers } from "ethers";
-	
+	import { token, updateToken } from "../types/tokenTypes";
+	import type { TokenInterface } from "../types/tokenTypes";
+
 	let expiry:string;
 	let loading = true;
 	let contract: unknown;
 	let evmProvider:any;
 	let selectedRecord = { title: "Avatar", contractKey: "avatar" };
-	
-	const renewABI = [
-		{
-			"constant": false,
-			"inputs": [
-				{
-					"name": "name",
-					"type": "string"
-				},
-				{
-					"name": "duration",
-					"type": "uint256"
-				}
-			],
-			"name": "renew",
-			"outputs": [],
-			"payable": true,
-			"stateMutability": "payable",
-			"type": "function"
-		}
-	]
 
 	const renewOptions = {
 		"Avatar": { title: "Avatar", contractKey: "avatar" },
@@ -44,11 +23,11 @@
 	}
 
 	interface RenewOptionsInterface {
-  	[key: string]: { title: string, contractKey: string }
+  		[key: string]: { title: string, contractKey: string }
 	}
 
 	function getRenewOption(renewOptions: RenewOptionsInterface, renewOptionKey: string): { title: string, contractKey: string } {
-  	return renewOptions[renewOptionKey];
+  		return renewOptions[renewOptionKey];
 	}
 
 	function getTokenDataByKey (token:TokenInterface, selectedKey: string): string | number | undefined {
@@ -58,15 +37,9 @@
 		return recordData;
 	}
 
-	const ethereumProviderConfig = {
-		name: 'ETHEREUM',
-    rpc: 'https://nodes.mewapi.io/rpc/eth',
-    explorer: 'https://etherscan.com/tx/'
-	}
-
 	context.data.subscribe(async (value) => {
 		if (!value.token) return;
-	
+
 		updateToken(value.token);
 		expiry = dateToUIDate(token.nameExpires * 1000);
 
@@ -87,25 +60,10 @@
 		web3.action.setProps({ newRecordKey: selectedRecord.contractKey });
 	}
 
-	function setContractAndProvider () {
-		// @ts-ignore
-		if(ethers && ethers.JsonRpcProvider) {
-			// @ts-ignore
-			evmProvider = new ethers.JsonRpcProvider(ethereumProviderConfig.rpc, "mainnet");
-			contract = new ethers.Contract("0x283af0b28c62c092c9727f1ee09c02ca627eb7f5", renewABI, evmProvider);
-		}
-	}
-
 	function updateRecordInput (event:Event) {
 		// @ts-ignore
-		web3.action.setProps({ newRecordValue: event.currentTarget });
+		web3.action.setProps({ newRecordValue: (event.currentTarget as HTMLInputElement).value });
 	}
-
-	function init() {
-		setContractAndProvider();
-	}
-
-	init();
 
 </script>
 
@@ -131,21 +89,25 @@
 						">Update Record</p>
 			</div>
 			<div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-					<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; width: 310px;">
-						{#each Object.keys(renewOptions) as renewOptionKey, index (index)}
-							{#if renewOptionKey === selectedRecord.title}
-								<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
-							{/if}
-							{#if renewOptionKey !== selectedRecord.title}
-								<button class="record-option-btn" on:click={() => { selectRecordType(getRenewOption(renewOptions, renewOptionKey)) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
-							{/if}
-					 {/each}
-					</div>
-					<div style="display: flex; flex-direction: column; align-items: center;">
-					<div style="background-color: #F5F5F5; width: 310px; border-radius: 20px; margin: 52px; padding: 24px;">
+				<div style="padding: 10px 14px; border-radius: 20px; background-color: white; border: solid #C2C2C2 1px; max-width: 450px;">
+					{#each Object.keys(renewOptions) as renewOptionKey, index (index)}
+						{#if renewOptionKey === selectedRecord.title}
+							<button class="record-option-btn" style="padding: 0 16px; float: left; display: block; background-color: #3888FF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
+						{/if}
+						{#if renewOptionKey !== selectedRecord.title}
+							<button class="record-option-btn" on:click={() => { selectRecordType(getRenewOption(renewOptions, renewOptionKey)) }} style="padding: 0 16px; float: left; display: block; background-color: #B6B6BF; border-radius: 38px; height: 31px; margin: 5px; text-align: center; border: none; cursor: pointer; color: white">{getRenewOption(renewOptions, renewOptionKey).title}</button>
+						{/if}
+				 {/each}
+				</div>
+				<div style="display: flex; flex-direction: column; align-items: center; max-width: 450px; width: 100%;">
+					<div style="background-color: #F5F5F5; border-radius: 20px; margin: 30px; padding: 24px; width: 100%;">
 						<p style="color: #9A9A9A; font-weight: 600;">{selectedRecord.title} Value</p>
 						{#if selectedRecord.contractKey === "avatar" }
-							<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey]} alt={selectedRecord.title}>
+							{#if token[selectedRecord.contractKey] }
+								<img style="width: 100px; border-radius: 80px;" src={ token[selectedRecord.contractKey]} alt={selectedRecord.title}>
+							{:else }
+								<p style="color: #9A9A9A;">Record not found</p>
+							{/if}
 						{/if}
 						{#if selectedRecord.contractKey !== "avatar" }
 							<p style="color: #9A9A9A;">
@@ -164,4 +126,3 @@
 	<Loader show={loading}/>
 </div>
 
-		
