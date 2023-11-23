@@ -11,7 +11,7 @@
 		<ts:iconUrl xml:lang="en">https://smart-layer-d12f1ja6t-smart-token-labs.vercel.app/smartcat/opengraph-image-3urawq.png?708f218c0ad1b4d7</ts:iconUrl>
 	</ts:meta>
 	<ts:contract interface="erc721" name="Token">
-		<ts:address network="137">0xd5ca946ac1c1f24eb26dae9e1a53ba6a02bd97fe</ts:address>
+		 <ts:address network="$tst{CONTRACT_CHAIN}">$tst{CONTRACT_ADDRESS}</ts:address>
 	</ts:contract>
 	<ts:origins>
 		
