@@ -113,29 +113,42 @@
 						margin: 38px 0 14px 0;
 						">Info</p>
 			</div>
-			<div style="margin-bottom: 14px; background-color: #F5F5F5; color: #989898; font-weight: 300; border-radius: 20px; padding: 12px 22px;">
-				<p style="color: #888; font-weight: 600;">Traits</p>
-				<div style="display: flex; justify-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap;">
-				{#each token?.tokenInfo?.attributes as trait}
-					<div style="margin-right: 14px; margin-bottom: 14px; width: 148px; background-color: white; font-size: 12px; text-align: center; border-radius: 20px; font-weight: 300; padding: 12px;">
-						<p style="font-weight: 600; color: #777;">{trait.trait_type}</p>
-						<p style="font-weight: 300; color: #777;">{trait.value}</p>
-						<p style="font-weight: 300; color: #ff0086e0">{trait.rarity ? trait.rarity : '(rarity percentage unknown)'}</p>
+			{#if token?.tokenInfo?.attributes}
+				<div style="margin-bottom: 14px; background-color: #F5F5F5; color: #989898; font-weight: 300; border-radius: 20px; padding: 12px 22px;">
+					<p style="color: #888; font-weight: 600;">Traits</p>
+					<div style="display: flex; justify-content: center; align-items: baseline; flex-direction: row; flex-wrap: wrap;">
+					
+					{#each token?.tokenInfo?.attributes as trait}
+						<div style="margin-right: 14px; margin-bottom: 14px; width: 148px; background-color: white; font-size: 12px; text-align: center; border-radius: 20px; font-weight: 300; padding: 12px;">
+							<p style="font-weight: 600; color: #777;">{trait.trait_type}</p>
+							<p style="font-weight: 300; color: #777;">{trait.value}</p>
+							<p style="font-weight: 300; color: #ff0086e0">{trait.rarity ? trait.rarity : '(rarity percentage unknown)'}</p>
+						</div>
+					{/each}
 					</div>
-				{/each}
 				</div>
-			</div>
+			{/if}				
 			<div style="margin-bottom: 14px; background-color: #F5F5F5; border-radius: 20px; font-weight: 300; padding: 24px;">
-				<p style="color: #888; font-weight: 600;">Description</p>
-				<p style="color: #888; word-wrap: break-word;">{token.description}</p>
-				<p style="color: #888; font-weight: 600;">Contract</p>
-				<p style="color: #888; word-wrap: break-word;">{token.contractAddress}</p>
-				<p style="color: #888; font-weight: 600;">Token Standard </p>
-				<p style="color: #888;">{token.tokenInfo.type}</p>
-				<p style="color: #888; font-weight: 600;">Chain</p>
-				<p style="color: #888; word-wrap: break-word;">{token.chainId}</p>
-				<p style="color: #888; font-weight: 600;">Symbol</p>
-				<p style="color: #888; word-wrap: break-word;">{token.symbol}</p>
+				{#if token.description}
+					<p style="color: #888; font-weight: 600;">Description</p>
+					<p style="color: #888; word-wrap: break-word;">{token.description}</p>
+				{/if}				
+				{#if token.contractAddress}
+					<p style="color: #888; font-weight: 600;">Contract</p>
+					<p style="color: #888; word-wrap: break-word;">{token.contractAddress}</p>
+				{/if}
+				{#if token.tokenInfo.type}
+					<p style="color: #888; font-weight: 600;">Token Standard </p>
+					<p style="color: #888;">{token.tokenInfo.type}</p>
+				{/if}
+				{#if token.chainId}
+					<p style="color: #888; font-weight: 600;">Chain</p>
+					<p style="color: #888; word-wrap: break-word;">{token.chainId}</p>
+				{/if}
+				{#if token.symbol}
+					<p style="color: #888; font-weight: 600;">Symbol</p>
+					<p style="color: #888; word-wrap: break-word;">{token.symbol}</p>
+				{/if}				
 				{#if creatorRoyaltiesForSale}
 					<p style="color: #888; font-weight: 600;">Creator Earnings Per Sale</p>
 					<p style="color: #888; word-wrap: break-word;">{ creatorRoyaltiesForSale+'%' }</p>
