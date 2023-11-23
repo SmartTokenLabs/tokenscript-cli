@@ -3,6 +3,7 @@
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
 	import { ethers } from "ethers";
+	import { chainConfig } from './../utils/index';
 
 	let token: any;
 	let loading = true;
@@ -35,8 +36,12 @@
 
 	async function checkCalculateRoyalty() {
 
-		const provider = new ethers.JsonRpcProvider("https://polygon-rpc.com/");
-		const contract = new ethers.Contract("0xd5ca946ac1c1f24eb26dae9e1a53ba6a02bd97fe", [
+		const rpc = chainConfig[Number(token.chainId)]?.rpc;
+
+		if(!rpc) return;
+
+		const provider = new ethers.JsonRpcProvider(rpc);
+		const contract = new ethers.Contract(token.contractAddress, [
 		{
 			"constant": true,
 			"name": "royaltyInfo",
