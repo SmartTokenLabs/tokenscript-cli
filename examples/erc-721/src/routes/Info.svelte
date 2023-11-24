@@ -29,11 +29,6 @@
 		}
 	}
 	
-	function setTokenId () {
-		// @ts-ignore
-		web3.action.setProps({ tokenId: token.tokenId });
-	}
-
 	async function checkCalculateRoyalty() {
 
 		const rpc = chainConfig[Number(token.chainId)]?.rpc;
@@ -74,18 +69,16 @@
 		}
 		], provider);
 
-		const calculateRoyalty = await contract.royaltyInfo(4275773203, 100);
+		const calculateRoyalty = await contract.royaltyInfo(token.tokenId, 100);
 		if(calculateRoyalty[1]) creatorRoyaltiesForSale = calculateRoyalty[1];
 	}
 
 	function setRoyalties () {
-		// if(ethers && token.royaltyInfo) {} // for handling via TS
-		checkCalculateRoyalty(); // Ethers
+		checkCalculateRoyalty();
 	}
 
 	function init () {
 		setCollectionName();
-		setTokenId();
 		setRoyalties();
 	}
 
@@ -93,7 +86,7 @@
 
 <div style="background-color: #86c7ee; padding: 20px; border-radius: 6px;">
 	<!-- 
-		example hero image
+		example external_link_open_graph_image
 		<img style="width:100%; border-radius: 7px;" src="https://coolcats.com/images/og-image.png" alt={'hero image'} /> 
 	-->
 	{#if token.external_link_open_graph_image}
