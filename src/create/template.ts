@@ -1,7 +1,7 @@
 import * as fs from "fs-extra";
-import {resolve} from "path";
-import {join} from "path";
-import {ITemplateData} from "../create/templateProcessor";
+import { resolve } from "path";
+import { join } from "path";
+import { ITemplateData } from "../create/templateProcessor";
 
 export interface ITemplateListItem {
 	id: string;
@@ -57,7 +57,7 @@ export class Templates {
 		}*/
 	];
 
-	static getTemplateDescriptor(id: string){
+	static getTemplateDescriptor(id: string) {
 
 		const fileContents = fs.readFileSync(resolve(this.templateDir, id, "tstemplate.json"), "utf-8");
 
@@ -95,11 +95,6 @@ export class Templates {
 		fs.copyFileSync(resolve(this.templateDir, template, "tstemplate.json"), join(dest, "tstemplate.json"));
 
 		this.copyHHInit(dest);
-
-		/*files = fs.readdirSync(join(this.templateDir, "hardhat")).filter(fileName => fileName.endsWith('.html'));
-		for (const file of files) {
-			fs.copyFileSync(resolve(this.templateDir, "hardhat", file), join(dest, file));
-		}*/
 	}
 
 	static copyHHInit(dest: string) {
@@ -107,6 +102,14 @@ export class Templates {
 		files.push("tokenscript.xml");
 		for (const file of files) {
 			fs.copyFileSync(resolve(this.templateDir, "hardhat", file), join(dest, file));
+		}
+	}
+
+	static cleanBuildFiles(dest: string) {
+		//remove prep files
+		if (fs.existsSync(join(dest, "non-payable-card.html"))) {
+			fs.rmSync(join(dest, "non-payable-card.html"));
+			fs.rmSync(join(dest, "payable-card.html"));
 		}
 	}
 }

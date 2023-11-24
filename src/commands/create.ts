@@ -40,7 +40,6 @@ export default class Create extends Command {
 		// can pass either --force or -f
 		template: Flags.string({ char: "t", options: Templates.templatesList.map((template) => template.id) }),
 		hardHat: Flags.string({ char: "h", description: 'Directory of HardHat project' }), //TODO: Ask user for HardHat directory if not given
-		hh: Flags.boolean() //pass '-hh' to rebuild hardhat project.
 	}
 
 	static args = [
@@ -61,18 +60,13 @@ export default class Create extends Command {
 
 		let hardHat = flags.hardHat as string;
 		let template = flags.template as string;
-		let hhDirective = flags.hh as boolean;
-
-		if (hhDirective) {
-			hardHat = Create.hardHatTemplate;
-		}
 
 		if (fs.existsSync(this.dir)) {
 
 			let numFiles = fs.readdirSync(this.dir).length;
 
 			if (numFiles && fs.existsSync(join(this.dir, "tstemplate.json"))) {
-				await this.handleExistingProject(hardHat);
+				await this.handleExistingProject();
 				return;
 			}
 
@@ -133,7 +127,8 @@ export default class Create extends Command {
 
 		CliUx.ux.action.stop();
 		CliUx.ux.info("Project successfully initialized!\r\n");
-		this.handleABItoScript(hardHat, templateDef, contractABI, tokenAddress);
+		await this.handleABItoScript(hardHat, templateDef, contractABI, tokenAddress);
+		Templates.cleanBuildFiles(this.dir);
 	}
 
 	private async checkFetchABI(template: string, tokenAddress: ContractLocator): Promise<[any, string]> {
@@ -159,12 +154,6 @@ export default class Create extends Command {
 		} else if (JSON.stringify(contractABI).length > 2) { //generate from ABI
 			await abiEncoder.start(contractABI, "Token");
 		}
-
-		//remove prep files
-		if (fs.existsSync("non-payable-card.html")) {
-			fs.rmSync("non-payable-card.html");
-			fs.rmSync("payable-card.html");
-		}
 	}
 
 	getContract(values: any[], templateDef: ITemplateData): ContractLocator {
@@ -188,35 +177,12 @@ export default class Create extends Command {
 		await templateProcessor.processTemplateUpdate(values);
 	}
 
-	private async handleExistingProject(hardHat: string) {
+	private async handleExistingProject() {
 
 		let templateDef = fs.readJsonSync(this.dir + "/tstemplate.json");
 
 		if (!templateDef)
 			throw new Error("Template file is invalid or not readable");
-
-		if (hardHat) {
-			//TODO: Keep tokenscript file and work out how to make the diff
-			//      For first draft, rebuild tokenscript xml base
-			if (fs.existsSync(join(this.dir, "tokenscript.xml"))) {
-				fs.rmSync(join(this.dir, "tokenscript.xml"),);
-			}
-
-			//add rebuild files in case we need them
-			Templates.copyHHInit(this.dir);
-
-			let templateProcessor = new TemplateProcessor(templateDef, this.dir);
-			let values = templateProcessor.getValuesFromTSTemplate();
-			let tokenAddress = this.getContract(values, templateDef);
-
-			//pull HardHat directory from tstemplate
-			hardHat = templateProcessor.getHardHatDirectory();
-
-			await templateProcessor.processTemplateUpdate(values);
-			let ABIEncoder = new ABIToScript(this.dir, tokenAddress);
-			await ABIEncoder.initFromHardHat(hardHat, templateDef);
-			return;
-		}
 
 		let proceed = await CliUx.ux.confirm("Existing workspace detected, would you like to try and update template values?\r\nThis may not work correctly, please save your current workspace before continuing");
 
