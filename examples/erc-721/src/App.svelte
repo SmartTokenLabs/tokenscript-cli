@@ -3,12 +3,15 @@
 	import context from "./lib/context";
 	import Info from "./routes/Info.svelte";
 	import NotFound from "./routes/NotFound.svelte";
+	import Transfer from "./routes/transfer.svelte";
 
 	let token;
+
 	let initialised = false;
 
 	const routingMap = {
-		'#info': Info
+		'#info': Info,
+		'#transfer': Transfer
 	};
 
 	let page;

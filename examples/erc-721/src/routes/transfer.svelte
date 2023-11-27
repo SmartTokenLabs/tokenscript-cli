@@ -1,0 +1,194 @@
+
+<script lang="ts">
+	import context from "../lib/context";
+	import Loader from "../components/Loader.svelte";
+	import { ethers } from "ethers";
+	import { chainConfig, getPixelColor } from './../utils/index';
+
+	let token: any;
+	let loading = true;
+	let collectionName:string;
+	let creatorRoyaltiesForSale: number;
+	let receivingAccountAddress:string;
+	let cardBackground:string|undefined;
+
+	context.data.subscribe(async (value) => {
+		if (!value.token)
+			return;
+		token = value.token;
+
+		init();
+
+		// You can load other data before hiding the loader
+		loading = false;
+	});
+
+	function setCollectionName () {
+		if(token.name.includes("#")) {
+			collectionName = token.name.substring(0, token.name.indexOf("#"));
+		} else {
+			collectionName = token.name
+		}
+	}
+
+	async function checkCalculateRoyalty() {
+
+		const rpc = chainConfig[Number(token.chainId)]?.rpc;
+
+		if(!rpc) return;
+
+		const provider = new ethers.JsonRpcProvider(rpc);
+		const contract = new ethers.Contract(token.contractAddress, [
+		{
+			"constant": true,
+			"name": "royaltyInfo",
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "tokenId",
+					"type": "uint256"
+				},
+				{
+					"internalType": "uint256",
+					"name": "salePrice",
+					"type": "uint256"
+				}
+			],
+			"outputs": [
+					{
+							"internalType": "address",
+							"name": "receiver",
+							"type": "uint256"
+					},
+					{
+							"internalType": "uint256",
+							"name": "royaltyAmount",
+							"type": "uint256"
+					}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+		], provider);
+
+		const calculateRoyalty = await contract.royaltyInfo(token.tokenId, 100);
+		if(calculateRoyalty[1]) creatorRoyaltiesForSale = calculateRoyalty[1];
+	}
+
+	function setRoyalties () {
+		checkCalculateRoyalty();
+	}
+
+	function init () {
+		setCollectionName();
+		setRoyalties();
+	}
+
+	function setTransactionParams(event:Event) {
+
+		// @ts-ignore
+		if(event?.target?.value.length === 42) {
+			// @ts-ignore
+			receivingAccountAddress = event.target.value;
+			// @ts-ignore
+			web3.action.setProps({ 
+				sendingAccountAddress: token.ownerAddress,
+				receivingAccountAddress,
+				tokenId: token.tokenId
+			});
+		} else {
+			// msg needed
+		}
+	}
+
+	function setPixelColor(event:Event) {
+		cardBackground = getPixelColor(event);
+		if(!cardBackground) cardBackground = '#f5f5f5';
+	}
+
+</script>
+
+<div style="background-color: { cardBackground }; padding: 20px; border-radius: 6px;">
+	{#if token.external_link_open_graph_image}
+		<img style="width:100%; border-radius: 7px;" src={token.external_link_open_graph_image} alt={'hero image'} />
+	{/if}
+	{#if token}
+		<div style="margin: 14px 0px 18px 0; display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 7px; height: 142px; width: 100%;">
+			<div style="margin: 15px; width: 50%;">
+					<h3 style="font-size: 18px; margin-bottom: 7px; word-wrap: break-word;">{token.name}</h3>
+					<p style="color: #989898; margin: 0; font-size: 14px">{collectionName} Collection</p>
+			</div>
+
+			<div>
+				<img on:load|once={setPixelColor} crossorigin="anonymous" id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+			</div>
+
+			</div>
+		
+			<div style="background-color: white; border-radius: 7px; width: 100%; display: flex; justify-content: space-between; flex-direction: column; padding: 0 18px;">
+
+				<div style="width: 100%;">
+
+					<p style="
+						font-size: 19px;
+						font-weight: 500;
+						text-align: center;
+						margin: 38px 0 14px 0;
+						">Transfer</p>
+
+				</div>
+
+				<div style="display: flex; justify-content: space-between; margin: 10px 0;">
+
+					<p style="font-size: 14px;font-weight: 400;color: #707070;">Send</p>
+
+				</div>
+
+				<div style="margin: 14px 0;">
+			
+					<img style="border-radius: 7px;width: 68px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+					
+					<p style="font-size: 14px;padding: 0;margin: 7px 0;font-weight: 400;">#{token.tokenId}</p>
+	
+				</div>
+
+				<p style="font-size: 14px;font-weight: 400; color: #707070;">To</p>
+
+				<div style="margin-bottom: 18px;background-color: #F5F5F5;border-radius: 20px;font-weight: 300;padding: 18px;">
+
+					<p style="margin: 7px 0;font-weight: 400;font-size: 14px;">Account Address</p>
+					<input minlength="42" maxlength="42" on:change={(event) => { setTransactionParams(event) }} placeholder="" id="recieving-account" style="padding: 12px 14px;width: 100%;border-radius: 4px;border: 1px solid #B6B6BF;border-radius: 14px;margin: 5px 0;" type="text">
+				
+				</div>
+
+				<div style="margin-bottom: 18px;background-color: #F5F5F5;border-radius: 20px;font-weight: 300;padding: 18px;">
+		
+					<p style="margin: 7px 0;font-weight: 500;font-size: 14px;color: #707070;">Transaction Details</p>
+
+					<p style="color: #888;font-weight: 400;font-size: 14px;">Chain Id</p>
+					<p style="color: black; word-wrap: break-word;font-size: 14px;">{token.chainId}</p>
+					
+					<p style="color: #888;font-weight: 400;font-size: 14px;">Send</p>
+					<p style="color: black;word-wrap: break-word;font-size: 14px;">{token.name}</p>
+
+					<p style="color: #888;font-weight: 400;font-size: 14px;">From</p>
+					<p style="color: black;word-wrap: break-word;font-size: 14px;">{token.ownerAddress}</p>
+		
+					<p style="color: #888;font-weight: 400;font-size: 14px;">To</p>
+					<p style="color: black;word-wrap: break-word;font-size: 14px;">{receivingAccountAddress}</p>
+					
+				</div>
+
+				<!-- <div style="display: flex; justify-content: space-between; margin-bottom: 18px;background-color: #F5F5F5;border-radius: 20px;font-weight: 300;padding: 18px;">
+
+					<p style=" color: #888; font-weight: 400; font-size: 14px;">Transaction fee estimate</p>
+		
+					<p style="font-size: 14px;color: #757575;">1 ETH</p>
+		
+				</div> -->
+
+			</div>
+	{/if}
+	<Loader show={loading}/>
+</div>
+
