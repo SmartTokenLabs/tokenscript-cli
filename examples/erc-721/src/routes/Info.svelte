@@ -85,7 +85,6 @@
 
 	function setPixelColor(event:Event) {
 		cardBackground = getPixelColor(event);
-		if(!cardBackground) cardBackground = '#f5f5f5';
 	}
 
 	function init () {
@@ -96,7 +95,7 @@
 
 </script>
 
-<div style="background-color: { cardBackground }; padding: 20px; border-radius: 6px;">
+<div style="background-color: { cardBackground ? cardBackground : '#f5f5f5' }; padding: 20px; border-radius: 6px;">
 	<!-- 
 		example external_link_open_graph_image
 		<img style="width:100%; border-radius: 7px;" src="https://coolcats.com/images/og-image.png" alt={'hero image'} /> 

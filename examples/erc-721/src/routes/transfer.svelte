@@ -2,13 +2,11 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
-	import { ethers } from "ethers";
-	import { chainConfig, getPixelColor } from './../utils/index';
+	import { getPixelColor } from './../utils/index';
 
 	let token: any;
 	let loading = true;
 	let collectionName:string;
-	let creatorRoyaltiesForSale: number;
 	let receivingAccountAddress:string;
 	let cardBackground:string|undefined;
 
@@ -31,84 +29,28 @@
 		}
 	}
 
-	async function checkCalculateRoyalty() {
-
-		const rpc = chainConfig[Number(token.chainId)]?.rpc;
-
-		if(!rpc) return;
-
-		const provider = new ethers.JsonRpcProvider(rpc);
-		const contract = new ethers.Contract(token.contractAddress, [
-		{
-			"constant": true,
-			"name": "royaltyInfo",
-			"inputs": [
-				{
-					"internalType": "uint256",
-					"name": "tokenId",
-					"type": "uint256"
-				},
-				{
-					"internalType": "uint256",
-					"name": "salePrice",
-					"type": "uint256"
-				}
-			],
-			"outputs": [
-					{
-							"internalType": "address",
-							"name": "receiver",
-							"type": "uint256"
-					},
-					{
-							"internalType": "uint256",
-							"name": "royaltyAmount",
-							"type": "uint256"
-					}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		}
-		], provider);
-
-		const calculateRoyalty = await contract.royaltyInfo(token.tokenId, 100);
-		if(calculateRoyalty[1]) creatorRoyaltiesForSale = calculateRoyalty[1];
-	}
-
-	function setRoyalties () {
-		checkCalculateRoyalty();
-	}
-
 	function init () {
 		setCollectionName();
-		setRoyalties();
 	}
 
 	function setTransactionParams(event:Event) {
-
 		// @ts-ignore
-		if(event?.target?.value.length === 42) {
-			// @ts-ignore
-			receivingAccountAddress = event.target.value;
-			// @ts-ignore
-			web3.action.setProps({ 
-				sendingAccountAddress: token.ownerAddress,
-				receivingAccountAddress,
-				tokenId: token.tokenId
-			});
-		} else {
-			// msg needed
-		}
+		receivingAccountAddress = event.target.value;
+		// @ts-ignore
+		web3.action.setProps({ 
+			sendingAccountAddress: token.ownerAddress,
+			receivingAccountAddress,
+			tokenId: token.tokenId
+		});
 	}
 
 	function setPixelColor(event:Event) {
 		cardBackground = getPixelColor(event);
-		if(!cardBackground) cardBackground = '#f5f5f5';
 	}
 
 </script>
 
-<div style="background-color: { cardBackground }; padding: 20px; border-radius: 6px;">
+<div style="background-color: { cardBackground ? cardBackground : '#f5f5f5' }; padding: 20px; border-radius: 6px;">
 	{#if token.external_link_open_graph_image}
 		<img style="width:100%; border-radius: 7px;" src={token.external_link_open_graph_image} alt={'hero image'} />
 	{/if}
@@ -120,7 +62,14 @@
 			</div>
 
 			<div>
-				<img on:load|once={setPixelColor} crossorigin="anonymous" id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+				{#if !token.image_preview_url}
+					<div style="border-radius: 7px; margin-top: 5px; margin-right: 15px; color: rgb(112, 112, 112); border: 1px solid; height: 98px; width: 98px; padding: 32px 16px; font-size: 14px;">
+						No image found.
+					</div>
+				{/if}
+				{#if token.image_preview_url}
+					<img on:load|once={setPixelColor} crossorigin="anonymous" id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+				{/if}
 			</div>
 
 			</div>
@@ -146,7 +95,9 @@
 
 				<div style="margin: 14px 0;">
 			
-					<img style="border-radius: 7px;width: 68px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+					{#if token.image_preview_url}
+						<img style="border-radius: 7px;width: 68px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+					{/if}
 					
 					<p style="font-size: 14px;padding: 0;margin: 7px 0;font-weight: 400;">#{token.tokenId}</p>
 	
@@ -178,14 +129,6 @@
 					<p style="color: black;word-wrap: break-word;font-size: 14px;">{receivingAccountAddress}</p>
 					
 				</div>
-
-				<!-- <div style="display: flex; justify-content: space-between; margin-bottom: 18px;background-color: #F5F5F5;border-radius: 20px;font-weight: 300;padding: 18px;">
-
-					<p style=" color: #888; font-weight: 400; font-size: 14px;">Transaction fee estimate</p>
-		
-					<p style="font-size: 14px;color: #757575;">1 ETH</p>
-		
-				</div> -->
 
 			</div>
 	{/if}
