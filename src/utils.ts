@@ -69,3 +69,56 @@ export function uint8tohex(uint8: Uint8Array): string {
 	if (!uint8 || !uint8.length) return '';
 	return Array.from(uint8).map(i => ('0' + i.toString(16)).slice(-2)).join('');
 }
+
+export function decode(key: string, cyphertextB64: string) {
+	try {
+		const buffer = Buffer.from(cyphertextB64, 'base64');
+		const cyphertext = buffer.toString('hex');
+		let parsed = cyphertext.match(/.{1,2}/g)!.map(x => parseInt(x, 16));
+		let plaintext = [];
+		for (let i = 0; i < parsed.length; i++) {
+			plaintext.push((parsed[i] ^ key.charCodeAt(Math.floor(i % key.length))).toString(16).padStart(2, '0'));
+		}
+		return decodeURIComponent('%' + plaintext.join('').match(/.{1,2}/g)!.join('%'));
+	}
+	catch(e) {
+		return false;
+	}
+}
+
+export function encode(key: string, plaintext: string) {
+	let cyphertext = [];
+	// Convert to hex to properly handle UTF8
+	let convert = Array.from(plaintext).map(function(c) {
+		if(c.charCodeAt(0) < 128) return c.charCodeAt(0).toString(16).padStart(2, '0');
+		else return encodeURIComponent(c).replace(/\%/g,'').toLowerCase();
+	}).join('');
+	// Convert each hex to decimal
+	let stripped = convert.match(/.{1,2}/g)?.map(x => parseInt(x, 16));
+	// Perform xor operation
+	for (let i = 0; i < plaintext.length; i++) {
+		cyphertext.push(stripped![i] ^ key.charCodeAt(Math.floor(i % key.length)));
+	}
+	// Convert to hex
+	cyphertext = cyphertext.map(function(x) {
+		return x.toString(16).padStart(2, '0');
+	});
+	return hexToBase64(cyphertext.join(''));
+}
+
+//Can this be done with a library function?
+function hexToBase64(hexstring: string) {
+	const matcher = hexstring.match(/\w{2}/g);
+	return btoa(matcher!.map(function(a) {
+		return String.fromCharCode(parseInt(a, 16));
+	}).join(""));
+}
+
+export function isAddress(address: string) {
+	return (/^(0x)?[0-9a-f]{40}$/i.test(address));
+    /*if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+        return false;
+    } else {
+		return true;
+	}*/
+}
