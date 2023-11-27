@@ -70,19 +70,8 @@ export default class ABIToScript {
 
 	}
 
-    async initFromHardHat(hardHat: string, templateDef: ITemplateData) {
+    async initFromHardHat(hardHat: string, contractABIs: string[]) {
 		//import ABI from hardhat directory
-		//first look for hardhat.config.ts in the dir
-		if (!fs.existsSync(join(hardHat, "hardhat.config.ts"))) {
-			throw new Error("-h <directory> must point to HardHat project");
-		}
-
-		if (!fs.existsSync(join(hardHat, "artifacts", "contracts"))) {
-			throw new Error("linked HardHat project must be built");
-		}
-
-		let contractABIs: string[] = fs.readdirSync(join(hardHat, "artifacts", "contracts"));
-
 		for (let i = 0; i < contractABIs.length; i++) {
 			let contractDir = contractABIs[i];
 			let abiFiles: string[] = fs.readdirSync(join(hardHat, "artifacts", "contracts", contractDir));
