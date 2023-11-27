@@ -148,10 +148,42 @@ export default class Create extends Command {
 	private async handleABItoScript(hardHat: string, templateDef: ITemplateData, contractABI: any, tokenAddress: ContractLocator) {
 		let abiEncoder: ABIToScript = new ABIToScript(this.dir, tokenAddress);
 		if (hardHat) {
-			await abiEncoder.initFromHardHat(hardHat, templateDef);
+
+			if (!fs.existsSync(join(hardHat, "hardhat.config.ts"))) {
+				CliUx.ux.error("-h <directory> must point to HardHat project");
+			}
+	
+			if (!fs.existsSync(join(hardHat, "artifacts", "contracts"))) {
+				CliUx.ux.error("linked HardHat project must be built");
+			}
+
+			let filesToHandle: string[] = [];
+			let contractABIs: string[] = fs.readdirSync(join(hardHat, "artifacts", "contracts"));
+
+			// Don't ask user if there's only one contract
+			if (contractABIs.length > 1) {
+
+				let selection: any[] = [];
+				for (let thisFile of contractABIs) {
+					selection.push({ name: thisFile, value: thisFile });
+				}
+
+				const fileChoice = await inquirer.prompt([{
+					name: 'fileSelection',
+					message: `Add which files to TokenScript?`,
+					type: 'checkbox',
+					choices: selection,
+				}]);
+
+				filesToHandle = fileChoice.fileSelection;
+			} else {
+				filesToHandle.push(contractABIs[0]);
+			}
+
+			await abiEncoder.initFromHardHat(hardHat, filesToHandle);
 			let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 			await templateProcessor.updateHardHat(hardHat);
-		} else if (JSON.stringify(contractABI).length > 2) { //generate from ABI
+		} else if (JSON.stringify(contractABI).length > 2) { // Generate from ABI
 			await abiEncoder.start(contractABI, "Token");
 		}
 	}
