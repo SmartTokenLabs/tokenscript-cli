@@ -97,11 +97,11 @@ export const getPixelColor = (event: Event) => {
 
     const context = canvas.getContext('2d');
 
-    canvas.width = 1;
+    canvas.width = 50;
 
-    canvas.height = 1;
+    canvas.height = 50;
 
-    context?.drawImage(event.target as CanvasImageSource, 0, 0, 1, 1);
+    context?.drawImage(event.target as CanvasImageSource, 0, 0, 50, 50);
 
     const imageData = context?.getImageData(0, 0, 1, 1).data;
 

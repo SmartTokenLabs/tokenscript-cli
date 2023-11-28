@@ -11,6 +11,7 @@
 	let creatorRoyaltiesForSale: number;
 	let explorer:string;
 	let cardBackground:string|undefined;
+	let imageFailedToLoad = false;
 
 	context.data.subscribe(async (value) => {
 		if (!value.token)
@@ -75,8 +76,12 @@
 		}
 		], provider);
 
-		const calculateRoyalty = await contract.royaltyInfo(token.tokenId, 100);
-		if(calculateRoyalty[1]) creatorRoyaltiesForSale = calculateRoyalty[1];
+		try {
+			const calculateRoyalty = await contract.royaltyInfo(token.tokenId, 100);
+			if(calculateRoyalty[1]) creatorRoyaltiesForSale = calculateRoyalty[1];
+		} catch (error) {
+			// no contract method or failed query.
+		}
 	}
 
 	function setRoyalties () {
@@ -93,6 +98,10 @@
 		setExplorer();
 	}
 
+	function handleImageError() {
+		imageFailedToLoad = true;
+  }
+
 </script>
 
 <div style="background-color: { cardBackground ? cardBackground : '#f5f5f5' }; padding: 20px; border-radius: 6px;">
@@ -101,7 +110,7 @@
 		<img style="width:100%; border-radius: 7px;" src="https://coolcats.com/images/og-image.png" alt={'hero image'} /> 
 	-->
 	{#if token.external_link_open_graph_image}
-		<img style="width:100%; border-radius: 7px;" src={token.external_link_open_graph_image} alt={'hero image'} />
+		<img crossorigin="anonymous" style="width:100%; border-radius: 7px;" src={token.external_link_open_graph_image} alt={'hero image'} />
 	{/if}
 	{#if token}
 		<div style="margin: 14px 0px 18px 0; display: flex; justify-content: space-between; align-items: center; background-color: white; border-radius: 7px; height: 142px; width: 100%;">
@@ -110,7 +119,20 @@
 					<p style="color: #989898; margin: 0; font-size: 14px">{collectionName} Collection</p>
 			</div>
 			<div>
-				<img on:load|once={setPixelColor} crossorigin="anonymous" id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+				{#if !token.image_preview_url || imageFailedToLoad}
+					<div style="border-radius: 7px; margin-top: 5px; margin-right: 15px; color: rgb(112, 112, 112); border: 1px solid; height: 98px; width: 98px; padding: 32px 16px; font-size: 14px;">
+						No image found.
+					</div>
+				{/if}
+				{#if token.image_preview_url && imageFailedToLoad === false}
+					<img on:load|once={setPixelColor} crossorigin="anonymous" style="display: none; border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={token.name} />
+					<img
+						src={token.image_preview_url}
+						alt={token.name}
+						on:error={handleImageError}
+						style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;"
+					/>
+				{/if}
 			</div>
 		</div>
 		<div style="background-color: white; border-radius: 7px; width: 100%; display: flex; justify-content: space-between; flex-direction: column; padding: 0 18px;">
@@ -122,7 +144,7 @@
 						margin: 38px 0 14px 0;
 						">Info</p>
 			</div>
-			{#if token?.tokenInfo?.attributes}
+			{#if token?.tokenInfo?.attributes?.length > 0}
 				<div style="margin-bottom: 18px; background-color: #F5F5F5; color: #989898; font-weight: 300; border-radius: 20px; padding: 12px 22px;">
 					<p style="color: rgb(112, 112, 112); font-weight: 500; font-size: 14px;">Traits</p>
 					<div style="display: flex; justify-content: space-evenly; align-items: baseline; flex-direction: row; flex-wrap: wrap;">

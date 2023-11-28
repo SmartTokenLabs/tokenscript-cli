@@ -9,6 +9,7 @@
 	let collectionName:string;
 	let receivingAccountAddress:string;
 	let cardBackground:string|undefined;
+	let imageFailedToLoad = false;
 
 	context.data.subscribe(async (value) => {
 		if (!value.token)
@@ -48,6 +49,10 @@
 		cardBackground = getPixelColor(event);
 	}
 
+	function handleImageError() {
+		imageFailedToLoad = true;
+  }
+
 </script>
 
 <div style="background-color: { cardBackground ? cardBackground : '#f5f5f5' }; padding: 20px; border-radius: 6px;">
@@ -62,13 +67,19 @@
 			</div>
 
 			<div>
-				{#if !token.image_preview_url}
+				{#if !token.image_preview_url || imageFailedToLoad}
 					<div style="border-radius: 7px; margin-top: 5px; margin-right: 15px; color: rgb(112, 112, 112); border: 1px solid; height: 98px; width: 98px; padding: 32px 16px; font-size: 14px;">
 						No image found.
 					</div>
 				{/if}
-				{#if token.image_preview_url}
-					<img on:load|once={setPixelColor} crossorigin="anonymous" id="token-image" style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+				{#if token.image_preview_url && imageFailedToLoad === false}
+					<img on:load|once={setPixelColor} crossorigin="anonymous" style="display: none; border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;" src="{token.image_preview_url}" alt={token.name} />
+					<img
+						src={token.image_preview_url}
+						alt={token.name}
+						on:error={handleImageError}
+						style="border-radius: 7px; width: 98px; margin-top: 5px; margin-right: 15px;"
+					/>
 				{/if}
 			</div>
 
@@ -95,11 +106,11 @@
 
 				<div style="margin: 14px 0;">
 			
-					{#if token.image_preview_url}
-						<img style="border-radius: 7px;width: 68px; margin-right: 15px;" src="{token.image_preview_url}" alt={'image of ' + token.description} />
+					{#if token.image_preview_url && !imageFailedToLoad}
+						<img style="border-radius: 7px;width: 68px; margin-right: 15px;" src="{token.image_preview_url}" alt={token.name} />
 					{/if}
 					
-					<p style="font-size: 14px;padding: 0;margin: 7px 0;font-weight: 400;">#{token.tokenId}</p>
+					<p style="font-size: 14px;padding: 0;margin: 7px 0;font-weight: 400; word-wrap: break-word;">#{token.tokenId}</p>
 	
 				</div>
 
