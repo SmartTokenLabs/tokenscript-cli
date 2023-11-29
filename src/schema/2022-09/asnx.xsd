@@ -23,7 +23,8 @@
             <element name="type" type="asnx:type">
             </element>
         </choice>
-        <attribute name="name" type="NCName"/>
+        <attribute name="name" type="ID" />
+		<attribute name="eventName" type="string" />
     </complexType>
 
     <complexType name="type">

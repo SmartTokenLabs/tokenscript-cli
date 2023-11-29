@@ -60,14 +60,14 @@
 				<assert test="if(not(ts:origins)) then count(ts:attribute[string(@distinct) = 'true']) = 1 else true()"/>
 			-->
 		</complexType>
-		<keyref name="typeRef" refer="ts:namedTypeName">
+		<!--<keyref name="typeRef" refer="ts:namedTypeName">
 			<selector xpath=".//ts:origins/ethereum:event|.//ts:origins/ethereum:call"/>
 			<field xpath="@type"/>
 		</keyref>
 		<key name="namedTypeName">
 			<selector xpath="asnx:module/namedType"></selector>
 			<field xpath="@name"></field>
-		</key>
+		</key>-->
 		<key name="token-attributes">
 			<selector xpath="ts:attribute"></selector>
 			<field xpath="@name"></field>
