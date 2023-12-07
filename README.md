@@ -19,7 +19,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.1.1 linux-x64 node-v16.18.1
+@tokenscript/cli/1.1.2 linux-x64 node-v16.18.1
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -82,6 +82,7 @@ If all goes well you should see a file in `./out/tokenscript.tsml`
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-1)
 * [`tokenscript plugins:uninstall PLUGIN...`](#tokenscript-pluginsuninstall-plugin-2)
 * [`tokenscript plugins update`](#tokenscript-plugins-update)
+* [`tokenscript refresh`](#tokenscript-refresh)
 * [`tokenscript sign`](#tokenscript-sign)
 * [`tokenscript validate`](#tokenscript-validate)
 
@@ -97,7 +98,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.1/dist/commands/build.ts)_
+_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/build.ts)_
 
 ## `tokenscript certificate COMMAND`
 
@@ -126,7 +127,7 @@ DESCRIPTION
   Create a certificate request or sign an existing request.
 ```
 
-_See code: [dist/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.1/dist/commands/certificate.ts)_
+_See code: [dist/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/certificate.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -134,16 +135,17 @@ Create a new TokenScript project
 
 ```
 USAGE
-  $ tokenscript create [DIRECTORY] [-t emptySvelte|emptyTypescript|empty]
+  $ tokenscript create [DIRECTORY] [-t emptySvelte|emptyTypescript|empty] [-h <value>]
 
 FLAGS
+  -h, --hardHat=<value>    Directory of HardHat project
   -t, --template=<option>  <options: emptySvelte|emptyTypescript|empty>
 
 DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.1/dist/commands/create.ts)_
+_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/create.ts)_
 
 ## `tokenscript emulate`
 
@@ -160,7 +162,7 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.1/dist/commands/emulate.ts)_
+_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/emulate.ts)_
 
 ## `tokenscript help [COMMAND]`
 
@@ -412,6 +414,20 @@ DESCRIPTION
   Update installed plugins.
 ```
 
+## `tokenscript refresh`
+
+Refresh a HardHat project
+
+```
+USAGE
+  $ tokenscript refresh
+
+DESCRIPTION
+  Refresh a HardHat project
+```
+
+_See code: [dist/commands/refresh.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/refresh.ts)_
+
 ## `tokenscript sign`
 
 sign the built .tsml
@@ -433,7 +449,7 @@ DESCRIPTION
   sign the built .tsml
 ```
 
-_See code: [dist/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.1/dist/commands/sign.ts)_
+_See code: [dist/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/sign.ts)_
 
 ## `tokenscript validate`
 
@@ -447,5 +463,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.1/dist/commands/validate.ts)_
+_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.2/dist/commands/validate.ts)_
 <!-- commandsstop -->
