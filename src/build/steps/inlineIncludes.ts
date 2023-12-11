@@ -61,13 +61,14 @@ export class InlineIncludes implements IBuildStep {
 				parent.append(...contentElem.head.childNodes);
 				parent.append(...contentElem.body.childNodes);
 			} else {
-				try {
-					parent.innerHTML += content;
-				} catch (e){
-					console.warn(e);
+				// TODO: This seems to cause issues with XML signing
+				//try {
+					//parent.innerHTML += content;
+				//} catch (e){
+					//console.warn(e);
 					const contentElem = this.context.parseXml(content, "text/xml");
 					parent.append(contentElem.documentElement);
-				}
+				//}
 			}
 		}
 
