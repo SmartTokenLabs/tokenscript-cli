@@ -118,6 +118,7 @@
                 <xs:element name="address" type="variable"/>
 				<xs:element name="struct" type="variable"/>
             </xs:choice>
+			<xs:attribute name="ref" type="xs:string"/>
         </xs:complexType>
     </xs:element>
     <xs:simpleType name="as">
@@ -133,6 +134,7 @@
             <xs:enumeration value="e2"/>
             <xs:enumeration value="bool"/>
             <xs:enumeration value="bytes"/>
+			<xs:enumeration value="abi"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:element name="mapping">
