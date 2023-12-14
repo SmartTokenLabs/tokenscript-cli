@@ -99,10 +99,11 @@
 			<selector xpath="ts:selection" />
 			<field xpath="@name" />
 		</key>
+		<!-- This doesn't work since exclude can be multiple values "IDREFS"
 		<keyref name="selectionRef" refer="ts:selectionKey">
 			<selector xpath=".//ts:card" />
 			<field xpath="@exclude" />
-		</keyref>
+		</keyref>-->
 	</element>
 	<element name="cards">
 		<complexType>
@@ -349,7 +350,7 @@
 				<element minOccurs="0" name="label" type="ts:text"/>
 				<element minOccurs="0" name="denial" type="ts:text"/>
 			</sequence>
-			<attribute name="name" type="NCName"/>
+			<attribute name="name" type="ID"/>
 			<attribute name="filter" type="string" use="required"></attribute>
 		</complexType>
 	</element>
