@@ -272,7 +272,7 @@
 				<element minOccurs="0" ref="ts:interface"/>
 				<element name="abi" minOccurs="0" type="string" />
 			</sequence>
-			<attribute name="name" use="required" type="NCName"/>
+			<attribute name="name" use="required" type="ID"/>
 			<attribute name="interface" type="NCName"/>
 		</complexType>
 	</element>
@@ -555,7 +555,7 @@
 					</complexType>
 				</element>
 			</sequence>
-			<attribute name="name" type="NCName"/>
+			<attribute name="name" type="ID"/>
 			<attribute name="type" type="ts:attest-type"/>
 		</complexType>
 	</element>
