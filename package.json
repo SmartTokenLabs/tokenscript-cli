@@ -26,6 +26,7 @@
     "@peculiar/asn1-x509": "^2.3.0",
     "@peculiar/webcrypto": "^1.4.0",
     "@peculiar/x509": "^1.9.2",
+    "@tokenbound/sdk": "^0.4.5",
     "@tokenscript/libxmljs2-xsd": "^0.32.0",
     "@xmldom/xmldom": "^0.9.0-beta.6",
     "axios": "^1.6.0",
