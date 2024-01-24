@@ -4,7 +4,7 @@
 
 ### Exploring the project directory
 
-- `/tokenscript.xml` defines project's the views, actions and props in correlation with the Svelte application. Each view should be defined inside the `TokenScript.xml` and within the Svelte application.
+- `/tokenscript.xml` defines project's the views, actions and props in correlation with the web application. Each view should be defined inside the `TokenScript.xml`.
 
 - `/index.ts` contains example views `Mint` and `Info` which can be built upon or used as a reference towards your project.
 
