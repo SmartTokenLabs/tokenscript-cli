@@ -8,6 +8,7 @@ import Create from '../commands/create'
 import {ContractLocator} from "../commands/create";
 import axios from 'axios';
 import {decode, isAddress} from '../utils';
+import {JSDOM} from "jsdom";
 
 interface EventContractObject {element?: any, address?: any};
 interface EventObject {event?: HTMLElement, contractObject?: EventContractObject};
@@ -23,7 +24,7 @@ const FunctionTypes = {
 	VIEW: "view",
 	PURE: "pure",
 	PAYABLE: "payable"
-};                                                                     
+};
 
 //TODO: move this out into the build spec file (.env or tstemplate.json)
 const DoNotGenerate: string[] = [
@@ -78,11 +79,15 @@ export default class ABIToScript {
 
     private contractsFromEvents: EventContractObject[] = [];
 
+	private domParser: DOMParser;
+
     constructor(
 		private dir: string,
         private tokenAddress: ContractLocator
 	) {
-
+		const dom = new JSDOM("");
+		const DOMParser = dom.window.DOMParser;
+		this.domParser = new DOMParser;
 	}
 
     async initFromHardHat(hardHat: string, contractABIs: string[]) {
@@ -120,11 +125,9 @@ export default class ABIToScript {
 
 	async start(abi: any, contractName: string) {
 
-		let domParser = new DOMParser();
-
 		let xmlFileContent = fs.readFileSync(resolve(this.dir, Create.SRC_XML_FILE), 'utf-8');
 
-		this.xmlDoc = domParser.parseFromString(xmlFileContent, "application/xml");
+		this.xmlDoc = this.domParser.parseFromString(xmlFileContent, "application/xml");
 
 		await this.setValuesFromABI(abi, contractName);
     }
@@ -163,7 +166,7 @@ export default class ABIToScript {
 		let pretty = xmlFormat(serialised);
 
         //remove whitespace from ts:addresses, ts:syntax
-        let tsNode = new DOMParser().parseFromString(pretty, 'text/xml');
+        let tsNode = this.domParser.parseFromString(pretty, 'text/xml');
         this.postParse(tsNode);
 
         //back to string again
@@ -279,9 +282,8 @@ export default class ABIToScript {
 
 	private getDocument() {
 		if (!this.xmlDoc) {
-			let domParser = new DOMParser();
 			let xmlFileContent = fs.readFileSync(resolve(this.dir, Create.SRC_XML_FILE), 'utf-8');
-			this.xmlDoc = domParser.parseFromString(xmlFileContent, "application/xml");
+			this.xmlDoc = this.domParser.parseFromString(xmlFileContent, "application/xml");
 		}
 
 		return this.xmlDoc;
@@ -389,7 +391,7 @@ export default class ABIToScript {
 		//templateDef.templateFields[0].value = func.name;
 
 		await this.processTemplateCard(templateDef, func.name, fName);
-		
+
         return card;
 	}
 
@@ -465,7 +467,7 @@ export default class ABIToScript {
                 dataElement.appendChild(paramNode);
                 if (valid) {
                     valid = this.checkValidity(input.type);
-                }                
+                }
             }
             return [dataElement, valid];
         } else {
@@ -490,7 +492,7 @@ export default class ABIToScript {
             };
         });
 
-        //disallowed 
+        //disallowed
         if (type.endsWith("[]")) {
             return false;
         }
@@ -549,7 +551,7 @@ export default class ABIToScript {
 		values.push(value);
 		let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 		await templateProcessor.replaceInFiles(values, [file]);
-	} 
+	}
 
 
     //
