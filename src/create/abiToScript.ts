@@ -46,6 +46,18 @@ const DoNotGenerate: string[] = [
 	"setApprovalForAll"
 ];
 
+//Remove whitespace from the following elements
+//Note that the XML beautifier will add spaces and CR/LF
+const StripWhitespace: string[] = [
+	"ts:address",
+    "ts:syntax"
+];
+
+//These are special types; remove the underscores from these types
+const AbbreviateTypes: string[] = [
+    "tokenId"
+]
+
 const DisallowedTypes: string[] = [
     "tuple"
 ];
@@ -56,6 +68,9 @@ interface ScanAPIRoute {
 }
 
 const scanAPIs: ScanAPIRoute[] = [];
+
+const whitespaceRegex = /^[\s\r\n]*$/;
+const whitespaceStrip = /[\s\r\n]+/g;
 
 export default class ABIToScript {
 
@@ -145,11 +160,40 @@ export default class ABIToScript {
 
 		let xmSerializer = new XMLSerializer();
 		let serialised = xmSerializer.serializeToString(updatedXML!!);
-
 		let pretty = xmlFormat(serialised);
+
+        //remove whitespace from ts:addresses, ts:syntax
+        let tsNode = new DOMParser().parseFromString(pretty, 'text/xml');
+        this.postParse(tsNode);
+
+        //back to string again
+        pretty = xmSerializer.serializeToString(tsNode);
 
 		fs.writeFileSync(resolve(this.dir, Create.SRC_XML_FILE), pretty);
     }
+
+    // Remove whitespace from nodes enclosed within the tags in StripWhitespace
+    // The TS engine is sensitive to whitespace in those places
+    // TODO: Strip whitespace from around addresses and descriptive elements that aren't expected to contain WS in TS engine
+    postParse(xmlDoc: Node) {
+		let child = xmlDoc.firstChild;
+        let rootName = xmlDoc.nodeName;
+
+		while (child) {
+			let nextChild = child.nextSibling;
+			if (child.nodeType === 3 && StripWhitespace.includes(rootName)) {
+                if (whitespaceRegex.test(child.nodeValue!)) {
+                    xmlDoc.removeChild(child);
+                } else {
+                    child.textContent = child.nodeValue!.replace(whitespaceStrip, '');
+                }
+			} else if (child.nodeType === 1) {
+                this.postParse(child);
+			}
+
+			child = nextChild;
+		}
+	}
 
 	private async handleFunction(func: any, contractName: string): Promise<[any, any]> {
 		if (!DoNotGenerate.includes(func.name)) {
@@ -417,7 +461,7 @@ export default class ABIToScript {
         if(func.inputs.length !== 0) {
             for(let input of func.inputs) {
 				let paramNode = this.getDocument().createElement(`ts:${input.type}`);
-				paramNode.setAttribute("ref", input.name);
+				paramNode.setAttribute("ref", this.parseInputName(input.name));
                 dataElement.appendChild(paramNode);
                 if (valid) {
                     valid = this.checkValidity(input.type);
@@ -426,6 +470,16 @@ export default class ABIToScript {
             return [dataElement, valid];
         } else {
             return [dataElement, valid];
+        }
+    }
+
+    // If this is a special name like _tokenId, replace with tokenId so that the TS engine will pick this up correctly.
+    private parseInputName(inputName: string): string {
+        let testInputName = inputName.replace(/^_+/, '');
+        if (AbbreviateTypes.includes(testInputName)) {
+            return testInputName;
+        } else {
+            return inputName;
         }
     }
 
