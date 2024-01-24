@@ -647,8 +647,8 @@ export default class ABIToScript {
         //TODO: read API keys from .env file
         //TODO: Add more routes
         scanAPIs[1] = { api: "https://api.etherscan.io/api?module=contract", key: "Oy4zQ0ACdRw7PSR8NyAlUkUrJDgjdD84ZVcyI2U/VyZGOQ==" };
-        scanAPIs[137] = { api: "https://api.polygonscan.com/api?module=contract", key: "LSNFOEZ8ZndQOCdnIThZQCohNj1VL1hkVD5bfjMhXQwoJA==" };
-        scanAPIs[80001] = { api: "https://api-testnet.polygonscan.com/api?module=contract", key: "LSNFOEZ8ZndQOCdkJTJGTSMrLGBGIVozUD5YIjEwWh0mJA==" };
+        scanAPIs[137] = { api: "https://api.polygonscan.com/api?module=contract", key: "EW1H5FIX1HNIQW59MNXN6N6J7Q6QRQ43EK" };
+        scanAPIs[80001] = { api: "https://api-testnet.polygonscan.com/api?module=contract", key: "EW1H5FIX1HNIQW59MNXN6N6J7Q6QRQ43EK" };
         scanAPIs[11155111] = { api: "https://api-sepolia.etherscan.io/api?module=contract", key: "Oy4zQ0ACdRw7PSR/ITE9WFsxJncoLj4yOEUhKzR8US0cNA==" };
         scanAPIs[17000] = { api: "https://api-holesky.etherscan.io/api?module=contract", key: "Oy4zQ0ACdRw7PSR/OjshUkQzPncoLj4yOEUhKzR8US0cNA==" };
     }
