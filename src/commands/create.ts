@@ -13,19 +13,6 @@ export interface ContractLocator {
 	name: string;
 }
 
-const Types = {
-	FUNCTION: "function",
-	TUPLE: "tuple",
-	EVENT: "event"
-};
-
-const FunctionTypes = {
-	NON_PAYABLE: "nonpayable",
-	VIEW: "view",
-	PURE: "pure",
-	PAYABLE: "payable"
-};
-
 export default class Create extends Command {
 
 	static description = 'Create a new TokenScript project';
@@ -183,8 +170,10 @@ export default class Create extends Command {
 			await abiEncoder.initFromHardHat(hardHat, filesToHandle);
 			let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 			await templateProcessor.updateHardHat(hardHat);
+			CliUx.ux.info("Project generation complete!\r\n");
 		} else if (JSON.stringify(contractABI).length > 2) { // Generate from ABI
 			await abiEncoder.start(contractABI, "Token");
+			CliUx.ux.info("Project generation complete!\r\n");
 		}
 	}
 

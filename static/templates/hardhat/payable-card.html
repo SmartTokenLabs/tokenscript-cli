@@ -8,7 +8,11 @@
 			return `
         		<h3>$tst{ACTION_NAME} ...</h3>
         		<p>Actions allow you to invoke a smart contract transaction or invoke a Javascript function within the view.</p>
-				<input type="number" id="valAmount" placeholder="Value Amount">
+				<div class="input-container">
+        			<input type="number" id="valAmount">
+        			<label for="valAmount">Value Amount</label>
+				</div>
+				$tst{INPUT_BOX}
 			`;
 		}
 	}
