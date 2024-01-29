@@ -6,7 +6,9 @@
 
 body {
 	text-align: center;
-	color: #0B0B0B;
+	color: rgb(225, 228, 234);
+	background-color: #1e212f;
+	border-radius: 5px;
 }
 
 h1 {
@@ -62,7 +64,6 @@ p.light {
 
 .score-box span {
 	font-weight: 600;
-	color: #011aff;
 }
 
 .form-field {

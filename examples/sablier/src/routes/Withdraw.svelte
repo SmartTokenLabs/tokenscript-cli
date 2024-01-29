@@ -2,6 +2,7 @@
 
 	import context from "../lib/context";
 	import {formatEther} from "ethers";
+	import Header from "../components/Header.svelte";
 
 	let token;
 	let withdrawable = "";
@@ -20,6 +21,7 @@
 
 </style>
 
+<Header/>
 <div style="text-align: left; margin: 0 5px;">
 	<h3 style="text-align: center;">Withdraw</h3>
 	<p style="text-align: center;">Claim available funds from Sablier contract</p>

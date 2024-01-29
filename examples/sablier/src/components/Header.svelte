@@ -2,6 +2,7 @@
 <script lang="ts">
 	import context from "../lib/context";
 	import NftIcon from "./NftIcon.svelte";
+	import SablierLogo from "./SablierLogo.svelte";
 
 	let token;
 
@@ -11,32 +12,27 @@
 </script>
 
 <style>
-	.cat-header {
+	.header {
 		display: flex;
+		align-items: center;
 	}
 
-	.cat-details {
+	.details {
 		flex-grow: 1;
-		padding: 10px;
+		padding: 20px;
 		text-align: left;
 	}
 
-	.cat-details h2 {
+	.details h2 {
 		margin-top: 0;
 		margin-bottom: 10px;
 		font-size: 18px;
 	}
-
-	.cat-icon {
-		width: 100px;
-	}
 </style>
 
-<div class="cat-header">
-	<div class="cat-icon">
-		<NftIcon imageUrl={token.image_preview_url} />
-	</div>
-	<div class="cat-details">
+<div class="header">
+	<SablierLogo />
+	<div class="details">
 		<h2>{token.name}</h2>
 		<div class="cat-stats">
 			<div>Stream ID: {token.tokenId}</div>
