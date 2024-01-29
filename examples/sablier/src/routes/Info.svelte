@@ -31,6 +31,16 @@
 		return `${ neg }${ whole }.${ frac }`;
 	}
 
+	function formatAmount(amount: string){
+		return commify(amount).substring(0, amount.indexOf(".") + 4);
+	}
+
+	function formatTime(epoch: number){
+		const date = new Date(epoch * 1000);
+
+		return date.toLocaleDateString() + " " + date.toLocaleTimeString();
+	}
+
 	context.data.subscribe(async (value) => {
 		if (!value.token)
 			return;
@@ -45,17 +55,6 @@
 </script>
 
 <style>
-	.info-container {
-		border-top: 1px solid #EEE;
-		padding: 32px 16px;
-	}
-
-	.info-panel {
-		padding: 16px;
-		background-color: rgb(36, 40, 56);
-		border-radius: 12px;
-		margin: 24px 0;
-	}
 
 	.attribute-grid {
 		display: grid;
@@ -122,10 +121,13 @@
 
 	.asset-details {
 		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 20px;
 	}
 
 	.details {
-		flex-grow: 1;
+		/*flex-grow: 1;*/
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -146,15 +148,15 @@
 	<div class="info-panel" style="display: flex; gap: 8px; margin: 24px 0">
 		<div class="score-box" style="flex: 33%;" title={deposited}>
 			<label>Deposited</label>
-			<span >{commify(deposited).substring(0, deposited.indexOf(".") + 4)}</span>
+			<span >{formatAmount(deposited)}</span>
 		</div>
 		<div class="score-box" style="flex: 33%;" title={withdrawn}>
 			<label>Withdrawn</label>
-			<span>{commify(withdrawn).substring(0, withdrawn.indexOf(".") + 4)}</span>
+			<span>{formatAmount(withdrawn)}</span>
 		</div>
 		<div class="score-box" style="flex: 33%;" title={withdrawable}>
 			<label>Available</label>
-			<span>{commify(withdrawable).substring(0, withdrawable.indexOf(".") + 4)}</span>
+			<span>{formatAmount(withdrawable)}</span>
 		</div>
 	</div>
 	<div class="info-panel">
@@ -245,7 +247,7 @@
 					<div data-component="content" class="details-box">
 						<div class="label" data-component="label" data-icon-last="true"><label>Started
 							on</label></div>
-						<div data-component="value" class="value"><p>Dec 12 '23 @ 3 pm</p></div>
+						<div data-component="value" class="value"><p>{formatTime(token.stream.startTime)}</p></div>
 					</div>
 				</div>
 			</div>
@@ -260,7 +262,7 @@
 					<div data-component="content" class="details-box">
 						<div class="label" data-component="label" data-icon-last="true"><label>Ends
 							on</label></div>
-						<div data-component="value" class="value"><p>Dec 12 '23 @ 3 pm</p></div>
+						<div data-component="value" class="value"><p>{formatTime(token.stream.endTime)}</p></div>
 					</div>
 				</div>
 			</div>
@@ -279,7 +281,7 @@
 					<div data-component="content" class="details-box">
 						<div class="label" data-component="label" data-icon-last="true"><label>Cancelability</label>
 						</div>
-						<div data-component="value" class="value"><p>Can be canceled</p></div>
+						<div data-component="value" class="value"><p>{token.isCancelable ? "Can" : "Cannot"} be canceled</p></div>
 					</div>
 				</div>
 			</div>

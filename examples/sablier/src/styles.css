@@ -66,6 +66,13 @@ p.light {
 	font-weight: 600;
 }
 
+.info-panel {
+	padding: 16px;
+	background-color: rgb(36, 40, 56);
+	border-radius: 12px;
+	margin: 24px 0;
+}
+
 .form-field {
 	position: relative;
 	margin: 25px auto;
