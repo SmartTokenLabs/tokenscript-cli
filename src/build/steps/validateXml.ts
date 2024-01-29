@@ -18,7 +18,12 @@ export class ValidateXml implements IBuildStep {
 		if (!ns)
 			throw new Error("Could not find namespace in XML. Are you missing a namespace declaration?");
 
-		const schemaVersion = ns!!.indexOf("2022/09") > -1 ? "2022-09" : "2020-06";
+		const versionMatch = ns!!.match(/([0-9]{4})\/([0-9]{2})/g);
+
+		if (!versionMatch)
+			throw new Error("Invalid schema version specified");
+
+		const schemaVersion = versionMatch[0].replace("/", "-");
 
 		// For some reason external schemas referenced by tokenscript.xsd do not work when using path.join or path.resolve
 		const schemaBasePath = __dirname + sep + ".." + sep + ".." + sep + "schema" + sep + schemaVersion + sep;
