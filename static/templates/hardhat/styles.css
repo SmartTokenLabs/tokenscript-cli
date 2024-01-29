@@ -36,3 +36,76 @@ p.light {
 	width: 100%;
 	height: 100%;
 }
+
+.card
+{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	border-radius: 18px;
+	background-color: rgb(32, 96, 204);
+	box-shadow: rgba(0, 0, 0, 0.25) 0px 4px 123px 0px, rgba(0, 0, 0, 0.25) 0px 4px 18px 0px;
+	padding-top: 18px;
+	padding-bottom: 18px;
+	padding-inline-start: 1.25rem;
+	padding-inline-end: 1.25rem;
+	margin-top: 0.75rem;
+	margin-bottom: 0.75rem;
+}
+
+.card-image {
+    width: 55px;
+	height: 55px;
+}
+
+.section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.label {
+    text-align: center;
+    font-weight: 500;
+    color: rgb(220, 210, 233);
+    opacity: 0.66;
+    font-size: 20px;
+}
+
+.title {
+	color: #FFF;
+	font-size: 22px;
+}
+
+.value {
+  color: #FFF;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.input-body {
+	font-family: Arial, sans-serif;
+}
+.input-container {
+	position: absolute;
+	width: 100%;
+	margin: 10px 20px 0px 20px;
+}
+.input-container label {
+	position: absolute;
+	top: -6px;
+	left: 10px;
+	color: rgb(32, 96, 204);
+	background-color: #FFF;
+	opacity: 1.00;
+	transition: 0.3s;
+	font-size: 12px;
+	padding: 0px 2px 0px 2px;
+}
+.input-container input {
+	width: 100%;
+	padding: 20px 10px 10px;
+	border: 1px solid rgb(32, 96, 204);
+	border-radius: 4px;
+}

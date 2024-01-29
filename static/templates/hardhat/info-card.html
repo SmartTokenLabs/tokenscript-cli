@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    var value;
+    class Token {
+
+        constructor(tokenInstance) {
+            this.props = tokenInstance;
+        }
+
+        render() {
+            return `
+			<div class="card">
+                <div class="card-image">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <g fill="none" fill-rule="evenodd">
+                            <circle fill="#597DF2" cx="12" cy="12" r="12"/>
+                            <path fill="#FFF" d="M12 21.6v-5.173L6 12.69z"/>
+                            <path fill="#BDCBFA" d="M12 16.427V21.6l6-8.91zM12 1.8v6.93l6 2.584z"/>
+                            <path fill="#FFF" d="m12 1.8-6 9.514 6-2.584z"/>
+                            <path fill="#BDCBFA" d="m6 11.314 6 3.356V8.73z"/>
+                            <path fill="#7B96F5" d="m12 14.67 6-3.356-6-2.584z"/>
+                        </g>
+                    </svg>  			    
+                </div>
+                <div class="text">
+    			    <p class="title">$tst{ATTRIBUTE_NAME}</p>
+    			    <p class="value">${value}</p>
+			    </div>
+			</div>
+			`;
+        }
+    }
+
+    web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
+        const currentTokenInstance = updatedTokens.currentInstance;
+        value = $tst{ATTRIBUTE_SOURCE}; // <-- here we can pull attributes (essentially function call results from your smart contract) from the TokenScript
+        $tst{ATTRIBUTE_COMMENT}
+        
+
+        document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
+    };
+
+</script>
