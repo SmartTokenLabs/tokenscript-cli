@@ -21,13 +21,12 @@
 
 </style>
 
-<Header/>
-<div style="text-align: left; margin: 0 5px;">
+
+<div style="text-align: left; padding: 10px 10px 0;">
+	<Header/>
+	<br/>
 	<h3 style="text-align: center;">Withdraw</h3>
 	<p style="text-align: center;">Claim available funds from Sablier contract</p>
-	<p>
-		Blah blah blah
-	</p>
 	<div class="form-field">
 		<input type="text" placeholder=" " id="recipient" name="recipient" value={token.ownerAddress} required />
 		<label on:click={() => document.getElementById("recipient").focus()}>To</label>

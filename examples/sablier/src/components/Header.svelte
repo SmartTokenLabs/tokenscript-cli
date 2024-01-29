@@ -15,11 +15,12 @@
 	.header {
 		display: flex;
 		align-items: center;
+		gap: 20px;
+		padding: 0 5px;
 	}
 
 	.details {
 		flex-grow: 1;
-		padding: 20px;
 		text-align: left;
 	}
 

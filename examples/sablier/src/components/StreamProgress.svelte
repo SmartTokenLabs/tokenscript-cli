@@ -47,17 +47,17 @@
 	}
 	#progress-border {
 		stroke: #00B5FF;
-		stroke-width: 10px;
+		stroke-width: 12px;
 		stroke-linecap: round;
 		stroke-dasharray: 566;
 	}
 	#track {
-		stroke: hsl(0, 0%, 100%);
+		stroke: #363b54;
 		stroke-width: 10px;
 	}
 	#border-track {
-		stroke: hsl(0, 0%, 93%);
-		stroke-width: 10px;
+		stroke: #363b54;
+		stroke-width: 12px;
 	}
 
 	.percent-display {
@@ -72,7 +72,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		font-size: 18px;
+		font-size: 28px;
 		font-weight: bold;
 	}
 </style>

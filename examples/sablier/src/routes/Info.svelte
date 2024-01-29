@@ -54,6 +54,7 @@
 		padding: 16px;
 		background-color: rgb(36, 40, 56);
 		border-radius: 12px;
+		margin: 24px 0;
 	}
 
 	.attribute-grid {
@@ -111,19 +112,34 @@
 		column-gap: 4px;
 		display: flex;
 		flex-direction: row;
-		-moz-box-pack: start;
 		justify-content: flex-start;
-		-moz-box-align: center;
 		align-items: center;
 	}
 
 	.grid-item .details-box .value {
 		color: rgb(135, 146, 171);
 	}
+
+	.asset-details {
+		display: flex;
+	}
+
+	.details {
+		flex-grow: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 </style>
 
 <div style="padding: 10px 10px 0">
 	<Header/>
+	<div class="info-panel asset-details">
+		<img alt="Smart Layer Network" style="width: 50px; height: auto; border-radius: 5px;" src="https://www.smartlayer.network/icon.png"/>
+		<div class="details">
+			<strong style="font-size: 20px">Smart Layer Network (SLN)</strong>
+		</div>
+	</div>
 	<div class="info-panel">
 		<StreamProgress current={parseFloat(withdrawn) + parseFloat(withdrawable)} total={parseFloat(deposited)} />
 	</div>
@@ -222,6 +238,40 @@
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
 								 stroke="currentColor" aria-hidden="true">
 								<path stroke-linecap="round" stroke-linejoin="round"
+									  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+							</svg>
+						</div>
+					</div>
+					<div data-component="content" class="details-box">
+						<div class="label" data-component="label" data-icon-last="true"><label>Started
+							on</label></div>
+						<div data-component="value" class="value"><p>Dec 12 '23 @ 3 pm</p></div>
+					</div>
+				</div>
+			</div>
+			<div class="grid-column">
+				<div class="grid-item">
+					<div data-component="frame" class="icon-box">
+						<div class="icon-wrapper" data-component="icon"
+							 data-purpose="heroicon">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"></path></svg>
+						</div>
+					</div>
+					<div data-component="content" class="details-box">
+						<div class="label" data-component="label" data-icon-last="true"><label>Ends
+							on</label></div>
+						<div data-component="value" class="value"><p>Dec 12 '23 @ 3 pm</p></div>
+					</div>
+				</div>
+			</div>
+			<div class="grid-column">
+				<div class="grid-item">
+					<div data-component="frame" class="icon-box">
+						<div class="icon-wrapper" data-component="icon"
+							 data-purpose="heroicon">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+								 stroke="currentColor" aria-hidden="true">
+								<path stroke-linecap="round" stroke-linejoin="round"
 									  d="M10.05 4.575a1.575 1.575 0 10-3.15 0v3m3.15-3v-1.5a1.575 1.575 0 013.15 0v1.5m-3.15 0l.075 5.925m3.075.75V4.575m0 0a1.575 1.575 0 013.15 0V15M6.9 7.575a1.575 1.575 0 10-3.15 0v8.175a6.75 6.75 0 006.75 6.75h2.018a5.25 5.25 0 003.712-1.538l1.732-1.732a5.25 5.25 0 001.538-3.712l.003-2.024a.668.668 0 01.198-.471 1.575 1.575 0 10-2.228-2.228 3.818 3.818 0 00-1.12 2.687M6.9 7.575V12m6.27 4.318A4.49 4.49 0 0116.35 15m.002 0h-.002"></path>
 							</svg>
 						</div>
@@ -261,40 +311,6 @@
 								<div class="sc-1f93cf44-1 fFmeqH"><p>Polygon</p></div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-			<div class="grid-column">
-				<div class="grid-item">
-					<div data-component="frame" class="icon-box">
-						<div class="icon-wrapper" data-component="icon"
-							 data-purpose="heroicon">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-								 stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									  d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
-							</svg>
-						</div>
-					</div>
-					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true"><label>Started
-							on</label></div>
-						<div data-component="value" class="value"><p>Dec 12 '23 @ 3 pm</p></div>
-					</div>
-				</div>
-			</div>
-			<div class="grid-column">
-				<div class="grid-item">
-					<div data-component="frame" class="icon-box">
-						<div class="icon-wrapper" data-component="icon"
-							 data-purpose="heroicon">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"></path></svg>
-						</div>
-					</div>
-					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true"><label>Ends
-							on</label></div>
-						<div data-component="value" class="value"><p>Dec 12 '23 @ 3 pm</p></div>
 					</div>
 				</div>
 			</div>
