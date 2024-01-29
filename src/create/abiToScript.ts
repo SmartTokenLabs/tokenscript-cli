@@ -9,6 +9,7 @@ import {ContractLocator} from "../commands/create";
 import axios from 'axios';
 import {decode, isAddress} from '../utils';
 import {JSDOM} from "jsdom";
+import inquirer from "inquirer";
 
 interface EventContractObject {element?: any, address?: any};
 interface EventObject {event?: HTMLElement, contractObject?: EventContractObject};
@@ -24,6 +25,11 @@ const FunctionTypes = {
 	VIEW: "view",
 	PURE: "pure",
 	PAYABLE: "payable"
+};
+
+const TSType = {
+    ATTRIBUTE: "Attributes",
+    CARD: "Cards"
 };
 
 //TODO: move this out into the build spec file (.env or tstemplate.json)
@@ -57,7 +63,7 @@ const StripWhitespace: string[] = [
 //These are special types; remove the underscores from these types
 const AbbreviateTypes: string[] = [
     "tokenId"
-]
+];
 
 const DisallowedTypes: string[] = [
     "tuple"
@@ -98,11 +104,9 @@ export default class ABIToScript {
 
 			for (let j = 0; j < abiFiles.length; j++) {
 				let abiFile = abiFiles[j];
-				console.log("abiFiles: %s", abiFile);
 				if (abiFile.includes(".dbg.json")) {
-					console.log("Skip: %s", abiFile);
+					//console.log("Skip: %s", abiFile);
 				} else if (abiFile.endsWith(".json")) {
-					console.log("Adding: %s", abiFile);
 					//got our ABI file
 					let abiFileContent = fs.readFileSync(join(hardHat, "artifacts", "contracts", contractDir, abiFile), "utf-8");
 					let json = JSON.parse(abiFileContent);
@@ -125,11 +129,24 @@ export default class ABIToScript {
 
 	async start(abi: any, contractName: string) {
 
+        const funcGenerationList: string[] = await this.pickElementsToGenerate(abi, contractName, TSType.CARD);
+        const attrGenerationList: string[] = await this.pickElementsToGenerate(abi, contractName, TSType.ATTRIBUTE);
+
+        //Ask if user wants to generate Info card
+        const addInfoCard = await inquirer.prompt([{
+            name: 'addInfo',
+            message: `Generate an additional Info card?`,
+            type: 'list',
+            choices: ['yes', 'no']
+        }]);
+
+        const addInfo = addInfoCard.addInfo == 'yes';
+
 		let xmlFileContent = fs.readFileSync(resolve(this.dir, Create.SRC_XML_FILE), 'utf-8');
 
 		this.xmlDoc = this.domParser.parseFromString(xmlFileContent, "application/xml");
 
-		await this.setValuesFromABI(abi, contractName);
+		await this.setValuesFromABI(abi, contractName, funcGenerationList, attrGenerationList, addInfo);
     }
 
     getABIFetchOption(templateDef: ITemplateFields[], values: any[]): boolean {
@@ -138,16 +155,53 @@ export default class ABIToScript {
         return val === 'yes';
     }
 
-	private async setValuesFromABI(abi: any, contractName: string) {
-        let attributesToAdd = [];
-        let eventsToAdd: any[] = [];
-		let viewCards = [];
+    private async pickElementsToGenerate(abi: any, contractName: string, type: any): Promise<string[]> {
+        let selection: any[] = [];
+
         for(let func of abi) {
             switch(func.type) {
                 case Types.FUNCTION:
 					let [attr, viewCard] = await this.handleFunction(func, contractName);
-					if (attr !== "") attributesToAdd.push(attr);
-					if (viewCard !== "") viewCards.push(viewCard);
+					if ((viewCard !== "" && type == TSType.CARD) || (attr !== "" && type == TSType.ATTRIBUTE) ) {
+                        selection.push({name: func.name, value: func.name});
+                    }
+					break;
+                case Types.EVENT:
+                    break;
+                case Types.TUPLE:
+                    break;
+            }
+        }
+
+        //now ask user to pick functions to add cards for cards
+        const funcChoice = await inquirer.prompt([{
+            name: 'funcSelection',
+            message: `Generate TokenScript ${type.toString()} for which functions?`,
+            type: 'checkbox',
+            choices: selection,
+        }]);
+
+        return funcChoice.funcSelection;
+    }
+
+	private async setValuesFromABI(abi: any, contractName: string, funcGenerationList: string[], attrGenerationList: string[], addInfo: boolean) {
+        let attributesToAdd = [];
+        let eventsToAdd: any[] = [];
+		let viewCards = [];
+        let firstAttr = null;
+        for(let func of abi) {
+            switch(func.type) {
+                case Types.FUNCTION:
+					let [attr, viewCard] = await this.handleFunction(func, contractName);
+					if (attr !== "" && this.isOnGenerationList(func, attrGenerationList)) {
+                        attributesToAdd.push(attr);
+                        if (firstAttr == null) {
+                            firstAttr = func;
+                        } 
+                    } else if (viewCard !== "" && this.isOnGenerationList(func, funcGenerationList)) {
+                        viewCards.push(viewCard);
+                        await this.createCardFile(func); // and create the card
+                    } 
 					break;
                 case Types.EVENT:
                     //let event: EventObject = this.getEvent(func.name, contractName, contractAddress, func);
@@ -157,6 +211,12 @@ export default class ABIToScript {
                 case Types.TUPLE:
                     break;
             }
+        }
+
+        if (addInfo) {
+            //User requested to add default info card
+            let infoCard = await this.infoCard(contractName, firstAttr);
+            viewCards.push(infoCard);
         }
 
 		let updatedXML = this.appendToTS(attributesToAdd, eventsToAdd, viewCards);
@@ -171,7 +231,6 @@ export default class ABIToScript {
 
         //back to string again
         pretty = xmSerializer.serializeToString(tsNode);
-
 		fs.writeFileSync(resolve(this.dir, Create.SRC_XML_FILE), pretty);
     }
 
@@ -310,11 +369,8 @@ export default class ABIToScript {
         if (!valid) { //can't handle this card transaction type yet (tuple or array type)
             return "";
         }
-        let card = this.getDocument().createElement("ts:card");
-		card.setAttribute("type", "action");
-		let nameAttr = this.getDocument().createAttribute("name");
-		nameAttr.value = func.name;
-		card.attributes.setNamedItem(nameAttr);
+
+        let card = this.initCard(func.name, "action", contractName, "");
 
 		//label
 		let nameNode = this.getDocument().createElement("ts:label");
@@ -374,7 +430,11 @@ export default class ABIToScript {
 
 		card.appendChild(viewNode);
 
-		//now create the file
+        return card;
+	}
+
+    private async createCardFile(func: any) {
+        //now create the file
 		//each card needs a view
 		let fName = func.name + ".html";
 		switch (func.stateMutability) {
@@ -387,11 +447,88 @@ export default class ABIToScript {
 		}
 
 		//do a parse on the new file
-		let templateDef = Templates.getCardTemplate();
-		//templateDef.templateFields[0].value = func.name;
-
+		let templateDef = Templates.getScriptTemplate("ACTION_NAME");
 		await this.processTemplateCard(templateDef, func.name, fName);
 
+        //if one of the inputs is a numerical "quantity", add a preformed quantity box
+        templateDef = Templates.getScriptTemplate("INPUT_BOX");
+        const inputBox = this.formInputBox(func);
+        await this.processTemplateCard(templateDef, inputBox, fName);
+    }
+
+    private async infoCard(contractName: string, firstAttr: any) {
+        const infoName = "Info";
+        let card: HTMLElement = this.initCard(infoName, "token", contractName, "secondary");
+
+		//label
+		let nameNode = this.getDocument().createElement("ts:label");
+        let stringNodeName = this.getDocument().createElement("ts:string");
+        stringNodeName.setAttribute("xml:lang", "en");
+
+		stringNodeName.appendChild(this.getDocument().createTextNode(infoName))
+        nameNode.appendChild(stringNodeName);
+        card.appendChild(nameNode);
+
+		//view
+		let viewNode = this.getDocument().createElement("ts:view");
+		viewNode.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+		let viewAttr = this.getDocument().createAttribute("xml:lang");
+		viewAttr.value = "en";
+		viewNode.attributes.setNamedItem(viewAttr);
+
+		let viewContent = this.getDocument().createElement("ts:viewContent");
+		viewContent.setAttribute("name", "common");
+		let viewInclude = this.getDocument().createElement("ts:include");
+		viewInclude.setAttribute("type", "html");
+		let includeAttr = this.getDocument().createAttribute("src");
+		includeAttr.value = "./" + infoName.toLocaleLowerCase() + ".html";
+		viewInclude.attributes.setNamedItem(includeAttr);
+
+		viewNode.appendChild(viewContent);
+		viewNode.appendChild(viewInclude);
+
+		card.appendChild(viewNode);
+
+        fs.copyFileSync("info-card.html", "info.html");
+        let attrName = "";
+        let attrSource = "";
+        let attrComment = "";
+
+        if (firstAttr != null) { //populate an info card with an attribute for illustration
+            // create attribute source based on first attribute
+            attrName = this.capitaliseFirstChar(firstAttr.name);
+            let syntax = this.getSyntax(firstAttr.outputs);
+            switch (syntax) {
+                case "uint":
+                case "int":
+                    //insert value code, assuming that 
+                    attrSource = `currentTokenInstance.${firstAttr.name}`;
+                    attrComment = `//value = Math.floor(1.0 * (currentTokenInstance.${firstAttr.name} / 10 ** 18) * 10000) / 10000; // <-- use for decimals 18 return value`;
+                    break;
+                case "bytes":
+                    //convert value to hex
+                    attrSource = `currentTokenInstance.${firstAttr.name}`;
+                    break;
+                case "string":
+                case "address":
+                default:
+                    attrSource = `currentTokenInstance.${firstAttr.name}`;
+                    break;
+            }
+        } else {
+            //take a generic attribute like token Symbol
+            attrName = "Symbol";
+            attrSource = 'currentTokenInstance.symbol;';
+        }
+
+        //do a parse on the new file. Can the card display attributes?
+        let templateDef = Templates.getScriptTemplate("ATTRIBUTE_NAME");
+		await this.processTemplateCard(templateDef, attrName, "info.html");
+        templateDef = Templates.getScriptTemplate("ATTRIBUTE_SOURCE");
+        await this.processTemplateCard(templateDef, attrSource, "info.html");
+        templateDef = Templates.getScriptTemplate("ATTRIBUTE_COMMENT");
+        await this.processTemplateCard(templateDef, attrComment, "info.html");
+	
         return card;
 	}
 
@@ -422,6 +559,7 @@ export default class ABIToScript {
 
 	private getAttribute(func: any, contractName: string) {
         let [data, valid] = this.getData(func);
+        
         if (!valid) { //can't handle this attribute yet (tuple or array type)
             return "";
         }
@@ -462,8 +600,13 @@ export default class ABIToScript {
         var valid: boolean = true;
         if(func.inputs.length !== 0) {
             for(let input of func.inputs) {
-				let paramNode = this.getDocument().createElement(`ts:${input.type}`);
-				paramNode.setAttribute("ref", this.parseInputName(input.name));
+                if (!this.checkValidity(input.type)) {
+                    valid = false; //currently array attributes aren't handled
+                    break;
+                }
+				let paramNode = this.getDocument().createElement(`ts:${input.type}`); //<<-- createElement can't handle array elements - TODO: find why.
+                let {refType, parsedName} = this.parseInputName(input);
+				paramNode.setAttribute(refType, parsedName);
                 dataElement.appendChild(paramNode);
                 if (valid) {
                     valid = this.checkValidity(input.type);
@@ -476,13 +619,53 @@ export default class ABIToScript {
     }
 
     // If this is a special name like _tokenId, replace with tokenId so that the TS engine will pick this up correctly.
-    private parseInputName(inputName: string): string {
-        let testInputName = inputName.replace(/^_+/, '');
-        if (AbbreviateTypes.includes(testInputName)) {
-            return testInputName;
-        } else {
-            return inputName;
+    private parseInputName(input: any): {refType: string, parsedName: string} {
+        let parsedName = input.name.replace(/^_+/, '');
+        const testDump = JSON.stringify(input);
+        let refType = "ref";
+        if (AbbreviateTypes.includes(parsedName)) {
+            return {refType, parsedName};
+        } else if (input.name == "quantity" && input.type.includes("int")) { // There may be other types that can be changes to local-ref if they are input types
+            refType = "local-ref";
         }
+
+        parsedName = input.name;
+        return {refType, parsedName};
+    }
+
+    private async processTemplateCard(templateDef: ITemplateData, value: string, file: any) {
+		let values:any[] = [];
+		values.push(value);
+		let templateProcessor = new TemplateProcessor(templateDef, this.dir);
+		await templateProcessor.replaceInFiles(values, [file]);
+	}
+
+    private initCard(funcName: string, cardType: string, contractName: string, buttonClass: string): HTMLElement {
+        let card: HTMLElement = this.getDocument().createElement("ts:card");
+        card.setAttribute("type", cardType);
+        let nameAttr = this.getDocument().createAttribute("name");
+        nameAttr.value = funcName;
+        card.attributes.setNamedItem(nameAttr);
+        if (buttonClass.length > 0) {
+            let buttonClassAttr = this.getDocument().createAttribute("buttonClass");
+            buttonClassAttr.value = "secondary";
+            card.attributes.setNamedItem(buttonClassAttr);
+        }
+        let originsAttr = this.getDocument().createAttribute("origins");
+        originsAttr.value = contractName;
+        card.attributes.setNamedItem(originsAttr);
+
+        return card;
+    }
+
+    //
+    //
+    // Helper methods
+    //
+    //
+
+    private capitaliseFirstChar(str: string): string {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     private checkValidity(type: string): boolean {
@@ -520,14 +703,33 @@ export default class ABIToScript {
         }
     }
 
+    private getFirstOutputType(outputs: any[]): string {
+        if (outputs.length == 0) {
+            return "";
+        } else if (outputs[0].type.includes("uint")) {
+            return "uint";
+        } else if (outputs[0].type.includes("int")) {
+            return "int";
+        } else if(outputs[0].type.includes("string")) {
+            return "string";
+        } else if(outputs[0].type.includes("byte")) {
+            return "byte";
+        } else if(outputs[0].type.includes("address")) {
+            return "address";
+        } else {
+            return outputs[0].type;
+        }
+    }
+
 	private getSyntax(outputs: any[]) {
+        const firstOutput = this.getFirstOutputType(outputs);
         if(outputs.length == 0) {
             return "";
-        } else if(outputs[0].type.includes("uint") || outputs[0].type.includes("int")) {
+        } else if(firstOutput.includes("uint") || firstOutput.includes("int")) {
             return "1.3.6.1.4.1.1466.115.121.1.36";
-        } else if(outputs[0].type.includes("string")) {
+        } else if(firstOutput.includes("string")) {
             return "1.3.6.1.4.1.1466.115.121.1.26";
-        } else if(outputs[0].type.includes("byte")) {
+        } else if(firstOutput.includes("byte")) {
             return "1.3.6.1.4.1.1466.115.121.1.6";
         } else {
             return "1.3.6.1.4.1.1466.115.121.1.15";
@@ -546,12 +748,26 @@ export default class ABIToScript {
         }
     }
 
-    private async processTemplateCard(templateDef: ITemplateData, value: string, file: any) {
-		let values:any[] = [];
-		values.push(value);
-		let templateProcessor = new TemplateProcessor(templateDef, this.dir);
-		await templateProcessor.replaceInFiles(values, [file]);
-	}
+    private formInputBox(func: any): string {
+        let inputBox = "";
+        if(func.inputs.length !== 0) {
+            for(let input of func.inputs) {
+                let {parsedName} = this.parseInputName(input);
+                if (input.type.includes('int') && parsedName.includes('quantity')) {
+                    //add input box
+                    const visibleString = this.capitaliseFirstChar(parsedName);
+                    inputBox = `<div class="input-container"><input type="number" id="${parsedName}"><label for="${parsedName}">${visibleString}</label></div>`;
+                    break;
+                }
+            }
+        }
+
+        return inputBox;
+    }
+
+    private isOnGenerationList(func: any, generationList: string[]): boolean {
+        return generationList.includes(func.name);
+    }
 
 
     //

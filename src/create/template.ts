@@ -17,19 +17,6 @@ export class Templates {
 
 	static templateDir = fs.existsSync(Templates.DEV_PATH) ? Templates.DEV_PATH : Templates.PROD_PATH;
 
-	// Used for replacing ACTION_NAME in card templates
-	static cardTemplate: ITemplateData = {
-		name: "",
-		description: "",
-		templateFields: [
-			{
-				name: "Card Name",
-				token: "ACTION_NAME",
-				prompt: ""
-			}
-		]
-	}
-
 	static templatesList: ITemplateListItem[] = [
 		{
 			id: "emptySvelte",
@@ -69,9 +56,20 @@ export class Templates {
 		return templateDef;
 	}
 
-	static getCardTemplate(): ITemplateData {
+	static getScriptTemplate(tokenName: string): ITemplateData {
+		let cardTemplate: ITemplateData = {
+			name: "",
+			description: "",
+			templateFields: [
+				{
+					name: "Card Name",
+					token: `${tokenName}`,
+					prompt: ""
+				}
+			]
+		}
 
-		return Templates.cardTemplate;
+		return cardTemplate;
 	}
 
 	static copyTemplate(id: string, dest: string) {
@@ -110,6 +108,7 @@ export class Templates {
 		if (fs.existsSync(join(dest, "non-payable-card.html"))) {
 			fs.rmSync(join(dest, "non-payable-card.html"));
 			fs.rmSync(join(dest, "payable-card.html"));
+			fs.rmSync(join(dest, "info-card.html"));
 		}
 	}
 }
