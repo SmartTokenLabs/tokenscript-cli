@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-		xmlns:ts="http://tokenscript.org/2022/09/tokenscript"
-		targetNamespace="http://tokenscript.org/2022/09/tokenscript"
+		xmlns:ts="http://tokenscript.org/2024/01/tokenscript"
+		targetNamespace="http://tokenscript.org/2024/01/tokenscript"
 		xmlns:xhtml="http://www.w3.org/1999/xhtml"
 		xmlns:dsig="http://www.w3.org/2000/09/xmldsig#"
 		xmlns:asnx="urn:ietf:params:xml:ns:asnx"
