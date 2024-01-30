@@ -1,7 +1,7 @@
-
+import type {ITokenContextData} from "@tokenscript/card-sdk/dist/types";
 import {writable} from 'svelte/store';
 
-const data = writable({
+const data = writable(<{token: null|ITokenContextData}>{
 	token: null
 });
 

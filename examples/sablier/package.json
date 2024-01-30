@@ -18,6 +18,7 @@
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@tokenscript/card-sdk": "^1.0.4",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.28.0",
@@ -35,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"bignumber.js": "^9.1.2",
 		"ethers": "^6.7.1"
 	}
 }

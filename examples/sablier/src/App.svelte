@@ -4,8 +4,9 @@
 	import Info from "./routes/Info.svelte";
 	import Withdraw from "./routes/Withdraw.svelte";
 	import NotFound from "./routes/NotFound.svelte";
+	import type {ITokenContextData} from "@tokenscript/card-sdk/dist/types";
 
-	let token;
+	let token: ITokenContextData;
 	let initialised = false;
 
 	const routingMap = {
@@ -19,7 +20,6 @@
 		page = routingMap[document.location.hash] || NotFound;
 	}
 
-	// @ts-ignore
 	web3.tokens.dataChanged = async (oldTokens, updatedTokens, cardId) => {
 
 		if (initialised)

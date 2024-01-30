@@ -3,36 +3,30 @@
 
 	import context from "../lib/context";
 	import Loader from "../components/Loader.svelte";
-	import {formatEther} from "ethers";
 	import StreamProgress from "../components/StreamProgress.svelte";
+	import type {ITokenContextData} from "@tokenscript/card-sdk/dist/types";
+	import {convertDecimals, getAssetDetails} from "../lib/data";
+	import {getChainDetails} from "../lib/constants.js";
+	import {formatAmount} from "../lib/data.js";
 
-	let token;
-	let catList = null;
+	let token: ITokenContextData;
+	let assetDetails;
+	let decimals: number;
 	let loading = true;
 	let deposited = "";
 	let withdrawn = "";
 	let withdrawable = "";
 
-	const loadInfo = async () => {
+	const loadInfo = async (token: ITokenContextData) => {
+
+		assetDetails = await getAssetDetails(token);
+		decimals = assetDetails.decimals ? parseInt(assetDetails.decimals) : 18;
+
+		deposited = convertDecimals(decimals, token.stream.amounts.deposited);
+		withdrawn = convertDecimals(decimals, token.stream.amounts.withdrawn);
+		withdrawable = convertDecimals(decimals, token.withdrawableAmount);
 
 		loading = false;
-	}
-
-	function commify(value) {
-		const match = value.match(/^(-?)([0-9]*)(\.?)([0-9]*)$/);
-		if (!match || (!match[2] && !match[4])) {
-			throw new Error(`bad formatted number: ${ JSON.stringify(value) }`);
-		}
-
-		const neg = match[1];
-		const whole = BigInt(match[2] || 0).toLocaleString("en-us");
-		const frac = match[4] && match[4].match(/^(.*?)0*$/)[1] != "" ? match[4].match(/^(.*?)0*$/)[1] : "00";
-
-		return `${ neg }${ whole }.${ frac }`;
-	}
-
-	function formatAmount(amount: string){
-		return commify(amount).substring(0, amount.indexOf(".") + 4);
 	}
 
 	function formatTime(epoch: number){
@@ -46,10 +40,8 @@
 			return;
 
 		token = value.token;
-		deposited = formatEther(token.stream.amounts.deposited);
-		withdrawn = formatEther(token.stream.amounts.withdrawn);
-		withdrawable = formatEther(token.withdrawableAmount);
-		await loadInfo();
+
+		await loadInfo(value.token);
 	});
 
 </script>
@@ -136,6 +128,7 @@
 
 <div style="padding: 10px 10px 0">
 	<Header/>
+	{#if token && decimals}
 	<div class="info-panel asset-details">
 		<img alt="Smart Layer Network" style="width: 50px; height: auto; border-radius: 5px;" src="https://www.smartlayer.network/icon.png"/>
 		<div class="details">
@@ -310,7 +303,7 @@
 																		   src="/_next/static/media/matic.9aee98ed.png">-->
 									</div>
 								</div>
-								<div class="sc-1f93cf44-1 fFmeqH"><p>Polygon</p></div>
+								<div class="sc-1f93cf44-1 fFmeqH"><p>{getChainDetails(token.chainId).displayName}</p></div>
 							</div>
 						</div>
 					</div>
@@ -337,6 +330,7 @@
 			</div>-->
 		</div>
 	</div>
+	{/if}
 </div>
 <div>
 	<Loader show={loading}/>

@@ -1,4 +1,4 @@
-//import "@tokenscript/card-sdk/src/tokenscript.d.ts";
+import "@tokenscript/card-sdk/src/tokenscript.d.ts";
 import App from './App.svelte'
 
 const app = new App({
