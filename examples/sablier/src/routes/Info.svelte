@@ -154,77 +154,6 @@
 	</div>
 	<div class="info-panel">
 		<div class="attribute-grid">
-			<!--<div class="grid-column">
-				<div class="grid-item">
-					<div data-component="frame" class="icon-box">
-						<div class="icon-wrapper" data-component="icon"
-							 data-purpose="heroicon">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-								 stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									  d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"></path>
-							</svg>
-						</div>
-					</div>
-					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true">
-							<label>Shape</label></div>
-						<div data-component="value" class="value"><p>Cliff stream</p></div>
-					</div>
-				</div>
-			</div>
-			<div class="grid-column">
-				<div class="grid-item">
-					<div data-component="frame" class="icon-box">
-						<div class="icon-wrapper" data-component="icon"
-							 data-purpose="heroicon">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-								 stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									  d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"></path>
-							</svg>
-						</div>
-					</div>
-					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true">
-							<label>Status</label></div>
-						<div data-component="value" class="value"><p>Streaming</p></div>
-					</div>
-				</div>
-			</div>
-			<div class="grid-column">
-				<div class="grid-item">
-					<div data-component="frame" class="icon-box">
-						<div class="icon-wrapper" data-component="icon"
-							 data-purpose="heroicon">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-								 stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									  d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"></path>
-							</svg>
-						</div>
-					</div>
-					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true"><label>Expected
-							Payout</label></div>
-						<div data-component="value" class="value">
-							<div class="value">
-								<div class="sc-56b0e719-0 sc-56b0e719-2 lbJJXj wWDhW">
-									<div class="sc-6b5b8381-0 sc-6b5b8381-3 hNRxPp kHoFft" data-component="icon"
-										 data-purpose="image">
-										<div class="sc-6b5b8381-1 iHjNjb"><img alt="" decoding="async" data-nimg="fill"
-																			   style="position: absolute; height: 20px; width: 20px; inset: 0px; color: transparent;"
-																			   src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZyBjbGlwLXBhdGg9InVybCgjY2xpcDBfMjcyXzIzMzI1KSIgdmVjdG9yRWZmZWN0PSJub24tc2NhbGluZy1zdHJva2UiPgogICAgPGNpcmNsZQogICAgICByPSI5IgogICAgICBjeD0iOSIKICAgICAgY3k9IjkiCiAgICAgIGZpbGw9IiNGRkZGRkYiCiAgICAvPgogICAgPHBhdGgKICAgICAgZD0iTTYuMTg3NSAxMy41MDAxTDguNDM3NSA0LjUwMDEyTTkuNTYyNSAxMy41MDAxTDExLjgxMjUgNC41MDAxMk01LjYyNSA3LjMxMjYySDEzLjVNNC41IDEwLjY4NzZIMTIuMzc1IgogICAgICBzdHJva2U9IiMyOTJGM0IiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiAvPgogIDwvZz4KICA8ZGVmcz4KICAgIDxjbGlwUGF0aCBpZD0iY2xpcDBfMjcyXzIzMzI1Ij4KICAgICAgPHJlY3Qgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiAvPgogICAgPC9jbGlwUGF0aD4KICA8L2RlZnM+Cjwvc3ZnPg==">
-										</div>
-									</div>
-									<div class="sc-56b0e719-1 geLzXU"><p>tsln2</p></div>
-								</div>
-								<div title="125000" class="sc-e24ef726-1 dxzfWj"><p>125K</p></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>-->
 			<div class="grid-column">
 				<div class="grid-item">
 					<div data-component="frame" class="icon-box">
@@ -272,9 +201,9 @@
 						</div>
 					</div>
 					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true"><label>Cancelability</label>
+						<div class="label" data-component="label" data-icon-last="true"><label>Cancellability</label>
 						</div>
-						<div data-component="value" class="value"><p>{token.isCancelable ? "Can" : "Cannot"} be canceled</p></div>
+						<div data-component="value" class="value"><p>{token.stream.isCancelable ? "Can" : "Cannot"} be canceled</p></div>
 					</div>
 				</div>
 			</div>
@@ -309,26 +238,10 @@
 					</div>
 				</div>
 			</div>
-			<!--<div class="grid-column">
-				<div class="grid-item">
-					<div data-component="frame" class="icon-box">
-						<div class="icon-wrapper" data-component="icon"
-							 data-purpose="heroicon">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-								 stroke="currentColor" aria-hidden="true">
-								<path stroke-linecap="round" stroke-linejoin="round"
-									  d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-							</svg>
-						</div>
-					</div>
-					<div data-component="content" class="details-box">
-						<div class="label" data-component="label" data-icon-last="true">
-							<label>Cliff</label></div>
-						<div data-component="value" class="value"><p>An hour (.01%)</p></div>
-					</div>
-				</div>
-			</div>-->
 		</div>
+	</div>
+	<div style="display: flex; gap: 20px; margin-bottom: 20px;">
+		<a class="button primary" href={`https://app.sablier.com/stream/LL-${token.chainId}-${token.tokenId}/`} target="_blank">View on Sablier</a>
 	</div>
 	{/if}
 </div>

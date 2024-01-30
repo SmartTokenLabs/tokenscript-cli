@@ -49,11 +49,19 @@
 		<p style="text-align: center;">Claim available funds from Sablier contract</p>
 		<div class="form-field">
 			<label>How much do you want to withdraw?</label>
-			<input type="text" placeholder="Fill in an amount" name="amount" inputmode="numeric" required on:change={(event) => {
-				tokenscript.action.setProps({
-					amount: convertToIntValue(decimals, event.target.value)
-				});
-			}} />
+			<div style="position: relative; height: 58px;">
+				<input type="text" placeholder="Fill in an amount" name="amount" inputmode="numeric" required on:change={(event) => {
+					tokenscript.action.setProps({
+						amount: convertToIntValue(decimals, event.target.value)
+					});
+				}} />
+				<button class="button secondary" style="position:absolute; right: 10px; height: 70%; top: 15%; width: 80px;" on:click={(event) => {
+					const elem = event.target.parentElement.getElementsByTagName("input")[0];
+					elem.value = withdrawable;
+					const changeEvt = new Event('change', {bubbles: true});
+					elem.dispatchEvent(changeEvt);
+				}}>MAX</button>
+			</div>
 			<small style="margin: 10px 0;">Available: {formatAmount(withdrawable)} {assetDetails.symbol ?? ""}</small>
 		</div>
 		<div class="form-field">
