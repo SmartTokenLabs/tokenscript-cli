@@ -8,6 +8,7 @@
 	import {convertDecimals, getAssetDetails} from "../lib/data";
 	import {getChainDetails} from "../lib/constants.js";
 	import {formatAmount} from "../lib/data.js";
+	import AssetDetails from "../components/AssetDetails.svelte";
 
 	let token: ITokenContextData;
 	let assetDetails;
@@ -110,30 +111,13 @@
 	.grid-item .details-box .value {
 		color: rgb(135, 146, 171);
 	}
-
-	.asset-details {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 20px;
-	}
-
-	.details {
-		/*flex-grow: 1;*/
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
 </style>
 
 <div style="padding: 10px 10px 0">
 	<Header/>
 	{#if token && decimals}
-	<div class="info-panel asset-details">
-		<img alt="Smart Layer Network" style="width: 50px; height: auto; border-radius: 5px;" src="https://www.smartlayer.network/icon.png"/>
-		<div class="details">
-			<strong style="font-size: 20px">Smart Layer Network (SLN)</strong>
-		</div>
+	<div class="info-panel">
+		<AssetDetails assetDetails={assetDetails} token={token} />
 	</div>
 	<div class="info-panel">
 		<StreamProgress current={parseFloat(withdrawn) + parseFloat(withdrawable)} total={parseFloat(deposited)} />
