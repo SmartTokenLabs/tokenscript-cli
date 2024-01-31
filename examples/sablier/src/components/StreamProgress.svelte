@@ -26,9 +26,10 @@
 		justify-content: center;
 		align-items: center;
 		position: relative;
+		height: 200px;
 	}
 
-	.progress-inner > svg {
+	.progress-inner svg {
 		height: 200px;
 		width: 200px;
 		transform: rotate(-89deg);

@@ -7,7 +7,7 @@
 		"build": "vite build && npm run build:ts",
 		"build:ts": "../../bin/dev build",
 		"sign": "../../bin/dev sign -k ../contract/test-signing.key",
-		"sign:prod": "../../bin/dev sign -k ../contract/prod-signing.key -r ../tokenscript/ts-certificate-prod.pem",
+		"sign:prod": "../../bin/dev sign -k ../smart-cat/contract/prod-loot-signing.key",
 		"emulate": "../../bin/dev emulate",
 		"emulate:local": "../../bin/dev emulate -e=http://localhost:3333/",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
