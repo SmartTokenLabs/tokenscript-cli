@@ -14,7 +14,7 @@ export function convertDecimals(decimals: number, value: bigint|string|number){
 	if (typeof value !== "string")
 		value = value.toString();
 
-	return (new BigNumber(value)).dividedBy(Math.pow(10, decimals)).toString();
+	return (new BigNumber(value)).dividedBy(Math.pow(10, decimals)).toString(10);
 }
 
 export function convertToIntValue(decimals: number, value: string|number){
