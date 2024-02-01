@@ -72,6 +72,4 @@
 	</div>
 </div>
 {/if}
-<div>
-	<Loader show={loading}/>
-</div>
+<Loader show={loading}/>

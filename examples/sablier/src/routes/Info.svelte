@@ -230,6 +230,4 @@
 	</div>
 	{/if}
 </div>
-<div>
-	<Loader show={loading}/>
-</div>
+<Loader show={loading}/>
