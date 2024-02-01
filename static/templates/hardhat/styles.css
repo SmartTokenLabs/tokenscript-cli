@@ -84,6 +84,12 @@ p.light {
   font-weight: bold;
 }
 
+.valueSmall {
+	color: #FFF;
+	font-size: 14px;
+	font-weight: bold;
+}
+
 .input-body {
 	font-family: Arial, sans-serif;
 }
