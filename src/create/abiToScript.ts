@@ -141,12 +141,27 @@ export default class ABIToScript {
         }]);
 
         const addInfo = addInfoCard.addInfo == 'yes';
+        const infoCardAttrs = await this.selectInfoAttrs(attrGenerationList, addInfo);
 
 		let xmlFileContent = fs.readFileSync(resolve(this.dir, Create.SRC_XML_FILE), 'utf-8');
-
 		this.xmlDoc = this.domParser.parseFromString(xmlFileContent, "application/xml");
 
-		await this.setValuesFromABI(abi, contractName, funcGenerationList, attrGenerationList, addInfo);
+		await this.setValuesFromABI(abi, contractName, funcGenerationList, attrGenerationList, infoCardAttrs, addInfo);
+    }
+
+    private async selectInfoAttrs(attrGenerationList: string[], addInfo: boolean): Promise<string[]> {
+        if (addInfo) {
+            const funcChoice = await inquirer.prompt([{
+                name: 'infoSelection',
+                message: `Add which Attributes in the info card?`,
+                type: 'checkbox',
+                choices: attrGenerationList,
+            }]);
+
+            return funcChoice.infoSelection; 
+        } else {
+            return [];
+        }
     }
 
     getABIFetchOption(templateDef: ITemplateFields[], values: any[]): boolean {
@@ -184,19 +199,22 @@ export default class ABIToScript {
         return funcChoice.funcSelection;
     }
 
-	private async setValuesFromABI(abi: any, contractName: string, funcGenerationList: string[], attrGenerationList: string[], addInfo: boolean) {
+	private async setValuesFromABI(abi: any, contractName: string, funcGenerationList: string[], attrGenerationList: string[], infoCardAttrNames: string[], addInfo: boolean) {
         let attributesToAdd = [];
         let eventsToAdd: any[] = [];
+        let infoCardAttrs: any[] = [];
 		let viewCards = [];
-        let firstAttr = null;
+        let jj = JSON.stringify(infoCardAttrNames);
         for(let func of abi) {
             switch(func.type) {
                 case Types.FUNCTION:
 					let [attr, viewCard] = await this.handleFunction(func, contractName);
 					if (attr !== "" && this.isOnGenerationList(func, attrGenerationList)) {
                         attributesToAdd.push(attr);
-                        if (firstAttr == null) {
-                            firstAttr = func;
+
+                        if (infoCardAttrNames.includes(func.name)) {
+                            infoCardAttrs.push(func);
+                            let lool = JSON.stringify(func);
                         } 
                     } else if (viewCard !== "" && this.isOnGenerationList(func, funcGenerationList)) {
                         viewCards.push(viewCard);
@@ -215,7 +233,7 @@ export default class ABIToScript {
 
         if (addInfo) {
             //User requested to add default info card
-            let infoCard = await this.infoCard(contractName, firstAttr);
+            let infoCard = await this.infoCard(contractName, infoCardAttrs);
             viewCards.push(infoCard);
         }
 
@@ -456,7 +474,7 @@ export default class ABIToScript {
         await this.processTemplateCard(templateDef, inputBox, fName);
     }
 
-    private async infoCard(contractName: string, firstAttr: any) {
+    private async infoCard(contractName: string, infoCardAttrs: any[]) {
         const infoName = "Info";
         let card: HTMLElement = this.initCard(infoName, "token", contractName, "secondary");
 
@@ -490,47 +508,84 @@ export default class ABIToScript {
 		card.appendChild(viewNode);
 
         fs.copyFileSync("info-card.html", "info.html");
-        let attrName = "";
-        let attrSource = "";
-        let attrComment = "";
+        let added: boolean = false;
 
-        if (firstAttr != null) { //populate an info card with an attribute for illustration
+        let varBlock = "";
+        let infoBlock = "";
+        let jSBlock = "";
+
+        for(let infoAttr of infoCardAttrs) { //populate an info card with an attribute for illustration
             // create attribute source based on first attribute
-            attrName = this.capitaliseFirstChar(firstAttr.name);
-            let syntax = this.getSyntax(firstAttr.outputs);
-            switch (syntax) {
-                case "uint":
-                case "int":
-                    //insert value code, assuming that 
-                    attrSource = `currentTokenInstance.${firstAttr.name}`;
-                    attrComment = `//value = Math.floor(1.0 * (currentTokenInstance.${firstAttr.name} / 10 ** 18) * 10000) / 10000; // <-- use for decimals 18 return value`;
-                    break;
-                case "bytes":
-                    //convert value to hex
-                    attrSource = `currentTokenInstance.${firstAttr.name}`;
-                    break;
-                case "string":
-                case "address":
-                default:
-                    attrSource = `currentTokenInstance.${firstAttr.name}`;
-                    break;
-            }
-        } else {
+            let syntax = this.getFirstOutputType(infoAttr.outputs);
+            infoBlock += this.getModuleBlock(infoAttr.name, syntax);
+            varBlock += `var value_${infoAttr.name};\n`;
+            jSBlock += this.getJSBlock(infoAttr.name, syntax);
+            added = true;
+        }
+
+        if (!added) {
             //take a generic attribute like token Symbol
-            attrName = "Symbol";
-            attrSource = 'currentTokenInstance.symbol;';
+            infoBlock = this.getModuleBlock("symbol", "string");
+            jSBlock = `value = currentTokenInstance.symbol\n`;
+            varBlock = `var value;\n`;
         }
 
         //do a parse on the new file. Can the card display attributes?
-        let templateDef = Templates.getScriptTemplate("ATTRIBUTE_NAME");
-		await this.processTemplateCard(templateDef, attrName, "info.html");
-        templateDef = Templates.getScriptTemplate("ATTRIBUTE_SOURCE");
-        await this.processTemplateCard(templateDef, attrSource, "info.html");
-        templateDef = Templates.getScriptTemplate("ATTRIBUTE_COMMENT");
-        await this.processTemplateCard(templateDef, attrComment, "info.html");
+        let templateDef = Templates.getScriptTemplate("VAR_BLOCK");
+		await this.processTemplateCard(templateDef, varBlock, "info.html");
+        templateDef = Templates.getScriptTemplate("HTML_BLOCK");
+        await this.processTemplateCard(templateDef, infoBlock, "info.html");
+        templateDef = Templates.getScriptTemplate("JS_BLOCK");
+        await this.processTemplateCard(templateDef, jSBlock, "info.html");
 	
         return card;
 	}
+
+    private getModuleBlock(attrName: string, syntax: string) {
+        const attrNameCap = this.capitaliseFirstChar(attrName);
+        const valueStyle = syntax == 'address' ? "valueSmall" : "value";
+        return `<div class="card"><div class="card-image"> 
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <g fill="none" fill-rule="evenodd">
+                <circle fill="#597DF2" cx="12" cy="12" r="12"/>
+                <path fill="#FFF" d="M12 21.6v-5.173L6 12.69z"/>
+                <path fill="#BDCBFA" d="M12 16.427V21.6l6-8.91zM12 1.8v6.93l6 2.584z"/>
+                <path fill="#FFF" d="m12 1.8-6 9.514 6-2.584z"/>
+                <path fill="#BDCBFA" d="m6 11.314 6 3.356V8.73z"/>
+                <path fill="#7B96F5" d="m12 14.67 6-3.356-6-2.584z"/>
+            </g>
+        </svg>  			    
+        </div>
+        <div class="text">
+            <p class="title">${attrNameCap}</p>
+            <p class="${valueStyle}">\${value_${attrName}}</p>
+        </div>
+        </div>
+        `;
+    }
+
+    private getJSBlock(attrName: string, syntax: string): string {
+        let jSBlock = "";
+        switch (syntax) {
+            case "uint":
+            case "int":
+                //insert value code, assuming that 
+                jSBlock += `value_${attrName} = currentTokenInstance.${attrName}\n`;
+                jSBlock += `//value = Math.floor(1.0 * (currentTokenInstance.${attrName} / 10 ** 18) * 10000) / 10000; // <-- use for decimals 18 return value\n`;
+                break;
+            case "bytes":
+                //convert value to hex
+                jSBlock += `value_${attrName} = currentTokenInstance.${attrName}\n`;
+                break;
+            case "string":
+            case "address":
+            default:
+                jSBlock += `value_${attrName} = currentTokenInstance.${attrName}\n`;
+                break;
+        }
+
+        return jSBlock;
+    }
 
 	private formatAttribute(typeName: string, name: string, originsElement: any) {
 		let attributeTypeNode = this.getDocument().createElement("ts:attribute");
