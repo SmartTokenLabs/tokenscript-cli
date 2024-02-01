@@ -1,10 +1,56 @@
 import type {ITokenContextData} from "@tokenscript/card-sdk/dist/types";
-import {getChainDetails} from "./constants";
+import {CHAIN_DETAILS, getChainDetails} from "./constants";
 import {BigNumber} from "bignumber.js";
+import {Contract, JsonRpcProvider, Network} from "ethers";
 
 export async function getAssetDetails(token: ITokenContextData){
 	const res = await fetch(`https://api.token-discovery.tokenscript.org/get-fungible-token?collectionAddress=${token.stream.asset}&chain=${getChainDetails(token.chainId).discoveryName}&blockchain=evm`);
 	return await res.json();
+}
+
+export async function getWithdrawableAmount(token: ITokenContextData){
+	const contract = getSablierContract(token);
+
+	const withdrawableAmount = await contract["withdrawableAmountOf"](token.tokenId);
+
+	web3.action.setProps({
+		withdrawableAmount
+	});
+
+	return withdrawableAmount;
+}
+
+function getSablierContract(token: ITokenContextData){
+
+	const network = new Network(CHAIN_DETAILS[chainID].discoveryName, chainID);
+
+	const provider = new JsonRpcProvider(rpcURL, network, {
+		staticNetwork: network
+	});
+
+	const abi = [
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "streamId",
+					"type": "uint256"
+				}
+			],
+			"name": "withdrawableAmountOf",
+			"outputs": [
+				{
+					"internalType": "uint128",
+					"name": "withdrawableAmount",
+					"type": "uint128"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		}
+	];
+
+	return new Contract(token.contractAddress!!, abi, provider);
 }
 
 export function convertDecimals(decimals: number, value: bigint|string|number){

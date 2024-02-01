@@ -108,11 +108,7 @@
 			<ts:string xml:lang="en">Withdrawable Amount</ts:string>
 		</ts:label>
 		<ts:origins>
-			<ethereum:call function="withdrawableAmountOf" contract="Sablier" as="uint">
-				<ts:data>
-					<ts:uint256 ref="tokenId"/>
-				</ts:data>
-			</ethereum:call>
+			<ts:user-entry as="uint"/>
 		</ts:origins>
 	</ts:attribute>
 

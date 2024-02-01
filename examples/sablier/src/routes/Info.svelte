@@ -5,7 +5,7 @@
 	import Loader from "../components/Loader.svelte";
 	import StreamProgress from "../components/StreamProgress.svelte";
 	import type {ITokenContextData} from "@tokenscript/card-sdk/dist/types";
-	import {convertDecimals, getAssetDetails} from "../lib/data";
+	import {convertDecimals, getAssetDetails, getWithdrawableAmount} from "../lib/data";
 	import {getChainDetails} from "../lib/constants.js";
 	import {formatAmount} from "../lib/data.js";
 	import AssetDetails from "../components/AssetDetails.svelte";
@@ -20,6 +20,7 @@
 
 	const loadInfo = async (token: ITokenContextData) => {
 
+		token.withdrawableAmount = await getWithdrawableAmount(token);
 		assetDetails = await getAssetDetails(token);
 		decimals = assetDetails.decimals ? parseInt(assetDetails.decimals) : 18;
 
