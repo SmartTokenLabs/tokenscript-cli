@@ -4,7 +4,8 @@
 
 	const SLN_ADDRESSES = [
 		"0xdb82c0d91e057e05600c8f8dc836beb41da6df14".toLowerCase(),
-		"0xF5F355746e64f5cDdd471205e9042153dB84387A".toLowerCase()
+		"0xF5F355746e64f5cDdd471205e9042153dB84387A".toLowerCase(),
+		"0x0404ab3994ed48c300ce219546f757ad34484dc7".toLowerCase()
 	]
 
 	export let token: ITokenContextData;
@@ -39,6 +40,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: flex-start;
+		text-align: left;
 	}
 </style>
 

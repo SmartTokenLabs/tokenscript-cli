@@ -226,7 +226,7 @@
 		</div>
 	</div>
 	<div style="display: flex; gap: 20px; margin-bottom: 20px;">
-		<a class="button primary" href={`https://app.sablier.com/stream/LL-${token.chainId}-${token.tokenId}/`} target="_blank">View on Sablier</a>
+		<a class="button primary" href={`https://app.sablier.com/stream/LL2-${token.chainId}-${token.tokenId}/`} target="_blank">View on Sablier</a>
 	</div>
 	{/if}
 </div>
