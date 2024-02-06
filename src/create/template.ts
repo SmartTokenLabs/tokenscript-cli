@@ -96,8 +96,12 @@ export class Templates {
 	}
 
 	static copyHHInit(dest: string) {
+		fs.copyFileSync(resolve(this.templateDir, "hardhat", "tokenscript.xml"), join(dest, "tokenscript.xml"));
+		this.copyCards(dest);
+	}
+
+	static copyCards(dest: string) {
 		const files = fs.readdirSync(join(this.templateDir, "hardhat")).filter(fileName => fileName.endsWith('.html'));
-		files.push("tokenscript.xml");
 		for (const file of files) {
 			fs.copyFileSync(resolve(this.templateDir, "hardhat", file), join(dest, file));
 		}
@@ -105,10 +109,8 @@ export class Templates {
 
 	static cleanBuildFiles(dest: string) {
 		//remove prep files
-		if (fs.existsSync(join(dest, "non-payable-card.html"))) {
-			fs.rmSync(join(dest, "non-payable-card.html"));
-			fs.rmSync(join(dest, "payable-card.html"));
-			fs.rmSync(join(dest, "info-card.html"));
+		if (fs.existsSync(join(dest, "card-prototype.html"))) {
+			fs.rmSync(join(dest, "card-prototype.html"));
 		}
 	}
 }
