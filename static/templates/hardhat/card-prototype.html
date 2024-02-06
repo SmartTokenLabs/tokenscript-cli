@@ -1,20 +1,19 @@
 <script type="text/javascript">
+	$tst{VAR_BLOCK}
 	class Token {
+		
 		constructor(tokenInstance) {
-			this.props = tokenInstance
+			this.props = tokenInstance;
 		}
 
 		render() {
-			return `
-        		<h3>$tst{ACTION_NAME} ...</h3>
-        		<p>Actions allow you to invoke a smart contract transaction or invoke a Javascript function within the view.</p>
-				$tst{INPUT_BOX}
-			`;
-		}
+            return `$tst{HTML_BLOCK}`;
+        }
 	}
 
 	web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
 		const currentTokenInstance = updatedTokens.currentInstance;
+		$tst{JS_BLOCK}
 		document.getElementById(cardId).innerHTML = new Token(currentTokenInstance).render();
 	};
 

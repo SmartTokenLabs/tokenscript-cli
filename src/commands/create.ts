@@ -36,6 +36,7 @@ export default class Create extends Command {
 	async catch(error: Error) {
 		// do something or
 		// re-throw to be handled globally
+		console.log(`Error: ${error.message}`);
 		throw error;
 	}
 
@@ -53,7 +54,7 @@ export default class Create extends Command {
 			let numFiles = fs.readdirSync(this.dir).length;
 
 			if (numFiles && fs.existsSync(join(this.dir, "tstemplate.json"))) {
-				await this.handleExistingProject();
+				await this.handleExistingProject(hardHat);
 				return;
 			}
 
@@ -198,21 +199,104 @@ export default class Create extends Command {
 		await templateProcessor.processTemplateUpdate(values);
 	}
 
-	private async handleExistingProject() {
+	private async handleExistingProject(hardHat: string) {
 
 		let templateDef = fs.readJsonSync(this.dir + "/tstemplate.json");
 
 		if (!templateDef)
 			throw new Error("Template file is invalid or not readable");
 
-		let proceed = await CliUx.ux.confirm("Existing workspace detected, would you like to try and update template values?\r\nThis may not work correctly, please save your current workspace before continuing");
+		CliUx.ux.info("Existing workspace detected.");
 
-		if (!proceed)
+		const newCard = "New Card";
+		const refreshProject = "Refresh Project";
+
+		let addNewCard = await inquirer.prompt([{
+            name: 'addCard',
+            message: `Generate new card(s) or refresh project?`,
+            type: 'list',
+            choices: [newCard, refreshProject, 'abort']
+        }]);
+
+		let proceed = addNewCard.addCard;
+
+		if (proceed === newCard) {
+			console.log("Doing new card");
+			let templateProcessor = new TemplateProcessor(templateDef, this.dir);
+			let values = templateProcessor.getValuesFromTSTemplate();
+			//add new card from etherscan ABI update
+			let contract = await this.updateCard(values, templateDef);
+			//now process the data
+			await this.handleTSUpdate(values, templateDef, contract, hardHat);
+		} else if (proceed === refreshProject) {
+			//refresh
+			let values = await this.collectFieldValues(templateDef.templateFields);
+			await this.processTemplateUpdate(templateDef, values);
+		} else {
 			return;
+		}
+	}
 
-		let values = await this.collectFieldValues(templateDef.templateFields);
+	private async updateCard(values: any, templateDef: any): Promise<ContractLocator> {
+		//ask user for new contract address
+		let tokenAddress = this.getContract(values, templateDef);
+		let tokenName = tokenAddress.name;
 
-		await this.processTemplateUpdate(templateDef, values);
+		const useTokenAddress: any = await inquirer.prompt([{
+			name: 'useContract',
+			message: 'From which contract do you want to pull the new functions / attributes?',
+			default: `${tokenAddress.address}`, 
+		  }]);
+
+		const inputChainId: any = await inquirer.prompt([{
+			name: 'useChainId',
+			message: 'From which chainId?',
+			default: `${tokenAddress.chainId}`, 
+		  }]);
+
+		if (tokenAddress.address !== useTokenAddress.useContract || tokenAddress.chainId !== inputChainId.useChainId) {
+			const newTokenName: any = await inquirer.prompt([{
+				name: 'tokenName',
+				message: `Name this contract (used within the TokenScript, must be different from '${tokenAddress.name}')`,
+				default: `${tokenAddress.name}_1`,
+		  	}]);
+
+			let selectedName = newTokenName.tokenName;
+			if (selectedName == tokenName) {
+				CliUx.ux.error("Additional contracts cannot have the same name as the origin token."); //abort
+			} else {
+				tokenName = selectedName;
+			}
+		}
+
+		tokenAddress = { chainId: inputChainId.useChainId, address: useTokenAddress.useContract, name: tokenName };
+
+		return tokenAddress;
+	}
+
+	private async handleTSUpdate(values: any, templateDef: any, tokenAddress: ContractLocator, hardHat: string) {
+		//1. Add template files
+		Templates.copyCards(this.dir);
+		//1. Pull ABI for contract
+		CliUx.ux.action.start("Fetching ABI from Block Scanner...");
+		let abiEncoder: ABIToScript = new ABIToScript(this.dir, tokenAddress);
+		const logicAddress = await abiEncoder.getLogicAddress(tokenAddress);
+		let contractABIResponse = await abiEncoder.getABI({chainId: tokenAddress.chainId, address: logicAddress, name: tokenAddress.name});
+		let contractABI = abiEncoder.convertABI(contractABIResponse);
+		CliUx.ux.action.stop();
+		if (JSON.stringify(contractABI).length <= 3) {
+			CliUx.ux.error("Failed to fetch contract ABI. Unable to proceed. This may be due to rate limits in bundled Etherscan key - please try again later or add your Etherscan API key to the .env file");
+		}
+
+		//hardHat?
+
+		//2. ask for new attrs/functions and add in new cards/scripts and additional contracts
+		await abiEncoder.startUpdate(contractABI);
+
+		//3. cleanup
+		Templates.cleanBuildFiles(this.dir);
+
+		CliUx.ux.info("Project update complete!\r\n");
 	}
 
 	private async showTemplateSelection() {
