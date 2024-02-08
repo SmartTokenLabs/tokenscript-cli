@@ -173,6 +173,22 @@
 					</div>
 				</div>
 			</div>
+			{#if token.stream.cliffTime > token.stream.startTime}
+				<div class="grid-column">
+					<div class="grid-item">
+						<div data-component="frame" class="icon-box">
+							<div class="icon-wrapper" data-component="icon"
+								 data-purpose="heroicon">
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+							</div>
+						</div>
+						<div data-component="content" class="details-box">
+							<div class="label" data-component="label" data-icon-last="true"><label>Cliff time</label></div>
+							<div data-component="value" class="value"><p>{formatTime(token.stream.cliffTime)}</p></div>
+						</div>
+					</div>
+				</div>
+			{/if}
 			<div class="grid-column">
 				<div class="grid-item">
 					<div data-component="frame" class="icon-box">

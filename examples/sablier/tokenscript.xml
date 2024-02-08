@@ -35,6 +35,12 @@
 		<ts:ethereum contract="Sablier"/>
 	</ts:origins>
 
+	<ts:selection name="nothingToWithdraw" filter="withdrawableAmount=0">
+		<ts:label>
+			<ts:string xml:lang="en">Nothing to withdraw yet</ts:string>
+		</ts:label>
+	</ts:selection>
+
 	<ts:cards>
 		<ts:viewContent name="common" xmlns="http://www.w3.org/1999/xhtml">
 			<ts:include type="html" src="./dist/index.html"/>
@@ -50,7 +56,7 @@
 			</ts:view>
 		</ts:card>
 
-		<ts:card type="action" name="Withdraw">
+		<ts:card type="action" name="Withdraw" exclude="nothingToWithdraw">
 			<ts:label>
 				<ts:string xml:lang="en">Withdraw</ts:string>
 			</ts:label>
@@ -108,7 +114,11 @@
 			<ts:string xml:lang="en">Withdrawable Amount</ts:string>
 		</ts:label>
 		<ts:origins>
-			<ts:user-entry as="uint"/>
+			<ethereum:call function="withdrawableAmountOf" contract="Sablier" as="uint">
+				<ts:data>
+					<ts:uint256 ref="tokenId"/>
+				</ts:data>
+			</ethereum:call>
 		</ts:origins>
 	</ts:attribute>
 
