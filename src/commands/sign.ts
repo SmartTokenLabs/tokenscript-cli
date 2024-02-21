@@ -1,8 +1,8 @@
 import {Command, Flags} from '@oclif/core'
-import * as xmldsigjs from "xmldsigjs";
+import * as xmldsigjs from "@tokenscript/xmldsigjs";
 import {Crypto, CryptoKey} from "@peculiar/webcrypto";
 import * as fs from "fs-extra";
-import {SignedXml} from "xmldsigjs";
+import {SignedXml} from "@tokenscript/xmldsigjs";
 import {KeyImporter} from "../sign/keyImporter";
 import {uint8tohex} from "../utils";
 import {base64, computeAddress} from "ethers/lib/utils";

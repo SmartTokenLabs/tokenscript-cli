@@ -80,7 +80,7 @@ export default class Create extends Command {
 		let values = await this.collectFieldValues(templateDef.templateFields);
 
 		let tokenAddress = this.getContract(values, templateDef);
-		let contractABI: any;
+		let contractABI: any|null = null;
 
 		let abiEncoder: ABIToScript = new ABIToScript(this.dir, tokenAddress);
 
@@ -128,19 +128,19 @@ export default class Create extends Command {
 		if (JSON.stringify(contractABI).length > 2) {
 			// handle ABI from block scan
 			template = Create.hardHatTemplate;
-		} 
+		}
 
 		return [contractABI, template];
 	}
 
-	private async handleABItoScript(hardHat: string, templateDef: ITemplateData, contractABI: any, tokenAddress: ContractLocator) {
+	private async handleABItoScript(hardHat: string, templateDef: ITemplateData, contractABI: null|any, tokenAddress: ContractLocator) {
 		let abiEncoder: ABIToScript = new ABIToScript(this.dir, tokenAddress);
 		if (hardHat) {
 
 			if (!fs.existsSync(join(hardHat, "hardhat.config.ts"))) {
 				CliUx.ux.error("-h <directory> must point to HardHat project");
 			}
-	
+
 			if (!fs.existsSync(join(hardHat, "artifacts", "contracts"))) {
 				CliUx.ux.error("linked HardHat project must be built");
 			}
@@ -172,7 +172,7 @@ export default class Create extends Command {
 			let templateProcessor = new TemplateProcessor(templateDef, this.dir);
 			await templateProcessor.updateHardHat(hardHat);
 			CliUx.ux.info("Project generation complete!\r\n");
-		} else if (JSON.stringify(contractABI).length > 2) { // Generate from ABI
+		} else if (contractABI && JSON.stringify(contractABI).length > 2) { // Generate from ABI
 			await abiEncoder.start(contractABI, "Token");
 			CliUx.ux.info("Project generation complete!\r\n");
 		}
@@ -245,13 +245,13 @@ export default class Create extends Command {
 		const useTokenAddress: any = await inquirer.prompt([{
 			name: 'useContract',
 			message: 'From which contract do you want to pull the new functions / attributes?',
-			default: `${tokenAddress.address}`, 
+			default: `${tokenAddress.address}`,
 		  }]);
 
 		const inputChainId: any = await inquirer.prompt([{
 			name: 'useChainId',
 			message: 'From which chainId?',
-			default: `${tokenAddress.chainId}`, 
+			default: `${tokenAddress.chainId}`,
 		  }]);
 
 		if (tokenAddress.address !== useTokenAddress.useContract || tokenAddress.chainId !== inputChainId.useChainId) {
