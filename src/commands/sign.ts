@@ -25,8 +25,8 @@ export default class Sign extends Command {
 	static flags = {
 		// flag with a value (-n, --name=VALUE)
 		verify: Flags.boolean({char: 'v', description: 'Verify existing signed .tsml'}),
-		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key file location', default: join(process.cwd(), "ts-signing.key")}),
-		publicKeyFile: Flags.string({char: 'p', description: 'Hex encoded private key file location', default: join(process.cwd(), "ts-signing.pub")}),
+		privateKeyFile: Flags.string({char: 'k', description: 'Hex encoded private key file location', default: "ts-signing.key"}),
+		publicKeyFile: Flags.string({char: 'p', description: 'Hex encoded private key file location', default: "ts-signing.pub"}),
 		certFile: Flags.string({char: 'r', description: 'Certificate PEM filename', default: Sign.DEFAULT_CERT_LOCATION}),
 	}
 

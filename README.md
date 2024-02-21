@@ -19,7 +19,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.1.9 linux-x64 node-v18.18.2
+@tokenscript/cli/1.1.10 linux-x64 node-v18.18.2
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -98,7 +98,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [src/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/build.ts)_
 
 ## `tokenscript certificate COMMAND`
 
@@ -113,21 +113,17 @@ ARGUMENTS
 
 FLAGS
   -c, --cn=<value>                    The CN for the certificate, or issuer CN if signing
-  -k, --privateKeyFile=<value>        [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-signing.key] Hex
-                                      encoded private key filename (for creating CSR)
-  -m, --masterPrivateKeyFile=<value>  [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-master.key] Hex
-                                      encoded master private key filename (for signing CSR)
-  -r, --certFile=<value>              [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-certificate.pem]
-                                      Certificate PEM input or output filename
-  -r, --certRequestFile=<value>       [default:
-                                      /home/michael/PhpstormProjects/tokenscript-cli/ts-certificate-request.pem]
-                                      Certificate signing request PEM input or output filename
+  -k, --privateKeyFile=<value>        [default: ts-signing.key] Hex encoded private key filename (for creating CSR)
+  -m, --masterPrivateKeyFile=<value>  [default: ts-master.key] Hex encoded master private key filename (for signing CSR)
+  -r, --certFile=<value>              [default: ts-certificate.pem] Certificate PEM input or output filename
+  -r, --certRequestFile=<value>       [default: ts-certificate-request.pem] Certificate signing request PEM input or
+                                      output filename
 
 DESCRIPTION
   Create a certificate request or sign an existing request.
 ```
 
-_See code: [src/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/certificate.ts)_
+_See code: [src/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/certificate.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -145,7 +141,7 @@ DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [src/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/create.ts)_
 
 ## `tokenscript emulate`
 
@@ -162,7 +158,7 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [src/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/emulate.ts)_
+_See code: [src/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/emulate.ts)_
 
 ## `tokenscript help [COMMANDS]`
 
@@ -439,7 +435,7 @@ DESCRIPTION
   Refresh a HardHat project
 ```
 
-_See code: [src/commands/refresh.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/refresh.ts)_
+_See code: [src/commands/refresh.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/refresh.ts)_
 
 ## `tokenscript sign`
 
@@ -450,10 +446,8 @@ USAGE
   $ tokenscript sign [-v] [-k <value>] [-p <value>] [-r <value>]
 
 FLAGS
-  -k, --privateKeyFile=<value>  [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-signing.key] Hex encoded
-                                private key file location
-  -p, --publicKeyFile=<value>   [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-signing.pub] Hex encoded
-                                private key file location
+  -k, --privateKeyFile=<value>  [default: ts-signing.key] Hex encoded private key file location
+  -p, --publicKeyFile=<value>   [default: ts-signing.pub] Hex encoded private key file location
   -r, --certFile=<value>        [default: /home/michael/PhpstormProjects/tokenscript-cli/ts-certificate.pem] Certificate
                                 PEM filename
   -v, --verify                  Verify existing signed .tsml
@@ -462,7 +456,7 @@ DESCRIPTION
   sign the built .tsml
 ```
 
-_See code: [src/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/sign.ts)_
+_See code: [src/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/sign.ts)_
 
 ## `tokenscript validate`
 
@@ -476,5 +470,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [src/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/validate.ts)_
+_See code: [src/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.10/src/commands/validate.ts)_
 <!-- commandsstop -->
