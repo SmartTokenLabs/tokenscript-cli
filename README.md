@@ -19,7 +19,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.1.8 linux-x64 node-v16.18.1
+@tokenscript/cli/1.1.9 linux-x64 node-v18.18.2
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -72,7 +72,7 @@ If all goes well you should see a file in `./out/tokenscript.tsml`
 * [`tokenscript certificate COMMAND`](#tokenscript-certificate-command)
 * [`tokenscript create [DIRECTORY]`](#tokenscript-create-directory)
 * [`tokenscript emulate`](#tokenscript-emulate)
-* [`tokenscript help [COMMAND]`](#tokenscript-help-command)
+* [`tokenscript help [COMMANDS]`](#tokenscript-help-commands)
 * [`tokenscript plugins`](#tokenscript-plugins)
 * [`tokenscript plugins:install PLUGIN...`](#tokenscript-pluginsinstall-plugin)
 * [`tokenscript plugins:inspect PLUGIN...`](#tokenscript-pluginsinspect-plugin)
@@ -98,7 +98,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [dist/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/build.ts)_
 
 ## `tokenscript certificate COMMAND`
 
@@ -106,7 +106,7 @@ Create a certificate request or sign an existing request.
 
 ```
 USAGE
-  $ tokenscript certificate [COMMAND] [-k <value>] [-m <value>] [-r <value>] [-r <value>] [-c <value>]
+  $ tokenscript certificate COMMAND [-k <value>] [-m <value>] [-r <value>] [-r <value>] [-c <value>]
 
 ARGUMENTS
   COMMAND  (request|sign) Whether to create a signing 'request' or 'sign' an existing request
@@ -127,7 +127,7 @@ DESCRIPTION
   Create a certificate request or sign an existing request.
 ```
 
-_See code: [dist/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/certificate.ts)_
+_See code: [src/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/certificate.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -145,7 +145,7 @@ DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [dist/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/create.ts)_
 
 ## `tokenscript emulate`
 
@@ -162,18 +162,18 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [dist/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/emulate.ts)_
+_See code: [src/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/emulate.ts)_
 
-## `tokenscript help [COMMAND]`
+## `tokenscript help [COMMANDS]`
 
 Display help for tokenscript.
 
 ```
 USAGE
-  $ tokenscript help [COMMAND] [-n]
+  $ tokenscript help [COMMANDS] [-n]
 
 ARGUMENTS
-  COMMAND  Command to show help for.
+  COMMANDS  Command to show help for.
 
 FLAGS
   -n, --nested-commands  Include all nested commands in the output.
@@ -182,7 +182,7 @@ DESCRIPTION
   Display help for tokenscript.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.22/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.2.20/src/commands/help.ts)_
 
 ## `tokenscript plugins`
 
@@ -202,7 +202,7 @@ EXAMPLES
   $ tokenscript plugins
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.0.11/src/commands/plugins/index.ts)_
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.7/src/commands/plugins/index.ts)_
 
 ## `tokenscript plugins:install PLUGIN...`
 
@@ -257,12 +257,17 @@ FLAGS
   -h, --help     Show CLI help.
   -v, --verbose
 
+GLOBAL FLAGS
+  --json  Format output as json.
+
 DESCRIPTION
   Displays installation properties of a plugin.
 
 EXAMPLES
   $ tokenscript plugins:inspect myplugin
 ```
+
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.7/src/commands/plugins/inspect.ts)_
 
 ## `tokenscript plugins:install PLUGIN...`
 
@@ -302,6 +307,8 @@ EXAMPLES
   $ tokenscript plugins:install someuser/someplugin
 ```
 
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.7/src/commands/plugins/install.ts)_
+
 ## `tokenscript plugins:link PLUGIN`
 
 Links a plugin into the CLI for development.
@@ -329,28 +336,7 @@ EXAMPLES
   $ tokenscript plugins:link myplugin
 ```
 
-## `tokenscript plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ tokenscript plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ tokenscript plugins unlink
-  $ tokenscript plugins remove
-```
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.7/src/commands/plugins/link.ts)_
 
 ## `tokenscript plugins:uninstall PLUGIN...`
 
@@ -374,6 +360,31 @@ ALIASES
   $ tokenscript plugins unlink
   $ tokenscript plugins remove
 ```
+
+## `tokenscript plugins:uninstall PLUGIN...`
+
+Removes a plugin from the CLI.
+
+```
+USAGE
+  $ tokenscript plugins:uninstall PLUGIN...
+
+ARGUMENTS
+  PLUGIN  plugin to uninstall
+
+FLAGS
+  -h, --help     Show CLI help.
+  -v, --verbose
+
+DESCRIPTION
+  Removes a plugin from the CLI.
+
+ALIASES
+  $ tokenscript plugins unlink
+  $ tokenscript plugins remove
+```
+
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.7/src/commands/plugins/uninstall.ts)_
 
 ## `tokenscript plugins:uninstall PLUGIN...`
 
@@ -414,6 +425,8 @@ DESCRIPTION
   Update installed plugins.
 ```
 
+_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.4.7/src/commands/plugins/update.ts)_
+
 ## `tokenscript refresh`
 
 Refresh a HardHat project
@@ -426,7 +439,7 @@ DESCRIPTION
   Refresh a HardHat project
 ```
 
-_See code: [dist/commands/refresh.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/refresh.ts)_
+_See code: [src/commands/refresh.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/refresh.ts)_
 
 ## `tokenscript sign`
 
@@ -449,7 +462,7 @@ DESCRIPTION
   sign the built .tsml
 ```
 
-_See code: [dist/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/sign.ts)_
+_See code: [src/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/sign.ts)_
 
 ## `tokenscript validate`
 
@@ -463,5 +476,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [dist/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.8/dist/commands/validate.ts)_
+_See code: [src/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.9/src/commands/validate.ts)_
 <!-- commandsstop -->
