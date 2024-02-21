@@ -1,5 +1,5 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
-import {XmlDsigC14NTransform} from "xmldsigjs";
+import {XmlDsigC14NTransform} from "@tokenscript/xmldsigjs";
 
 export class CanonicalizeXml implements IBuildStep {
 
