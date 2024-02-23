@@ -1,6 +1,6 @@
 {
   "name": "@tokenscript/cli",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "description": "A tool for managing tokenscript projects",
   "author": "Michael Wallace @micwallace",
   "bin": {
@@ -27,7 +27,8 @@
     "@peculiar/webcrypto": "^1.4.0",
     "@peculiar/x509": "^1.9.2",
     "@tokenscript/libxmljs2-xsd": "^0.32.0",
-    "@xmldom/xmldom": "^0.9.0-beta.6",
+    "@tokenscript/xmldsigjs": "^2.5.2",
+    "@xmldom/xmldom": "^0.9.0-beta.11",
     "axios": "^1.6.0",
     "chokidar": "^3.5.3",
     "cors": "^2.8.5",
@@ -41,8 +42,7 @@
     "key-encoder": "^2.0.3",
     "open": "^8.4.0",
     "replace-in-file": "^6.3.5",
-    "xml-formatter": "^3.6.0",
-    "@tokenscript/xmldsigjs": "^2.5.1"
+    "xml-formatter": "^3.6.0"
   },
   "devDependencies": {
     "@oclif/test": "^2",
@@ -103,10 +103,5 @@
   "keywords": [
     "oclif"
   ],
-  "types": "dist/index.d.ts",
-  "overrides": {
-    "xml-core": {
-      "@xmldom/xmldom": "$@xmldom/xmldom"
-    }
-  }
+  "types": "dist/index.d.ts"
 }
