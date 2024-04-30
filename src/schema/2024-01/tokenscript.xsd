@@ -283,6 +283,7 @@
 				<element name="description" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 				<element name="aboutUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 				<element name="iconUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
+				<element name="imageUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 			</choice>
 		</complexType>
 	</element>
@@ -312,6 +313,7 @@
 		<attribute name="url" type="anyURI" />
 		<attribute name="urlFragment" type="anyURI" />
 		<attribute name="uiButton" type="boolean" />
+		<attribute name="fullScreen" type="boolean" />
 	</complexType>
 	<complexType name="viewInclude">
 		<attribute name="type" use="required">
