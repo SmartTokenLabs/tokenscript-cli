@@ -146,6 +146,7 @@
 	<simpleType name="cardType">
 		<restriction base="string">
 			<enumeration value="token"/>
+			<enumeration value="onboarding"/>
 			<enumeration value="action"/>
 			<enumeration value="activity"/>
 		</restriction>
