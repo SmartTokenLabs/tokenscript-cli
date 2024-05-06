@@ -47,6 +47,7 @@
 					</complexType>
 				</element>
 				<element minOccurs="0" maxOccurs="unbounded" ref="ts:selection"/>
+				<element ref="ts:style"/>
 				<element ref="ts:cards"/>
 				<element minOccurs="0" ref="ts:grouping"/>
 				<element minOccurs="0" ref="ts:ordering"/>
@@ -104,6 +105,24 @@
 			<selector xpath=".//ts:card" />
 			<field xpath="@exclude" />
 		</keyref>-->
+	</element>
+	<element name="style">
+		<annotation>
+			<documentation>
+				Specify styles for the user-agent to use in the token list or token details screen.
+				Only a small subset of CSS selectors &amp; properties are allowed and are as follows:
+
+				Token Container (token list item or details view):
+				.ts-token-container { }
+				Allowed properties: border-radius, border, border-color, background-color, color, padding, font-family, font-size
+
+				Card Buttons &amp; button text container:
+				.ts-card-button { }
+				.ts-card-button span { }
+				Allowed properties: border-radius, border, border-color, background-color, color, padding, font-family, font-size
+			</documentation>
+		</annotation>
+		<complexType mixed="true" />
 	</element>
 	<element name="cards">
 		<complexType>
