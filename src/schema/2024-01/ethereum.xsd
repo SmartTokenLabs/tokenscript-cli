@@ -167,7 +167,8 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
-					<xs:attribute name="function" type="xs:NCName" use="optional"/>
+					<xs:attribute name="function" type="xs:NCName"/>
+					<xs:attribute name="paymaster" type="xs:IDREFS"/>
 				</xs:extension>
 			</xs:complexContent>
 		</xs:complexType>

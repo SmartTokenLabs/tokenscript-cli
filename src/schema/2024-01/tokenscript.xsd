@@ -46,6 +46,7 @@
 						</sequence>
 					</complexType>
 				</element>
+				<element minOccurs="0" maxOccurs="unbounded" ref="ts:paymaster"/>
 				<element minOccurs="0" maxOccurs="unbounded" ref="ts:selection"/>
 				<element ref="ts:cards"/>
 				<element minOccurs="0" ref="ts:grouping"/>
@@ -275,6 +276,13 @@
 			</sequence>
 			<attribute name="name" use="required" type="ID"/>
 			<attribute name="interface" type="NCName"/>
+		</complexType>
+	</element>
+	<element name="paymaster">
+		<complexType>
+			<attribute name="name" type="ID"/>
+			<attribute name="url" type="anyURI"/>
+			<attribute name="messagePrefix" type="string"/>
 		</complexType>
 	</element>
 	<element name="meta">
