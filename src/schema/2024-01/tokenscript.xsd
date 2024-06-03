@@ -122,7 +122,14 @@
 				Allowed properties: border-radius, border, border-color, background-color, color, padding, font-family, font-size
 			</documentation>
 		</annotation>
-		<complexType mixed="true" />
+		<complexType mixed="true">
+			<sequence>
+				<choice maxOccurs="unbounded">
+					<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>
+					<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+				</choice>
+			</sequence>
+		</complexType>
 	</element>
 	<element name="cards">
 		<complexType>
