@@ -31,7 +31,9 @@ export class InlineIncludes implements IBuildStep {
 
 			this.context.cli.log("Processing " + src);
 
-			let content = this.getIncludeContent(type, src);
+			const isUiStyle = elem.parentElement?.tagName === "ts:style"
+
+			let content = this.getIncludeContent(type, src, !isUiStyle);
 
 			let parent = elem.parentElement;
 
@@ -60,6 +62,8 @@ export class InlineIncludes implements IBuildStep {
 
 				parent.append(...contentElem.head.childNodes);
 				parent.append(...contentElem.body.childNodes);
+			} else if (isUiStyle) {
+				parent.innerHTML += content;
 			} else {
 				// TODO: This seems to cause issues with XML signing
 				//try {
@@ -82,7 +86,7 @@ export class InlineIncludes implements IBuildStep {
 		return content;
 	}
 
-	private getIncludeContent(type: string, src: string){
+	private getIncludeContent(type: string, src: string, addTags: boolean){
 
 		src = resolve(this.context.workspace, src);
 
@@ -96,11 +100,11 @@ export class InlineIncludes implements IBuildStep {
 				break;
 
 			case "css":
-				content = `<style>
-					/* <![CDATA[ */
+				content = `${addTags ? `<style>
+					/* <![CDATA[ */` : ""}
 					${content}
-					/* ]]> */
-				</style>`;
+					${addTags ? `/* ]]> */
+				</style>` : ""}`;
 				break;
 
 			case "js":
