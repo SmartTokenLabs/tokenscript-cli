@@ -43,6 +43,9 @@ select:hover {
 	color: #0B0B0B;
 	border: none;
 	cursor: pointer;
+}
+
+.ts-card-button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -51,6 +54,11 @@ select:hover {
 .btn > span {
 	margin: 0;
 	font-size: 14px;
+	color: inherit;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .btn-primary {
