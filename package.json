@@ -27,7 +27,7 @@
     "@peculiar/asn1-pkcs8": "^2.3.0",
     "@peculiar/asn1-schema": "^2.3.0",
     "@peculiar/asn1-x509": "^2.3.0",
-    "@peculiar/webcrypto": "^1.4.0",
+    "@peculiar/webcrypto": "^1.5.0",
     "@peculiar/x509": "^1.9.2",
     "@tokenscript/libxmljs2-xsd": "^0.32.0",
     "@tokenscript/xmldsigjs": "^2.5.2",
