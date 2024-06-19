@@ -60,7 +60,7 @@
     "@types/jsdom": "^20.0.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.59",
-    "@types/w3c-xmlserializer": "^2.0.2",
+    "@types/w3c-xmlserializer": "^2.0.4",
     "chai": "^4",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
