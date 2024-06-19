@@ -58,7 +58,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/inquirer": "^9.0.1",
     "@types/jsdom": "^20.0.0",
-    "@types/mocha": "^9.0.0",
+    "@types/mocha": "^10.0.6",
     "@types/node": "^16.11.59",
     "@types/w3c-xmlserializer": "^2.0.2",
     "chai": "^4",
