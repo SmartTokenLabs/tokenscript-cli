@@ -48,7 +48,7 @@
     "xml-formatter": "^3.6.0"
   },
   "devDependencies": {
-    "@oclif/test": "^2",
+    "@oclif/test": "^3",
     "@types/chai": "^4",
     "@types/cors": "^2.8.12",
     "@types/elliptic": "^6.4.14",
