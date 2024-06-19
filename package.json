@@ -56,7 +56,7 @@
     "@types/express-ws": "^3.0.1",
     "@types/filesystem": "^0.0.32",
     "@types/fs-extra": "^9.0.13",
-    "@types/inquirer": "^9.0.1",
+    "@types/inquirer": "^9.0.7",
     "@types/jsdom": "^20.0.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.59",
