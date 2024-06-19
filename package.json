@@ -59,7 +59,7 @@
     "@types/inquirer": "^9.0.1",
     "@types/jsdom": "^20.0.0",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.59",
+    "@types/node": "^20.14.5",
     "@types/w3c-xmlserializer": "^2.0.2",
     "chai": "^4",
     "eslint": "^7.32.0",
