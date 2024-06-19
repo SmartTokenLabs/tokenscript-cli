@@ -41,7 +41,7 @@
     "express-ws": "^5.0.2",
     "fs-extra": "^10.1.0",
     "inquirer": "^8.2.4",
-    "jsdom": "^20.0.0",
+    "jsdom": "^24.1.0",
     "key-encoder": "^2.0.3",
     "open": "^8.4.0",
     "replace-in-file": "^6.3.5",
