@@ -5,7 +5,7 @@
   "author": "Michael Wallace @micwallace",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SmartTokenLabs/TokenScript-SDK.git",
+    "url": "https://github.com/SmartTokenLabs/tokenscript-cli.git",
     "directory": "javascript/card-sdk"
   },
   "bin": {
