@@ -1,7 +1,7 @@
+///<reference path="../node_modules/@tokenscript/card-sdk/src/tokenscript.d.ts""/>
 
 function init(){
 
-	// @ts-ignore
 	web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
 		const currentTokenInstance = updatedTokens.currentInstance;
 

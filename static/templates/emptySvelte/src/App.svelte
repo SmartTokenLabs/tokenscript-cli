@@ -17,7 +17,7 @@
 	let page;
 
 	function routeChange() {
-		page = routingMap[token.level == 0 ? "#adopt" : document.location.hash] || NotFound;
+		page = routingMap[document.location.hash] || NotFound;
 	}
 
 	// @ts-ignore
