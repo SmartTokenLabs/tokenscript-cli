@@ -1,9 +1,15 @@
 TokenScript CLI
 =================
 
-A tool for managing TokenScript projects.
+TokenScript CLI is tool for managing TokenScript projects.
 
-It currently includes commands for creating projects based on a selection of templates, and building the project into a valid TSML.
+The CLI currently includes commands for:
+- Creating/initializing projects based on a set of inbuilt templates or contract ABIs
+- Building the project into a TSML and validating the output
+- Emulating a TokenScript in the browser with live reload
+- Signing & validating TokenScripts for distribution
+
+Note: ABI import support is experimental and only works for one template
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 
@@ -12,7 +18,7 @@ It currently includes commands for creating projects based on a selection of tem
 * [Development](#development)
 * [Commands](#commands)
 <!-- tocstop -->
-# Usage
+# Installation & Usage
 <!-- usage -->
 ```sh-session
 $ npm install -g @tokenscript/cli
@@ -27,9 +33,34 @@ USAGE
 ```
 <!-- usagestop -->
 
+## Creating a TokenScript project
+
+```shell
+$ tokenscript create my-project-dir
+```
+
+When executing this command you will be asked a series of questions according to the template you selected.
+It is recommended to use the Svelte or typescript template to benefit from type checking, including for [Card SDK](https://github.com/SmartTokenLabs/tokenscript-engine/tree/master/javascript/card-sdk) types.
+
+Once the project is successfully initialized you can build or emulate the project:
+
+```shell
+$ cd my-project-dir
+my-project-dir$ npm run build
+```
+
+If all goes well you should see a file in `./out/tokenscript.tsml`
+
+```shell
+my-project-dir$ npm run emulate
+```
+
+Your browser will open TokenScript viewer and load your project.
+You can make changes to your project and the CLI will rebuild & reload as you code.
+
 # Development
 
-TokenScript CLI isn't yet published as an NPM package, it needs to be installed and built, or run in development mode.
+The CLI is built using [oclif](https://oclif.io/).
 
 ## Development dependencies 
 
@@ -56,15 +87,14 @@ $ npm link
 
 Note: Rebuilding will update the global version
 
-## building the typescript project
+## Framework requirements
 
-```shell
-$ cd typescript project
-typescript-project$ npm i 
-typescript-project$ npm run build
-```
+TokenScript is compatible with almost any frontend framework. Currently only Svelte template is available but React is coming soon. 
+The only requirement is that the builder/bundler is capable of exporting to a deterministic set of files that can be referenced for inclusion within tokenscript.xml. 
 
-If all goes well you should see a file in `./out/tokenscript.tsml`
+It is recommended to export as a single page application and rely on document.location.hash for routing. 
+
+Please get in touch with us if you need assistance creating your own templates. 
 
 # Commands
 <!-- commands -->
