@@ -1,7 +1,7 @@
-// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import Loader from "../components/loader/loader";
 
+// @ts-ignore
 export const Mint: React.FC = ({ token }) => {
 	const [loading, setLoading] = useState(true);
 
