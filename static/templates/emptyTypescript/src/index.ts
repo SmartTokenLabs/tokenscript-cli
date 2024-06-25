@@ -2,7 +2,7 @@
 
 function init(){
 
-	web3.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
+	tokenscript.tokens.dataChanged = (oldTokens, updatedTokens, cardId) => {
 		const currentTokenInstance = updatedTokens.currentInstance;
 
 		let content = "";

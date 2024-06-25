@@ -2,19 +2,7 @@ import React, { useState, useEffect, FC } from "react";
 import { Info } from "./cards/Info";
 import { Mint } from "./cards/Mint";
 import { NotFound } from "./cards/NotFound";
-
-let tokenData: unknown;
-
-const dataChangedHandler = async (
-	oldTokens: unknown,
-	updatedTokens: unknown
-	// cardId: unknown
-) => {
-	tokenData = updatedTokens;
-};
-
-// @ts-ignore
-web3.tokens.dataChanged = dataChangedHandler;
+import {ITokenContextData} from "@tokenscript/card-sdk/dist/types";
 
 const App: FC = () => {
 	// add TokenScript Card views here
@@ -27,7 +15,7 @@ const App: FC = () => {
 	const [CurrentPageName, setCurrentPageName] = useState<CardName>(
 		CardName.Info
 	);
-	const [token, setToken] = useState();
+	const [token, setToken] = useState<ITokenContextData>();
 
 	const mapCardName = (card: string | null): CardName => {
 		switch (card) {
@@ -55,13 +43,12 @@ const App: FC = () => {
 			setCurrentPageName(mappedCardName);
 		};
 
-		// @ts-expect-error - web3 is not defined
-		web3.tokens.dataChanged = dataChangedHandler;
+		web3.tokens.dataChanged = (prevTokens, newTokens, id) => {
+			setToken(newTokens.currentInstance);
+		};
 
-		// @ts-ignore
-		if (tokenData && tokenData.currentInstance !== undefined) {
-			// @ts-ignore
-			setToken(tokenData.currentInstance);
+		if (web3.tokens.data.currentInstance) {
+			setToken(web3.tokens.data.currentInstance);
 		}
 
 		window.addEventListener("hashchange", routeChange);
@@ -72,7 +59,6 @@ const App: FC = () => {
 		};
 	}, []);
 
-	// @ts-ignore
 	return <CurrentPage token={token} />;
 };
 

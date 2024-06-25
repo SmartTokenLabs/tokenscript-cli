@@ -56,6 +56,9 @@ export class InlineIncludes implements IBuildStep {
 				let styleElems = contentElem.getElementsByTagName("style");
 
 				for (let s = 0; s < styleElems.length; s++) {
+					// React
+					styleElems[s].removeAttribute("crossorigin");
+					styleElems[s].removeAttribute("rel");
 
 					styleElems[s].innerHTML = "/*<![CDATA[*/ \r\n" + styleElems[s].innerHTML + "\r\n /*//]]>*/";
 				}

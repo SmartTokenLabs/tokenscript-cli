@@ -343,13 +343,14 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
-			<xs:attribute name="content" use="required">
+			<xs:attribute name="content">
 				<xs:annotation>
 					<xs:documentation>
 						This attribute gives the value associated with the http-equiv or name attribute, depending of the context.
 					</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
+			<xs:attribute name="charset" type="xs:string"/>
 			<xs:attribute name="scheme">
 				<xs:annotation>
 					<xs:documentation>
@@ -443,7 +444,6 @@
 			<xs:attribute name="media" type="MediaDesc"/>
 			<xs:attribute name="title" type="xs:string"/>
 			<xs:attribute fixed="preserve" ref="xml:space"/>
-			<xs:attribute name="crossorigin" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="script">

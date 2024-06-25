@@ -20,9 +20,15 @@ export class Templates {
 	static templatesList: ITemplateListItem[] = [
 		{
 			id: "emptySvelte",
-			name: "Empty Svelte Project",
+			name: "Empty Svelte Project - recommended",
 			description: "An empty TokenScript project with Svelte & Vite",
 			location: "templates/emptySvelte"
+		},
+		{
+			id: "emptyReact",
+			name: "Empty React Project - recommended",
+			description: "An empty TokenScript project with React & Vite",
+			location: "templates/emptyReact"
 		},
 		{
 			id: "emptyTypescript",

@@ -3,7 +3,6 @@
 	import context from "./lib/context";
 	import Info from "./routes/Info.svelte";
 	import NotFound from "./routes/NotFound.svelte";
-
 	import Mint from "./routes/Mint.svelte";
 
 	let token;
@@ -20,8 +19,7 @@
 		page = routingMap[document.location.hash] || NotFound;
 	}
 
-	// @ts-ignore
-	web3.tokens.dataChanged = async (oldTokens, updatedTokens, cardId) => {
+	tokenscript.tokens.dataChanged = async (oldTokens, updatedTokens, cardId) => {
 
 		if (initialised)
 			return;
