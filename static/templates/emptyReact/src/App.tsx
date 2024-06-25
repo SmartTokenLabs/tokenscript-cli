@@ -43,12 +43,12 @@ const App: FC = () => {
 			setCurrentPageName(mappedCardName);
 		};
 
-		web3.tokens.dataChanged = (prevTokens, newTokens, id) => {
+		tokenscript.tokens.dataChanged = (prevTokens, newTokens, id) => {
 			setToken(newTokens.currentInstance);
 		};
 
-		if (web3.tokens.data.currentInstance) {
-			setToken(web3.tokens.data.currentInstance);
+		if (tokenscript.tokens.data.currentInstance) {
+			setToken(tokenscript.tokens.data.currentInstance);
 		}
 
 		window.addEventListener("hashchange", routeChange);
