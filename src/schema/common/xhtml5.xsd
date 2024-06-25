@@ -427,6 +427,7 @@
 					</xs:documentation>
 				</xs:annotation>
 			</xs:attribute>
+			<xs:attribute name="crossorigin" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="style">
@@ -442,6 +443,7 @@
 			<xs:attribute name="media" type="MediaDesc"/>
 			<xs:attribute name="title" type="xs:string"/>
 			<xs:attribute fixed="preserve" ref="xml:space"/>
+			<xs:attribute name="crossorigin" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="script">
@@ -1529,6 +1531,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="crossorigin" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="figure">
@@ -1831,6 +1834,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="crossorigin" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="source">
@@ -1877,6 +1881,7 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:attribute>
+			<xs:attribute name="crossorigin" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 
