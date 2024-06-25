@@ -14,7 +14,7 @@ Note: ABI import support is experimental and only works for one template
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 
 <!-- toc -->
-* [Usage](#usage)
+* [Installation & Usage](#installation--usage)
 * [Development](#development)
 * [Commands](#commands)
 <!-- tocstop -->
@@ -25,7 +25,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.1.20 linux-x64 node-v18.18.2
+@tokenscript/cli/1.1.21 linux-x64 node-v18.18.2
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -128,7 +128,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [src/commands/build.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/build.ts)_
 
 ## `tokenscript certificate COMMAND`
 
@@ -153,7 +153,7 @@ DESCRIPTION
   Create a certificate request or sign an existing request.
 ```
 
-_See code: [src/commands/certificate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/certificate.ts)_
+_See code: [src/commands/certificate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/certificate.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -161,17 +161,17 @@ Create a new TokenScript project
 
 ```
 USAGE
-  $ tokenscript create [DIRECTORY] [-t emptySvelte|emptyTypescript|empty] [-h <value>]
+  $ tokenscript create [DIRECTORY] [-t emptySvelte|emptyReact|emptyTypescript|empty] [-h <value>]
 
 FLAGS
   -h, --hardHat=<value>    Directory of HardHat project
-  -t, --template=<option>  <options: emptySvelte|emptyTypescript|empty>
+  -t, --template=<option>  <options: emptySvelte|emptyReact|emptyTypescript|empty>
 
 DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [src/commands/create.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/create.ts)_
 
 ## `tokenscript emulate`
 
@@ -188,7 +188,7 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [src/commands/emulate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/emulate.ts)_
+_See code: [src/commands/emulate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/emulate.ts)_
 
 ## `tokenscript help [COMMANDS]`
 
@@ -465,7 +465,7 @@ DESCRIPTION
   Refresh a HardHat project
 ```
 
-_See code: [src/commands/refresh.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/refresh.ts)_
+_See code: [src/commands/refresh.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/refresh.ts)_
 
 ## `tokenscript sign`
 
@@ -486,7 +486,7 @@ DESCRIPTION
   sign the built .tsml
 ```
 
-_See code: [src/commands/sign.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/sign.ts)_
+_See code: [src/commands/sign.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/sign.ts)_
 
 ## `tokenscript validate`
 
@@ -500,5 +500,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [src/commands/validate.ts](https://github.com/TokenScript/tokenscript-cli/blob/v1.1.20/src/commands/validate.ts)_
+_See code: [src/commands/validate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.1.21/src/commands/validate.ts)_
 <!-- commandsstop -->
