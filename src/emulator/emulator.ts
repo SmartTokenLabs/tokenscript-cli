@@ -6,6 +6,7 @@ import expressWs from "express-ws";
 import fs, {existsSync} from "fs";
 import cors from "cors";
 import {join} from "path";
+import {useTokenscriptBuildCommand} from "../utils";
 
 export class Emulator {
 
@@ -22,7 +23,11 @@ export class Emulator {
 
 	buildTimer?: NodeJS.Timeout;
 
-	constructor(private emulatorHost?: string|undefined) {
+	buildCommand: string;
+
+	constructor(private emulatorHost?: string|undefined, private args: {[key: string]: any} = {}) {
+		process.env.TOKENSCRIPT_ENV = this.args.environment;
+		this.buildCommand = useTokenscriptBuildCommand(this.projectDir) ? "../../bin/dev build" : "npm run build";
 	}
 
 	startEmulator() {
@@ -126,9 +131,7 @@ export class Emulator {
 
 		console.log("Build started..");
 
-		const buildCommand = existsSync(join(this.projectDir, "package.json")) ? "npm run build" : "tokenscript build";
-
-		this.buildProcess = exec.exec("cd " + this.projectDir + " && " + buildCommand, (error, stdout, stderr) => {
+		this.buildProcess = exec.exec("cd " + this.projectDir + " && " + this.buildCommand, (error, stdout, stderr) => {
 
 			if (error){
 				const errMsg = "Failed to build TokenScript project: ";

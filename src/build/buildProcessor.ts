@@ -7,6 +7,8 @@ import {InlineIncludes} from "./steps/inlineIncludes";
 import {Command} from "@oclif/core";
 import {JSDOM} from "jsdom";
 import {resolve} from "path";
+import {ApplyEnvironment} from "./steps/applyEnvironment";
+import {BuildWeb} from "./steps/buildWeb";
 
 export interface IBuildStep {
 	runBuildStep(): void
@@ -16,8 +18,10 @@ export class BuildProcessor {
 
 	static BUILD_STEPS = [
 		PrepareOutputDirectory,
+		BuildWeb,
 		CanonicalizeXml,
 		InlineIncludes,
+		ApplyEnvironment,
 		ValidateXml
 	];
 
@@ -30,6 +34,7 @@ export class BuildProcessor {
 	constructor(
 		public workspace: string,
 		public cli: Command,
+		public args: {[key: string]: any},
 		private statusCallback: (status: string) => void
 	) {
 
@@ -40,6 +45,8 @@ export class BuildProcessor {
 	}
 
 	async build(){
+
+		this.cli.log(`\r\nBuilding TokenScript with ${this.args.environment} environment`);
 
 		for (let BuildStep of BuildProcessor.BUILD_STEPS){
 
@@ -87,14 +94,7 @@ export class BuildProcessor {
 
 		this.xmlString = new XMLSerializer().serializeToString(this.xmlDoc);
 
-		//this.xmlString = serialize(this.xmlDoc, { requireWellFormed: false });
-
-		//this.xmlString = this.xmlDoc.documentElement.outerHTML;
-
 		this.saveXmlOutput();
-
-		// TODO: Fix: For some reason validation fails in some cases unless the XML string is reloaded from the disk.
-		this.xmlString = null;
 	}
 
 	public getOutputXmlPath(){
@@ -112,8 +112,6 @@ export class BuildProcessor {
 		const parser = new DOMParser;
 
 		return parser.parseFromString(xmlString, type);
-
-		//this.xmlDoc = new DOMParser().parseFromString(this.getXmlString(), 'text/xml');
 	}
 
 }

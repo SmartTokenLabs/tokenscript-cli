@@ -28,6 +28,10 @@
 						"description": "The token in the project that will be replaced with a user inputted value. This should be distinct & unique",
 						"type": "string"
 					},
+					"isEnvironment": {
+						"description": "Whether to treat this field as an environment variable. If true, the value will only be replaced in the tokenscript.xml at build time and multiple targets can be specified",
+						"type": "boolean"
+					},
 					"updatePrefix": {
 						"description": "Increase accuracy when updating already initialized templates",
 						"type": "string"
