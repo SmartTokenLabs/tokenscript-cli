@@ -135,7 +135,7 @@
 		<complexType>
 			<sequence>
 				<element name="viewContent" minOccurs="0" maxOccurs="unbounded">
-					<complexType>
+					<complexType mixed="true">
 						<sequence>
 							<choice maxOccurs="unbounded">
 								<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>

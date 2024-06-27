@@ -2320,7 +2320,7 @@
 			<xs:choice maxOccurs="unbounded" minOccurs="0">
 				<xs:group ref="flowContent"/>
 			</xs:choice>
-			<xs:attribute name="onclick"/>
+			<xs:attributeGroup ref="coreattrs"/>
 			<xs:attribute name="name"/>
 			<xs:attribute name="value"/>
 			<xs:attribute default="submit" name="type">
