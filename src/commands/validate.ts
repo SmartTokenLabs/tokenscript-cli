@@ -20,7 +20,7 @@ export default class Validate extends Command {
 
 	async run(): Promise<void> {
 
-		let buildProcessor = new BuildProcessor(process.cwd(), this, (status) => {
+		let buildProcessor = new BuildProcessor(process.cwd(), this, {}, (status) => {
 			CliUx.ux.action.start(status);
 		});
 

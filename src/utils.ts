@@ -1,5 +1,8 @@
 // Util functions copied from attestation JS library
 
+import {existsSync, readFileSync} from "fs";
+import {join} from "path";
+
 export function hexStringToArray(str: string = '') {
 	if (str.substr(0,2).toLowerCase() === "0x") {
 		str = str.substr(2);
@@ -121,4 +124,16 @@ export function isAddress(address: string) {
     } else {
 		return true;
 	}*/
+}
+
+export function useTokenscriptBuildCommand(projectDir: string){
+
+	const path = join(projectDir, "package.json");
+
+	if (existsSync(path)){
+		const packageJson = JSON.parse(readFileSync(path, "utf8"));
+		return !!packageJson.scripts["ts:buildWeb"];
+	}
+
+	return true
 }

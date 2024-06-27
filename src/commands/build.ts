@@ -1,13 +1,22 @@
-import {CliUx, Command} from "@oclif/core";
+import {CliUx, Command, Flags} from "@oclif/core";
 import {BuildProcessor} from "../build/buildProcessor";
 
 export default class Build extends Command {
 
 	static description = 'Build the tokenscript project into a .tsml'
 
-	static flags = {}
+	static flags = {
+		outputTemplate: Flags.boolean({char: 't', description: 'Output a .tsml template that can be used to serve TokenScripts on-the-fly for multiple contracts', default: false}),
+	}
 
-	static args = []
+	static args = [
+		{
+			name: 'environment',
+			description: "The environment configuration to use for the build",
+			required: false,
+			default: process.env.TOKENSCRIPT_ENV ?? "default"
+		}
+	]
 
 	async catch(error: Error|any) {
 
@@ -20,7 +29,9 @@ export default class Build extends Command {
 
 	async run(): Promise<void> {
 
-		let buildProcessor = new BuildProcessor(process.cwd(), this, (status) => {
+		const {args} = await this.parse(Build);
+
+		const buildProcessor = new BuildProcessor(process.cwd(), this, args, (status) => {
 			CliUx.ux.action.start(status);
 		});
 

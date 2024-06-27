@@ -1,6 +1,7 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
 import * as fs from "fs";
 import {resolve} from "path";
+import {XMLSerializer} from "@xmldom/xmldom";
 
 export class InlineIncludes implements IBuildStep {
 

@@ -8,7 +8,14 @@ export default class Emulate extends Command {
 		emulatorHost: Flags.string({char: "e", required: false, default: ""}),
 	}
 
-	static args = []
+	static args = [
+		{
+			name: 'environment',
+			description: "The environment configuration to use for the build",
+			required: false,
+			default: process.env.TOKENSCRIPT_ENV ?? "default"
+		}
+	]
 
 	async catch(error: Error|any) {
 
@@ -21,9 +28,9 @@ export default class Emulate extends Command {
 
 	async run(): Promise<void> {
 
-		const {flags} = await this.parse(Emulate);
+		const {flags, args} = await this.parse(Emulate);
 
-		const emulator = new Emulator(flags.emulatorHost as string);
+		const emulator = new Emulator(flags.emulatorHost as string, args);
 
 		this.log("Starting emulator...");
 
