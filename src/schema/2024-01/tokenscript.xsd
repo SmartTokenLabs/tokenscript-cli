@@ -19,8 +19,8 @@
 			schemaLocation="../common/xmldsig-core-schema.xsd"/>
 
 	<!-- Importing XHTML namespace. use xhtml1-strict.xsd to get xhtml:Block -->
-	<import namespace="http://www.w3.org/1999/xhtml"
-			schemaLocation="../common/xhtml5.xsd"/>
+	<!--<import namespace="http://www.w3.org/1999/xhtml"
+			schemaLocation="../common/xhtml5.xsd"/>-->
 
 	<import namespace="urn:ietf:params:xml:ns:asnx"
 			schemaLocation="asnx.xsd"/>
@@ -126,7 +126,7 @@
 			<sequence>
 				<choice maxOccurs="unbounded">
 					<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>
-					<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+					<any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 				</choice>
 			</sequence>
 		</complexType>
@@ -139,7 +139,7 @@
 						<sequence>
 							<choice maxOccurs="unbounded">
 								<element name="include" type="ts:viewInclude" minOccurs="0" maxOccurs="unbounded"/>
-								<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+								<any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 							</choice>
 						</sequence>
 						<attribute name="name" type="string" use="required" />
@@ -334,7 +334,7 @@
 					</complexType>
 				</element>
 				<element name="include" minOccurs="0" maxOccurs="unbounded" type="ts:viewInclude"/>
-				<any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="unbounded"/>
+				<any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
 			</choice>
 		</sequence>
 		<attribute ref="xml:lang"/>
