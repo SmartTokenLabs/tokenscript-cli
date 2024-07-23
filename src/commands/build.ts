@@ -14,7 +14,7 @@ export default class Build extends Command {
 			name: 'environment',
 			description: "The environment configuration to use for the build",
 			required: false,
-			default: process.env.TOKENSCRIPT_ENV ?? "default"
+			default: process.env.TOKENSCRIPT_ENV ? process.env.TOKENSCRIPT_ENV : "default"
 		}
 	]
 

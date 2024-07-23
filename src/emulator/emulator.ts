@@ -27,7 +27,7 @@ export class Emulator {
 
 	constructor(private emulatorHost?: string|undefined, private args: {[key: string]: any} = {}) {
 		process.env.TOKENSCRIPT_ENV = this.args.environment;
-		this.buildCommand = useTokenscriptBuildCommand(this.projectDir) ? "../../bin/dev build" : "npm run build";
+		this.buildCommand = useTokenscriptBuildCommand(this.projectDir) ? "tokenscript build" : "npm run build";
 	}
 
 	startEmulator() {
