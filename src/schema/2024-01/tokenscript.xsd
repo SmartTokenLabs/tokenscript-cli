@@ -52,6 +52,15 @@
 				<element minOccurs="0" ref="ts:grouping"/>
 				<element minOccurs="0" ref="ts:ordering"/>
 				<element name="attribute" minOccurs="0" maxOccurs="unbounded" type="ts:attributeWithDistinct"/>
+				<element name="transaction" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<complexContent>
+							<extension base="ts:transaction">
+								<attribute name="name" type="NCName" use="required"/>
+							</extension>
+						</complexContent>
+					</complexType>
+				</element>
 				<element minOccurs="0" maxOccurs="unbounded" ref="dsig:Signature"/>
 			</sequence>
 			<attribute name="custodian" type="boolean" default="false"/>
@@ -201,7 +210,7 @@
 				 them to <transaction> too early -->
 			<element minOccurs="0" name="input" type="ts:tokens"/>
 			<element minOccurs="0" name="output" type="ts:tokens"/>
-			<element minOccurs="0" ref="ts:transaction"/>
+			<element name="transaction" minOccurs="0" type="ts:transaction"/>
 			<element minOccurs="0" maxOccurs="unbounded" name="guide-view" type="ts:view">
 				<unique name="guideView-uniqueIncludeSrc">
 					<selector xpath="ts:include" />
@@ -312,6 +321,15 @@
 				<element name="iconUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 				<element name="imageUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
 				<element name="backgroundImageUrl" minOccurs="0" maxOccurs="unbounded" type="ts:meta-tag" />
+				<element name="env" minOccurs="0" maxOccurs="unbounded">
+					<complexType>
+						<simpleContent>
+							<extension base="string">
+								<attribute name="name" type="string"/>
+							</extension>
+						</simpleContent>
+					</complexType>
+				</element>
 			</choice>
 		</complexType>
 	</element>
@@ -462,13 +480,11 @@
 			<enumeration value="1.3.6.1.4.1.1466.115.121.1.36"/><!-- NumericString -->
 		</restriction>
 	</simpleType>
-	<element name="transaction">
-		<complexType>
-			<choice>
-				<element ref="ethereum:transaction"/>
-			</choice>
-		</complexType>
-	</element>
+	<complexType name="transaction">
+		<choice>
+			<element ref="ethereum:transaction"/>
+		</choice>
+	</complexType>
 	<element name="origins">
 		<complexType>
 			<choice maxOccurs="unbounded">
