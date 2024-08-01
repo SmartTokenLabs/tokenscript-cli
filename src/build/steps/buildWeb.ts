@@ -1,5 +1,5 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
-import {useTokenscriptBuildCommand} from "../../utils";
+import {hasWebBuildCommand} from "../../utils";
 import exec from "child_process";
 
 export class BuildWeb implements IBuildStep {
@@ -9,7 +9,7 @@ export class BuildWeb implements IBuildStep {
 
 	async runBuildStep(): Promise<void> {
 
-		if (!useTokenscriptBuildCommand(this.context.workspace)){
+		if (!hasWebBuildCommand(this.context.workspace)){
 			return;
 		}
 

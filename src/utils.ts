@@ -132,8 +132,23 @@ export function useTokenscriptBuildCommand(projectDir: string){
 
 	if (existsSync(path)){
 		const packageJson = JSON.parse(readFileSync(path, "utf8"));
-		return !!packageJson.scripts["ts:buildWeb"];
+
+		if (!!packageJson.scripts["ts:buildWeb"])
+			return true;
+
+		return !packageJson.scripts["ts:build"];
 	}
 
 	return true
+}
+
+export function hasWebBuildCommand(projectDir: string){
+	const path = join(projectDir, "package.json");
+
+	if (existsSync(path)){
+		const packageJson = JSON.parse(readFileSync(path, "utf8"));
+		return !!packageJson.scripts["ts:buildWeb"];
+	}
+
+	return false;
 }
