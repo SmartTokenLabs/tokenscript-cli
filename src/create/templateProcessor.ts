@@ -63,7 +63,7 @@ export class TemplateProcessor {
 		this.templateData.templateFields.forEach((field, index) => {
 			if (!field.isEnvironment)
 				return;
-			projectFile.environment.default[index] = values[index];
+			projectFile.environment.default[field.token] = values[index];
 		})
 
 		fs.writeFileSync(join(this.workspace, "tokenscript-project.json"), JSON.stringify(projectFile, null, "\t"));

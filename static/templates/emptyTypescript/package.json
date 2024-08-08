@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "Plain typescript project for TokenScript",
   "scripts": {
-    "start": "webpack serve --open",
-    "build": "webpack build && npm run build:ts",
-    "build:ts": "tokenscript build",
+    "start": "tokenscript emulate",
+    "build": "tokenscript build",
+    "ts:buildWeb": "webpack build",
     "sign": "tokenscript sign",
     "emulate": "tokenscript emulate",
     "test": "echo \"Error: no test specified\" && exit 1"
