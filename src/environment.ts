@@ -1,14 +1,21 @@
 import {resolve} from "path";
 import fs from "fs";
 
-export function getEnvironment(workspaceUrl: string, envName: string = "default"){
-
+export function getProjectFile(workspaceUrl: string){
 	const configPath = resolve(workspaceUrl, "tokenscript-project.json");
 
 	if (!fs.existsSync(configPath))
-		return {};
+		return {
+			$schema: "https://tokenscript.org/schemas/project/tokenscript-project.schema.json",
+			environment: { default: {} }
+		};
 
-	const projectConfig = JSON.parse(fs.readFileSync(configPath, "utf8"));
+	return JSON.parse(fs.readFileSync(configPath, "utf8"))
+}
+
+export function getEnvironment(workspaceUrl: string, envName: string = "default"){
+
+	const projectConfig = getProjectFile(workspaceUrl);
 
 	let env = {...projectConfig.environment.default};
 

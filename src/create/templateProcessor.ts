@@ -1,7 +1,7 @@
 import {replaceInFile} from "replace-in-file";
 import * as fs from "fs";
 import {join} from "path";
-import { Null } from "asn1js";
+import {getProjectFile} from "../environment";
 
 export interface ITemplateFields {
 	name: string;
@@ -10,6 +10,7 @@ export interface ITemplateFields {
 	prompt: string;
 	options?: string[];
 	value?: string;
+	isEnvironment?: boolean;
 }
 
 export interface ITemplateData {
@@ -54,11 +55,23 @@ export class TemplateProcessor {
 		}
 
 		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
+
+		// Create project file with environment config and other settings
+		const projectFile = getProjectFile(this.workspace);
+
+		// Update environment variables
+		this.templateData.templateFields.forEach((field, index) => {
+			if (!field.isEnvironment)
+				return;
+			projectFile.environment.default[index] = values[index];
+		})
+
+		fs.writeFileSync(join(this.workspace, "tokenscript-project.json"), JSON.stringify(projectFile, null, "\t"));
 	}
 
 	async updateHardHat(file: string) {
 
-		let hardhatRelPath = { directory: join(this.workspace, file) }; 
+		let hardhatRelPath = { directory: join(this.workspace, file) };
 		this.templateData.hardhat?.push(hardhatRelPath);
 		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
 	}
@@ -80,10 +93,18 @@ export class TemplateProcessor {
 			filesForReplace.push(join(this.workspace, file));
 		}
 
+		const nonEnvironmentValues: any[] = [];
+		const nonEnvironmentFields = this.templateData.templateFields.filter((field, index) => {
+			if (field.isEnvironment === true)
+				return false;
+			nonEnvironmentValues.push(values[index]);
+			return true;
+		});
+
 		return await replaceInFile({
 			files: filesForReplace,
 			allowEmptyPaths: true,
-			from: this.templateData.templateFields.map((field) => {
+			from: nonEnvironmentFields.map((field) => {
 
 				if (field.value){
 					let value = this.escapeRegExp(field.value);
@@ -97,8 +118,8 @@ export class TemplateProcessor {
 
 				return new RegExp("\\\$tst\\\{" + field.token + "\\\}", 'g');
 			}),
-			to: values.map((value, index) => {
-				let template = this.templateData.templateFields[index];
+			to: nonEnvironmentValues.map((value, index) => {
+				let template = nonEnvironmentFields[index];
 
 				if (template.value && template.updatePrefix)
 					return "$1" + value;
@@ -134,13 +155,13 @@ export class TemplateProcessor {
 	insertTrimmedName(values: any[]): any[] {
 		const trimIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_TRIM');
 		const nameIndex = this.templateData.templateFields.findIndex((element) => element.token === 'TOKENSCRIPT_NAME');
-		
+
 		//If trim name exists (running a re-create) remove it first case the TokenScript name changed
 		if (trimIndex >= 0) {
 			this.templateData.templateFields.splice(trimIndex, 1);
 			values.splice(trimIndex, 1);
 		}
-		
+
 		if (nameIndex >= 0) {
 			const trimVal = values[nameIndex].replace(/\s/g, "-");
 			let trimEntry: ITemplateFields = { name: 'Trimmed Name', token: 'TOKENSCRIPT_TRIM', prompt: '' };

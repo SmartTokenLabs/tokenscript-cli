@@ -18,13 +18,15 @@
     {
       "name": "Contract address",
       "token": "CONTRACT_ADDRESS",
-      "prompt": "Enter the ethereum contract address for the TokenScript"
+      "prompt": "Enter the ethereum contract address for the TokenScript",
+	  "isEnvironment": true
     },
     {
       "name": "Contract chain",
       "token": "CONTRACT_CHAIN",
       "updatePrefix": "network=\"",
-      "prompt": "Enter the ethereum chainID for the TokenScript"
+      "prompt": "Enter the ethereum chainID for the TokenScript",
+	  "isEnvironment": true
     },
     {
       "name": "Description",

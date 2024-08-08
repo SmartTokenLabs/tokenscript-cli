@@ -6,7 +6,6 @@
 	import Mint from "./routes/Mint.svelte";
 
 	let token;
-	let initialised = false;
 
 	const routingMap = {
 		'#info': Info,
@@ -21,13 +20,8 @@
 
 	tokenscript.tokens.dataChanged = async (oldTokens, updatedTokens, cardId) => {
 
-		if (initialised)
-			return;
-
 		context.setToken(updatedTokens.currentInstance);
 		token = updatedTokens.currentInstance;
-
-		initialised = true;
 
 		routeChange();
 	};
