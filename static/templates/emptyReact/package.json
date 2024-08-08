@@ -19,7 +19,7 @@
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
-    "@tokenscript/card-sdk": "^1.2.0",
+    "@tokenscript/card-sdk": "^1.4.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
