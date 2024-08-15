@@ -157,7 +157,7 @@ export default class ABIToScript {
 
     /**
      * Used for adding additional cards to an existing tokenscript; can handle external contracts
-     * 
+     *
      * @param abi ABI of contract we are pulling functions from
      * @param tokenAddress Pointer to contract (or existing contract)
      */
@@ -277,7 +277,7 @@ export default class ABIToScript {
         return attrs;
     }
 
-    private async setValuesFromABI(abi: any, contractName: string, originName: string, funcGenerationList: string[], attrGenerationList: string[], 
+    private async setValuesFromABI(abi: any, contractName: string, originName: string, funcGenerationList: string[], attrGenerationList: string[],
             infoCardAttrNames: string[], existingAttrs: string[], addInfo: boolean) {
         let attributesToAdd = [];
         let eventsToAdd: any[] = [];
@@ -561,7 +561,7 @@ export default class ABIToScript {
     private getModuleBlock(attrName: string, syntax: string) {
         const attrNameCap = this.capitaliseFirstChar(attrName);
         const valueStyle = syntax == 'address' ? "valueSmall" : "value";
-        return `<div class="card"><div class="card-image"> 
+        return `<div class="card"><div class="card-image">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <g fill="none" fill-rule="evenodd">
                 <circle fill="#597DF2" cx="12" cy="12" r="12"/>
@@ -571,7 +571,7 @@ export default class ABIToScript {
                 <path fill="#BDCBFA" d="m6 11.314 6 3.356V8.73z"/>
                 <path fill="#7B96F5" d="m12 14.67 6-3.356-6-2.584z"/>
             </g>
-        </svg>  			    
+        </svg>
         </div>
         <div class="text">
             <p class="title">${attrNameCap}</p>
@@ -586,7 +586,7 @@ export default class ABIToScript {
         switch (syntax) {
             case "uint":
             case "int":
-                //insert value code, assuming that 
+                //insert value code, assuming that
                 jSBlock += `value_${attrName} = currentTokenInstance.${attrName}\n`;
                 jSBlock += `//value = Math.floor(1.0 * (currentTokenInstance.${attrName} / 10 ** 18) * 10000) / 10000; // <-- use for decimals 18 return value\n`;
                 break;
@@ -740,7 +740,7 @@ export default class ABIToScript {
 
     /**
      * Find all Attribute and Card names, and contracts in the TokenScript
-     * 
+     *
      * @returns array of contracts, card and attribute names
      */
     private readTokenScriptDetails(): { contracts: ContractLocator[], cards: string[], attributes: string[], origin: string, attributeDetails: ScannedFunction[] } {
@@ -803,7 +803,7 @@ export default class ABIToScript {
         return inputList;
     }
 
-    
+
     private parseCardNames(node: Node): string[] {
         let cards: string[] = [];
         let child = node.firstChild;
@@ -879,7 +879,7 @@ export default class ABIToScript {
     private parseOrigin(node: Node): string {
         let child = node.firstChild;
         let origin: string = "";
-        
+
         while (child) {
             let nextChild = child.nextSibling;
             if (child.nodeName == 'ts:ethereum') {
@@ -897,7 +897,7 @@ export default class ABIToScript {
 
         return origin;
     }
-    
+
     private async fillCardDetails(fName: string, func: any, attrList: any[]) {
         let added: boolean = false;
 
@@ -1046,7 +1046,7 @@ export default class ABIToScript {
             case "1.3.6.1.4.1.1466.115.121.1.15":
                 return "string";
             default:
-                return "string";         
+                return "string";
         }
     }
 

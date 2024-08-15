@@ -1,5 +1,4 @@
 import {BuildProcessor, IBuildStep} from "../buildProcessor";
-import {getEnvironment} from "../../environment";
 
 export class ApplyEnvironment implements IBuildStep {
 
@@ -12,7 +11,7 @@ export class ApplyEnvironment implements IBuildStep {
 
 		let doc = this.context.getXmlString();
 
-		const env = getEnvironment(this.context.workspace, this.context.args.environment);
+		const env = this.context.getEnvironment(this.context.args.environment);
 
 		for (const key in env){
 			doc = doc.replace(new RegExp("\\\$tst\\\{" + key + "\\\}", 'g'), env[key]);

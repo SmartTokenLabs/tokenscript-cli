@@ -1,35 +1,29 @@
-import fs from "fs";
-import {XMLSerializer} from "@xmldom/xmldom";
 import {PrepareOutputDirectory} from "./steps/prepareOutputDirectory";
 import {CanonicalizeXml} from "./steps/canonicalizeXml";
 import {ValidateXml} from "./steps/validateXml";
 import {InlineIncludes} from "./steps/inlineIncludes";
 import {Command} from "@oclif/core";
-import {JSDOM} from "jsdom";
 import {resolve} from "path";
 import {ApplyEnvironment} from "./steps/applyEnvironment";
 import {BuildWeb} from "./steps/buildWeb";
+import {ProjectContext} from "../projectContext";
 
 export interface IBuildStep {
 	runBuildStep(): void
 }
 
-export class BuildProcessor {
+export class BuildProcessor extends ProjectContext {
 
 	static BUILD_STEPS = [
 		PrepareOutputDirectory,
 		BuildWeb,
-		CanonicalizeXml,
 		InlineIncludes,
 		ApplyEnvironment,
+		CanonicalizeXml,
 		ValidateXml
 	];
 
 	static OUTPUT_DIR = "out";
-	static SRC_XML_FILE = "tokenscript.xml";
-
-	private xmlString?: string|null = null;
-	private xmlDoc: Document|null = null;
 
 	constructor(
 		public workspace: string,
@@ -37,7 +31,7 @@ export class BuildProcessor {
 		public args: {[key: string]: any},
 		private statusCallback: (status: string) => void
 	) {
-
+		super(workspace);
 	}
 
 	updateStatus(status: string){
@@ -69,49 +63,7 @@ export class BuildProcessor {
 
 	}
 
-	getXmlString(){
-		if (!this.xmlString){
-			this.xmlString = fs.readFileSync(resolve(this.workspace, BuildProcessor.SRC_XML_FILE), 'utf-8');
-		}
-		return this.xmlString;
-	}
-
-	getXmlDoc(){
-		if (!this.xmlDoc){
-			this.xmlDoc = this.parseXml(this.getXmlString());
-		}
-		return this.xmlDoc;
-	}
-
-	setXmlString(xml: string){
-		this.xmlDoc = null;
-		this.xmlString = xml;
-		this.saveXmlOutput();
-	}
-
-	setXmlDoc(xmlDoc: Document){
-		this.xmlDoc = xmlDoc;
-
-		this.xmlString = new XMLSerializer().serializeToString(this.xmlDoc);
-
-		this.saveXmlOutput();
-	}
-
 	public getOutputXmlPath(){
 		return resolve(this.workspace, BuildProcessor.OUTPUT_DIR, "tokenscript.tsml");
 	}
-
-	private saveXmlOutput(){
-		fs.writeFileSync(this.getOutputXmlPath(), this.xmlString!!);
-	}
-
-	public parseXml(xmlString: string, type: DOMParserSupportedType = "text/xml"){
-
-		const dom = new JSDOM("");
-		const DOMParser = dom.window.DOMParser;
-		const parser = new DOMParser;
-
-		return parser.parseFromString(xmlString, type);
-	}
-
 }

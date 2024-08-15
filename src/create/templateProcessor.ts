@@ -1,7 +1,7 @@
 import {replaceInFile} from "replace-in-file";
 import * as fs from "fs";
 import {join} from "path";
-import {getProjectFile} from "../environment";
+import {ProjectContext} from "../projectContext";
 
 export interface ITemplateFields {
 	name: string;
@@ -21,13 +21,13 @@ export interface ITemplateData {
 }
 
 
-export class TemplateProcessor {
+export class TemplateProcessor extends ProjectContext {
 
 	constructor(
 		private templateData: ITemplateData,
-		private workspace: string
+		workspace: string
 	) {
-
+		super(workspace);
 	}
 
 	async processTemplateUpdate(values: any[]) {
@@ -57,7 +57,7 @@ export class TemplateProcessor {
 		fs.writeFileSync(join(this.workspace, "tstemplate.json"), JSON.stringify(this.templateData, null, "\t"));
 
 		// Create project file with environment config and other settings
-		const projectFile = getProjectFile(this.workspace);
+		const projectFile = this.getProjectSettings();
 
 		// Update environment variables
 		this.templateData.templateFields.forEach((field, index) => {
@@ -66,7 +66,8 @@ export class TemplateProcessor {
 			projectFile.environment.default[field.token] = values[index];
 		})
 
-		fs.writeFileSync(join(this.workspace, "tokenscript-project.json"), JSON.stringify(projectFile, null, "\t"));
+		this.setProjectSettings(projectFile);
+		this.saveProjectSettings();
 	}
 
 	async updateHardHat(file: string) {
