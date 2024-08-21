@@ -106,7 +106,8 @@ export default class Create extends Command {
 		if (fs.existsSync(join(this.dir, "package.json"))) {
 			try {
 				CliUx.ux.action.start("Running NPM install...");
-				exec.execSync("cd " + this.dir + " && npm i");
+				process.chdir(this.dir);
+				exec.execSync("npm i");
 			} catch (e: any) {
 				CliUx.ux.error(e);
 				CliUx.ux.info("Failed to run 'npm i', please perform this step manually");

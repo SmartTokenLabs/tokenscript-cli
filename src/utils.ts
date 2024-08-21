@@ -132,11 +132,7 @@ export function useTokenscriptBuildCommand(projectDir: string){
 
 	if (existsSync(path)){
 		const packageJson = JSON.parse(readFileSync(path, "utf8"));
-
-		if (!!packageJson.scripts["ts:buildWeb"])
-			return true;
-
-		return !packageJson.scripts["ts:build"];
+		return !!packageJson.scripts["ts:buildWeb"];
 	}
 
 	return true

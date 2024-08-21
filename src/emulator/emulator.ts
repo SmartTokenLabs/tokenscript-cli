@@ -131,7 +131,7 @@ export class Emulator {
 
 		console.log("Build started..");
 
-		this.buildProcess = exec.exec("cd " + this.projectDir + " && " + this.buildCommand, (error, stdout, stderr) => {
+		this.buildProcess = exec.exec(this.buildCommand, (error, stdout, stderr) => {
 
 			if (error){
 				const errMsg = "Failed to build TokenScript project: ";
