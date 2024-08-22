@@ -16,7 +16,7 @@ export class ValidateXml implements IBuildStep {
 		let ns = doc.documentElement.getAttribute("xmlns:ts");
 
 		if (!ns)
-			throw new Error("Could not find namespace in XML. Are you missing a namespace declaration?");
+			throw new Error("Could not find namespace in XML. Are you missing a namespace declaration? Are there invalid characters in your tokenscript.xml?");
 
 		const versionMatch = ns!!.match(/([0-9]{4})\/([0-9]{2})/g);
 
