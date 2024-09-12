@@ -451,7 +451,7 @@
 	</element>
 	<complexType name="attribute">
 		<sequence>
-			<element name="type">
+			<element name="type" minOccurs="0">
 				<complexType>
 					<sequence>
 						<element name="syntax"/>

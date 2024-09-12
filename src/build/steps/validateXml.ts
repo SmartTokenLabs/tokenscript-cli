@@ -39,7 +39,7 @@ export class ValidateXml implements IBuildStep {
 			const errMsg = "XML Validation Errors: \r\n" +
 				errors.map((error: any) => {
 					return "- " + error.message.trim() + " (line " + error.line + ", column " + error.column + ")";
-				}).join("\r\n");
+				}).join("\r\n") + "\r\n" + "Are you using the right schema version?";
 
 			throw new Error(errMsg);
 		}
