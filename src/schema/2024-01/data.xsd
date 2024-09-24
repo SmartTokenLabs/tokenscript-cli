@@ -117,6 +117,7 @@
                 <xs:element name="bytes32" type="variable"/>
                 <xs:element name="address" type="variable"/>
 				<xs:element name="struct" type="variable"/>
+				<xs:element name="abi" type="variable"/>
             </xs:choice>
 			<xs:attribute name="ref" type="xs:string"/>
         </xs:complexType>
