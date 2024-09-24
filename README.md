@@ -25,7 +25,7 @@ $ npm install -g @tokenscript/cli
 $ tokenscript COMMAND
 running command...
 $ tokenscript (--version)
-@tokenscript/cli/1.2.2 linux-x64 node-v18.18.2
+@tokenscript/cli/1.2.3 linux-x64 node-v18.18.2
 $ tokenscript --help [COMMAND]
 USAGE
   $ tokenscript COMMAND
@@ -134,7 +134,7 @@ DESCRIPTION
   Build the tokenscript project into a .tsml
 ```
 
-_See code: [src/commands/build.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/build.ts)_
+_See code: [src/commands/build.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/build.ts)_
 
 ## `tokenscript certificate COMMAND`
 
@@ -159,7 +159,7 @@ DESCRIPTION
   Create a certificate request or sign an existing request.
 ```
 
-_See code: [src/commands/certificate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/certificate.ts)_
+_See code: [src/commands/certificate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/certificate.ts)_
 
 ## `tokenscript create [DIRECTORY]`
 
@@ -177,7 +177,7 @@ DESCRIPTION
   Create a new TokenScript project
 ```
 
-_See code: [src/commands/create.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/create.ts)_
+_See code: [src/commands/create.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/create.ts)_
 
 ## `tokenscript emulate [ENVIRONMENT]`
 
@@ -197,7 +197,7 @@ DESCRIPTION
   Emulate the TokenScript in a browser
 ```
 
-_See code: [src/commands/emulate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/emulate.ts)_
+_See code: [src/commands/emulate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/emulate.ts)_
 
 ## `tokenscript help [COMMANDS]`
 
@@ -474,7 +474,7 @@ DESCRIPTION
   Refresh a HardHat project
 ```
 
-_See code: [src/commands/refresh.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/refresh.ts)_
+_See code: [src/commands/refresh.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/refresh.ts)_
 
 ## `tokenscript sign`
 
@@ -495,7 +495,7 @@ DESCRIPTION
   sign the built .tsml
 ```
 
-_See code: [src/commands/sign.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/sign.ts)_
+_See code: [src/commands/sign.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/sign.ts)_
 
 ## `tokenscript validate`
 
@@ -509,5 +509,5 @@ DESCRIPTION
   Validate an existing .tsml
 ```
 
-_See code: [src/commands/validate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.2/src/commands/validate.ts)_
+_See code: [src/commands/validate.ts](https://github.com/SmartTokenLabs/tokenscript-cli/blob/v1.2.3/src/commands/validate.ts)_
 <!-- commandsstop -->
