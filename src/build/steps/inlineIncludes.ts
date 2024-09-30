@@ -19,6 +19,9 @@ export class InlineIncludes implements IBuildStep {
 
 		let elems = doc?.documentElement.getElementsByTagName("ts:include");
 
+		if (!elems || !elems.length)
+			return;
+
 		for (let i = 0, len = elems.length; i < len; i++){
 
 			const elem = elems[0];
@@ -85,7 +88,22 @@ export class InlineIncludes implements IBuildStep {
 
 	private escapeNonPrintableUnicodeChars(content: string){
 
-		content = content.replace(/\u0019/g, "\\u0019");
+		// We need to replace non-printable characters with their escaped Unicode representation for them to be valid
+		const nonPrintableChars = content.match(/[\u0000-\u0008\u000B-\u001F\u007F-\u009F]/g);
+
+		if (nonPrintableChars)
+			for (const match of nonPrintableChars){
+
+				console.log(match);
+
+				if (!match)
+					return;
+
+				const hex = ((match as string).codePointAt(0) ?? "").toString(16);
+				const escapeStr = "\\u" + "0000".substring(0, 4 - hex.length) + hex;
+
+				content = content.replace(match, escapeStr);
+			}
 
 		return content;
 	}
@@ -114,7 +132,7 @@ export class InlineIncludes implements IBuildStep {
 			case "js":
 				content = `<script type="text/javascript">
 					// <![CDATA[
-					${content}
+					${this.escapeNonPrintableUnicodeChars(content)}
 					// ]]>
 				</script>`;
 				break;
