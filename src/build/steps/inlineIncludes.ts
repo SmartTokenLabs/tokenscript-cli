@@ -54,6 +54,9 @@ export class InlineIncludes implements IBuildStep {
 
 				for (let s = 0; s < scriptElems.length; s++) {
 
+					if (scriptElems[s].getAttribute("src"))
+						continue;
+
 					scriptElems[s].innerHTML = "//<![CDATA[\r\n" + this.escapeNonPrintableUnicodeChars(scriptElems[s].innerHTML) + "\r\n//]]>";
 				}
 

@@ -100,6 +100,8 @@ export class Emulator {
 		if (existsSync(join(this.projectDir, "src"))){
 			watchedPaths.push(join(this.projectDir, "src"));
 			watchedPaths.push(join(this.projectDir, "tokenscript.xml"))
+			watchedPaths.push(join(this.projectDir, "tokenscript-project.json"))
+			watchedPaths.push(join(this.projectDir, "index.html"))
 		} else {
 			watchedPaths.push(this.projectDir);
 		}
